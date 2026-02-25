@@ -2,8 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Mon Coach Finance - Planning & Réel</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Mon Coach Finance - Gestion Totale</title>
     <style>
         :root { --main: #6366f1; --bg: #f1f5f9; --card: #ffffff; --text: #1e293b; --danger: #ef4444; --success: #22c55e; --warning: #f59e0b; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; }
@@ -16,9 +15,13 @@
         input, select, button { width: 100%; padding: 10px; margin: 5px 0 15px 0; border-radius: 8px; border: 1px solid #e2e8f0; box-sizing: border-box; }
         button { background: var(--main); color: white; border: none; font-weight: bold; cursor: pointer; }
         
-        .budget-row { display: flex; gap: 10px; align-items: center; margin-bottom: 5px; }
-        .budget-row label { flex: 1; font-size: 0.9rem; }
-        .budget-row input { width: 80px; margin: 0; }
+        .budget-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+        .budget-row label { flex: 1; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .budget-row input { width: 90px; margin: 0; }
+        
+        /* Bouton supprimer catégorie */
+        .btn-del-cat { background: #fee2e2; color: var(--danger); width: 32px; height: 32px; padding: 0; margin: 0; border-radius: 6px; border: none; font-size: 0.8rem; }
+        .btn-del-cat:hover { background: var(--danger); color: white; }
 
         .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
         .stat-box { background: var(--card); padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; }
@@ -33,6 +36,15 @@
         
         .progress-bar-bg { background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 5px; }
         .progress-bar-fill { height: 100%; background: var(--main); transition: 0.3s; }
+
+        .add-cat-box { display: flex; gap: 5px; margin-top: 15px; padding-top: 10px; border-top: 1px dashed #ddd; }
+        .add-cat-box input { margin: 0; }
+        .add-cat-box button { margin: 0; width: 50px; background: #94a3b8; }
+
+        .plan-summary { margin-top: 15px; padding: 12px; border-radius: 10px; background: #f8fafc; border: 1px solid #e2e8f0; font-size: 0.9rem; }
+        .plan-summary div { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .text-danger { color: var(--danger); font-weight: bold; }
+        .text-success { color: var(--success); font-weight: bold; }
     </style>
 </head>
 <body>
@@ -49,10 +61,22 @@
             <label>Salaire / Revenus (€)</label>
             <input type="number" id="prev_revenu" placeholder="Ex: 1800" onchange="sauvegarder()">
             
-            <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 10px;">Fixe tes limites par catégorie :</p>
-            <div id="setup_categories">
+            <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 10px;">Fixe tes limites :</p>
+            <div id="setup_categories"></div>
+            
+            <div class="add-cat-box">
+                <input type="text" id="new_cat_name" placeholder="Nouv. catégorie">
+                <button onclick="ajouterNouvelleCategorie()">+</button>
+            </div>
+
+            <div class="plan-summary">
+                <div><span>Total planifié :</span> <span id="total_prevu_val">0 €</span></div>
+                <div id="status_plan_container">
+                    <span>Reste à répartir :</span> <span id="reste_a_repartir">0 €</span>
                 </div>
-            <button onclick="sauvegarder()">Enregistrer mon plan</button>
+            </div>
+            
+            <button onclick="sauvegarder()" style="margin-top: 15px;">Mettre à jour les calculs</button>
         </div>
 
         <div class="card">
@@ -99,38 +123,43 @@
 </div>
 
 <script>
-    const CATS = {
-        "Fixe": "🏠 Loyers/Charges",
-        "Courses": "🛒 Alimentation",
-        "Loisirs": "🎉 Sorties/Plaisirs",
-        "Epargne": "💰 Épargne",
-        "Autres": "✨ Divers"
-    };
-
-    let db = JSON.parse(localStorage.getItem('budget_v3')) || {
+    let db = JSON.parse(localStorage.getItem('budget_vGestion')) || {
         revenu: 0,
-        previsions: { Fixe:0, Courses:0, Loisirs:0, Epargne:0, Autres:0 },
+        categories: [
+            { id: "Fixe", label: "🏠 Loyers/Charges" },
+            { id: "Courses", label: "🛒 Alimentation" },
+            { id: "Loisirs", label: "🎉 Sorties/Plaisirs" },
+            { id: "Epargne", label: "💰 Épargne" },
+            { id: "Autres", label: "✨ Divers" }
+        ],
+        previsions: { Fixe: 0, Courses: 0, Loisirs: 0, Epargne: 0, Autres: 0 },
         depenses: []
     };
 
-    // Initialisation de l'interface de planification
-    const setupDiv = document.getElementById('setup_categories');
-    const selectAdd = document.getElementById('add_cat');
-    Object.keys(CATS).forEach(key => {
-        setupDiv.innerHTML += `
-            <div class="budget-row">
-                <label>${CATS[key]}</label>
-                <input type="number" class="prev-input" data-cat="${key}" value="${db.previsions[key] || 0}" onchange="sauvegarder()">
-            </div>`;
-        selectAdd.innerHTML += `<option value="${key}">${CATS[key]}</option>`;
-    });
+    function ajouterNouvelleCategorie() {
+        const input = document.getElementById('new_cat_name');
+        const name = input.value.trim();
+        if (name === "") return;
+        const newId = "cat_" + Date.now();
+        db.categories.push({ id: newId, label: name });
+        db.previsions[newId] = 0;
+        input.value = "";
+        sauvegarder();
+    }
+
+    function supprimerCategorie(id) {
+        if(confirm("Supprimer cette catégorie ? Cela n'effacera pas les dépenses déjà enregistrées mais elles n'auront plus de budget de référence.")) {
+            db.categories = db.categories.filter(c => c.id !== id);
+            delete db.previsions[id];
+            sauvegarder();
+        }
+    }
 
     function ajouterDepense() {
         const desc = document.getElementById('add_desc').value;
         const mt = parseFloat(document.getElementById('add_mt').value);
         const ct = document.getElementById('add_cat').value;
         if(!desc || isNaN(mt)) return;
-        
         db.depenses.push({ id: Date.now(), date: new Date().toLocaleDateString('fr-FR'), desc, mt, ct });
         document.getElementById('add_desc').value = '';
         document.getElementById('add_mt').value = '';
@@ -147,64 +176,78 @@
         document.querySelectorAll('.prev-input').forEach(input => {
             db.previsions[input.dataset.cat] = parseFloat(input.value) || 0;
         });
-        localStorage.setItem('budget_v3', JSON.stringify(db));
+        localStorage.setItem('budget_vGestion', JSON.stringify(db));
         majAffichage();
     }
 
     function majAffichage() {
+        const setupDiv = document.getElementById('setup_categories');
+        const selectAdd = document.getElementById('add_cat');
+        setupDiv.innerHTML = "";
+        selectAdd.innerHTML = "";
+        let totalPlanifie = 0;
+
+        db.categories.forEach(cat => {
+            const val = db.previsions[cat.id] || 0;
+            totalPlanifie += val;
+            setupDiv.innerHTML += `
+                <div class="budget-row">
+                    <button class="btn-del-cat" onclick="supprimerCategorie('${cat.id}')">✕</button>
+                    <label>${cat.label}</label>
+                    <input type="number" class="prev-input" data-cat="${cat.id}" value="${val}" onchange="sauvegarder()">
+                </div>`;
+            selectAdd.innerHTML += `<option value="${cat.id}">${cat.label}</option>`;
+        });
+
+        document.getElementById('total_prevu_val').innerText = totalPlanifie.toFixed(0) + " €";
+        const reste = db.revenu - totalPlanifie;
+        const statusCont = document.getElementById('status_plan_container');
+        if (reste < 0) {
+            statusCont.innerHTML = `<span>Dépassement :</span> <span class="text-danger">${Math.abs(reste).toFixed(0)} €</span>`;
+        } else {
+            statusCont.innerHTML = `<span>Reste à répartir :</span> <span class="text-success">${reste.toFixed(0)} €</span>`;
+        }
+
         document.getElementById('prev_revenu').value = db.revenu;
-        
-        // Calculs
-        let totaux = { Fixe:0, Courses:0, Loisirs:0, Epargne:0, Autres:0 };
+        let totaux = {};
+        db.categories.forEach(c => totaux[c.id] = 0);
         let totalGeneral = 0;
+        let totalEpargne = 0;
         let tableBody = document.querySelector('#log_table tbody');
         tableBody.innerHTML = '';
 
-        db.depenses.reverse().forEach(d => {
-            totaux[d.ct] += d.mt;
-            if(d.ct !== 'Epargne') totalGeneral += d.mt;
-            tableBody.innerHTML += `<tr><td>${d.date}</td><td>${d.desc}</td><td>${d.ct}</td><td>${d.mt}€</td><td><button onclick="supprimer(${d.id})" style="background:none; color:red; padding:0; margin:0; width:auto;">✕</button></td></tr>`;
+        [...db.depenses].reverse().forEach(d => {
+            if(totaux.hasOwnProperty(d.ct)) totaux[d.ct] += d.mt;
+            const catObj = db.categories.find(c => c.id === d.ct);
+            if(catObj && catObj.label.toLowerCase().includes("épargne")) totalEpargne += d.mt;
+            else totalGeneral += d.mt;
+            tableBody.innerHTML += `<tr><td>${d.date}</td><td>${d.desc}</td><td>${catObj ? catObj.label : 'N/A'}</td><td>${d.mt}€</td><td><button onclick="supprimer(${d.id})" style="background:none; color:red; padding:0; margin:0; width:auto;">✕</button></td></tr>`;
         });
-        db.depenses.reverse(); // remettre à l'endroit pour le calcul
 
-        // Dashboard
         document.getElementById('view_total_dep').innerText = totalGeneral.toFixed(0);
-        document.getElementById('view_total_ep').innerText = totaux.Epargne.toFixed(0);
-        const solde = db.revenu - totalGeneral - totaux.Epargne;
+        document.getElementById('view_total_ep').innerText = totalEpargne.toFixed(0);
+        const solde = db.revenu - totalGeneral - totalEpargne;
         document.getElementById('view_solde').innerText = solde.toFixed(0);
         document.getElementById('view_solde_box').style.color = solde < 0 ? 'var(--danger)' : 'var(--success)';
 
-        // Table Bilan
         const bilanBody = document.querySelector('#bilan_table tbody');
         bilanBody.innerHTML = '';
-        Object.keys(CATS).forEach(cat => {
-            const prev = db.previsions[cat] || 0;
-            const reel = totaux[cat];
+        db.categories.forEach(cat => {
+            const prev = db.previsions[cat.id] || 0;
+            const reel = totaux[cat.id] || 0;
             const ecart = prev - reel;
             const pct = prev > 0 ? Math.min((reel/prev)*100, 100) : 0;
             const status = reel <= prev ? '<span class="status-badge bg-success">OK</span>' : '<span class="status-badge bg-danger">DÉPASSÉ</span>';
-            
-            bilanBody.innerHTML += `
-                <tr>
-                    <td>${CATS[cat]}</td>
-                    <td>${prev} €</td>
-                    <td>${reel} €</td>
-                    <td style="color:${ecart < 0 ? 'red' : 'green'}">${ecart > 0 ? '+' : ''}${ecart.toFixed(0)} €</td>
-                    <td>
-                        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%; background:${reel > prev ? 'var(--danger)' : 'var(--main)'}"></div></div>
-                    </td>
-                    <td>${status}</td>
-                </tr>`;
+            bilanBody.innerHTML += `<tr><td>${cat.label}</td><td>${prev} €</td><td>${reel} €</td><td style="color:${ecart < 0 ? 'red' : 'green'}">${ecart > 0 ? '+' : ''}${ecart.toFixed(0)} €</td><td><div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%; background:${reel > prev ? 'var(--danger)' : 'var(--main)'}"></div></div></td><td>${status}</td></tr>`;
         });
     }
 
     function resetMois() {
-        if(confirm("Effacer les dépenses ? Tes objectifs seront conservés.")) {
+        if(confirm("Effacer les dépenses ?")) {
             db.depenses = [];
             sauvegarder();
         }
     }
-
     majAffichage();
 </script>
 </body>
