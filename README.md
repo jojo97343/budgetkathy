@@ -3,29 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Mon Coach Finance - Gestion Totale</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root { --main: #6366f1; --bg: #f1f5f9; --card: #ffffff; --text: #1e293b; --danger: #ef4444; --success: #22c55e; --warning: #f59e0b; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; }
         .container { max-width: 1200px; margin: auto; }
-        
+       
         .grid-top { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; margin-bottom: 20px; }
-        .card { background: var(--card); padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        
+        .card { background: var(--card); padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+       
         h2 { margin-top: 0; font-size: 1.2rem; border-bottom: 2px solid var(--bg); padding-bottom: 10px; }
         input, select, button { width: 100%; padding: 10px; margin: 5px 0 15px 0; border-radius: 8px; border: 1px solid #e2e8f0; box-sizing: border-box; }
         button { background: var(--main); color: white; border: none; font-weight: bold; cursor: pointer; }
-        
+       
+        #search_input { background-color: #f8fafc; border: 1px solid #cbd5e1; margin-bottom: 10px; }
         .budget-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
         .budget-row label { flex: 1; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .budget-row input { width: 90px; margin: 0; }
-        
-        /* Bouton supprimer catégorie */
         .btn-del-cat { background: #fee2e2; color: var(--danger); width: 32px; height: 32px; padding: 0; margin: 0; border-radius: 6px; border: none; font-size: 0.8rem; }
         .btn-del-cat:hover { background: var(--danger); color: white; }
 
-        .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
-        .stat-box { background: var(--card); padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; }
-        
+        .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
+        .stat-box { background: var(--card); padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; border: 1px solid #e2e8f0; }
+        .stat-box-gold { background: #fffbeb; border: 1px solid #f59e0b; color: #b45309; }
+       
         .status-badge { padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; color: white; }
         .bg-success { background: var(--success); }
         .bg-danger { background: var(--danger); }
@@ -33,7 +34,7 @@
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th { text-align: left; font-size: 0.8rem; color: #64748b; padding: 10px; }
         td { padding: 10px; border-top: 1px solid #f1f5f9; font-size: 0.9rem; }
-        
+       
         .progress-bar-bg { background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 5px; }
         .progress-bar-fill { height: 100%; background: var(--main); transition: 0.3s; }
 
@@ -45,25 +46,40 @@
         .plan-summary div { display: flex; justify-content: space-between; margin-bottom: 5px; }
         .text-danger { color: var(--danger); font-weight: bold; }
         .text-success { color: var(--success); font-weight: bold; }
+
+        .bilan-layout { display: flex; gap: 20px; flex-wrap: wrap; }
+        .bilan-table-side { flex: 2; min-width: 300px; }
+        .bilan-chart-side { flex: 1; min-width: 250px; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h1>📊 Mon Budget : Prévu vs Réel</h1>
-        <button onclick="resetMois()" style="width: auto; background: #94a3b8;">Nouveau Mois</button>
+        <h1>Mon Budget : Prévu vs Réel</h1>
+        <button onclick="resetMois()" style="width: auto; background: #94a3b8;">Clôturer le mois et archiver</button>
     </header>
+
+    <div class="stat-grid">
+        <div class="stat-box">Dépensé : <span id="view_total_dep">0</span> €</div>
+        <div class="stat-box">Épargné : <span id="view_total_ep">0</span> €</div>
+        <div class="stat-box" id="view_solde_box">Solde : <span id="view_solde">0</span> €</div>
+        <div class="stat-box stat-box-gold">
+            Coffre-fort : <span id="view_global_ep">0</span> €
+            <br>
+            <button onclick="resetCoffre()" style="background:none; border:1px solid #b45309; padding:2px 8px; font-size:0.7rem; color:#b45309; margin-top:5px; width: auto;">Reset</button>
+        </div>
+    </div>
 
     <div class="grid-top">
         <div class="card">
             <h2>1. Je prévois mon mois</h2>
             <label>Salaire / Revenus (€)</label>
             <input type="number" id="prev_revenu" placeholder="Ex: 1800" onchange="sauvegarder()">
-            
+           
             <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 10px;">Fixe tes limites :</p>
             <div id="setup_categories"></div>
-            
+           
             <div class="add-cat-box">
                 <input type="text" id="new_cat_name" placeholder="Nouv. catégorie">
                 <button onclick="ajouterNouvelleCategorie()">+</button>
@@ -75,7 +91,7 @@
                     <span>Reste à répartir :</span> <span id="reste_a_repartir">0 €</span>
                 </div>
             </div>
-            
+           
             <button onclick="sauvegarder()" style="margin-top: 15px;">Mettre à jour les calculs</button>
         </div>
 
@@ -87,14 +103,10 @@
                 <select id="add_cat"></select>
                 <button onclick="ajouterDepense()" style="margin: 5px 0;">+</button>
             </div>
-            
-            <div class="stat-grid">
-                <div class="stat-box">Dépensé : <span id="view_total_dep">0</span> €</div>
-                <div class="stat-box">Épargné : <span id="view_total_ep">0</span> €</div>
-                <div class="stat-box" id="view_solde_box">Solde : <span id="view_solde">0</span> €</div>
-            </div>
-
+           
             <h2>Historique</h2>
+            <input type="text" id="search_input" placeholder=" Rechercher par catégorie ou nom..." oninput="majAffichage()">
+           
             <div style="max-height: 250px; overflow-y: auto;">
                 <table id="log_table">
                     <thead><tr><th>Date</th><th>Nom</th><th>Cat.</th><th>Prix</th><th>Action</th></tr></thead>
@@ -106,19 +118,30 @@
 
     <div class="card">
         <h2>3. Bilan : Ai-je respecté mes engagements ?</h2>
-        <table id="bilan_table">
-            <thead>
-                <tr>
-                    <th>Catégorie</th>
-                    <th>Prévu (Budget)</th>
-                    <th>Réel (Dépensé)</th>
-                    <th>Écart</th>
-                    <th>Progression</th>
-                    <th>Statut</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+        <div class="bilan-layout">
+            <div class="bilan-table-side">
+                <table id="bilan_table">
+                    <thead>
+                        <tr><th>Catégorie</th><th>Prévu</th><th>Réel</th><th>Écart</th><th>Progression</th><th>Statut</th></tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="bilan-chart-side">
+                <canvas id="budgetChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Espace Épargne (Suivi détaillé)</h2>
+        <div style="max-height: 200px; overflow-y: auto; border: 1px solid #f1f5f9; border-radius: 8px; padding: 5px;">
+            <table id="epargne_history_table">
+                <thead><tr><th>Date</th><th>Nom</th><th>Montant</th><th>Action</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <p style="margin-top:10px; font-weight:bold;">Total de cet espace : <span id="local_epargne_total">0</span> €</p>
     </div>
 </div>
 
@@ -126,15 +149,19 @@
     let db = JSON.parse(localStorage.getItem('budget_vGestion')) || {
         revenu: 0,
         categories: [
-            { id: "Fixe", label: "🏠 Loyers/Charges" },
-            { id: "Courses", label: "🛒 Alimentation" },
-            { id: "Loisirs", label: "🎉 Sorties/Plaisirs" },
-            { id: "Epargne", label: "💰 Épargne" },
-            { id: "Autres", label: "✨ Divers" }
+            { id: "Fixe", label: "Loyers/Charges" },
+            { id: "Courses", label: "Alimentation" },
+            { id: "Loisirs", label: "Sorties/Plaisirs" },
+            { id: "Epargne", label: "Épargne" },
+            { id: "Autres", label: "Divers" }
         ],
         previsions: { Fixe: 0, Courses: 0, Loisirs: 0, Epargne: 0, Autres: 0 },
-        depenses: []
+        depenses: [],
+        historiqueEpargne: []
     };
+   
+    let globalSavings = parseFloat(localStorage.getItem('globalSavings')) || 0;
+    let chartInstance = null;
 
     function ajouterNouvelleCategorie() {
         const input = document.getElementById('new_cat_name');
@@ -148,7 +175,7 @@
     }
 
     function supprimerCategorie(id) {
-        if(confirm("Supprimer cette catégorie ? Cela n'effacera pas les dépenses déjà enregistrées mais elles n'auront plus de budget de référence.")) {
+        if(confirm("Supprimer cette catégorie ?")) {
             db.categories = db.categories.filter(c => c.id !== id);
             delete db.previsions[id];
             sauvegarder();
@@ -158,16 +185,39 @@
     function ajouterDepense() {
         const desc = document.getElementById('add_desc').value;
         const mt = parseFloat(document.getElementById('add_mt').value);
-        const ct = document.getElementById('add_cat').value;
+        const ctId = document.getElementById('add_cat').value;
         if(!desc || isNaN(mt)) return;
-        db.depenses.push({ id: Date.now(), date: new Date().toLocaleDateString('fr-FR'), desc, mt, ct });
+       
+        const expense = { id: Date.now(), date: new Date().toLocaleDateString('fr-FR'), desc, mt, ct: ctId };
+        db.depenses.push(expense);
+       
+        const catObj = db.categories.find(c => c.id === ctId);
+        if(catObj && catObj.label.toLowerCase().includes("épargne")) {
+            db.historiqueEpargne.push(expense);
+        }
+
         document.getElementById('add_desc').value = '';
         document.getElementById('add_mt').value = '';
         sauvegarder();
     }
 
+    // --- Fonction de suppression améliorée ---
     function supprimer(id) {
+        // 1. Chercher si l'élément est dans l'historique d'épargne
+        const indexInSavings = db.historiqueEpargne.findIndex(d => d.id === id);
+       
+        if (indexInSavings !== -1) {
+            // Soustraire le montant du coffre-fort global
+            globalSavings = Math.max(0, globalSavings - db.historiqueEpargne[indexInSavings].mt);
+            localStorage.setItem('globalSavings', globalSavings);
+           
+            // Supprimer de l'historique
+            db.historiqueEpargne.splice(indexInSavings, 1);
+        }
+
+        // 2. Supprimer de la liste générale des dépenses
         db.depenses = db.depenses.filter(d => d.id !== id);
+       
         sauvegarder();
     }
 
@@ -180,7 +230,36 @@
         majAffichage();
     }
 
+    function resetCoffre() {
+        if(confirm("ATTENTION : Voulez-vous vraiment vider tout le coffre-fort ET l'historique d'épargne ?")) {
+            globalSavings = 0;
+            db.historiqueEpargne = [];
+            localStorage.setItem('globalSavings', 0);
+            sauvegarder();
+        }
+    }
+
     function majAffichage() {
+        const searchTerm = document.getElementById('search_input').value.toLowerCase();
+        document.getElementById('view_global_ep').innerText = globalSavings.toFixed(0);
+
+        // Tri alphabétique
+        db.historiqueEpargne.sort((a, b) => a.desc.toLowerCase().localeCompare(b.desc.toLowerCase()));
+
+        const epTable = document.querySelector('#epargne_history_table tbody');
+        epTable.innerHTML = '';
+        let totalEpLocal = 0;
+        db.historiqueEpargne.forEach(d => {
+            epTable.innerHTML += `<tr>
+                <td>${d.date}</td>
+                <td>${d.desc}</td>
+                <td>${d.mt}€</td>
+                <td><button onclick="supprimer(${d.id})" style="background:none; color:red; padding:0; margin:0; width:auto;">✕</button></td>
+            </tr>`;
+            totalEpLocal += d.mt;
+        });
+        document.getElementById('local_epargne_total').innerText = totalEpLocal.toFixed(0);
+
         const setupDiv = document.getElementById('setup_categories');
         const selectAdd = document.getElementById('add_cat');
         setupDiv.innerHTML = "";
@@ -202,11 +281,7 @@
         document.getElementById('total_prevu_val').innerText = totalPlanifie.toFixed(0) + " €";
         const reste = db.revenu - totalPlanifie;
         const statusCont = document.getElementById('status_plan_container');
-        if (reste < 0) {
-            statusCont.innerHTML = `<span>Dépassement :</span> <span class="text-danger">${Math.abs(reste).toFixed(0)} €</span>`;
-        } else {
-            statusCont.innerHTML = `<span>Reste à répartir :</span> <span class="text-success">${reste.toFixed(0)} €</span>`;
-        }
+        statusCont.innerHTML = reste < 0 ? `<span>Dépassement :</span> <span class="text-danger">${Math.abs(reste).toFixed(0)} €</span>` : `<span>Reste à répartir :</span> <span class="text-success">${reste.toFixed(0)} €</span>`;
 
         document.getElementById('prev_revenu').value = db.revenu;
         let totaux = {};
@@ -219,9 +294,13 @@
         [...db.depenses].reverse().forEach(d => {
             if(totaux.hasOwnProperty(d.ct)) totaux[d.ct] += d.mt;
             const catObj = db.categories.find(c => c.id === d.ct);
-            if(catObj && catObj.label.toLowerCase().includes("épargne")) totalEpargne += d.mt;
-            else totalGeneral += d.mt;
-            tableBody.innerHTML += `<tr><td>${d.date}</td><td>${d.desc}</td><td>${catObj ? catObj.label : 'N/A'}</td><td>${d.mt}€</td><td><button onclick="supprimer(${d.id})" style="background:none; color:red; padding:0; margin:0; width:auto;">✕</button></td></tr>`;
+            const catLabel = catObj ? catObj.label.toLowerCase() : '';
+           
+            if (d.desc.toLowerCase().includes(searchTerm) || catLabel.includes(searchTerm)) {
+                if(catObj && catObj.label.toLowerCase().includes("épargne")) totalEpargne += d.mt;
+                else totalGeneral += d.mt;
+                tableBody.innerHTML += `<tr><td>${d.date}</td><td>${d.desc}</td><td>${catObj ? catObj.label : 'N/A'}</td><td>${d.mt}€</td><td><button onclick="supprimer(${d.id})" style="background:none; color:red; padding:0; margin:0; width:auto;">✕</button></td></tr>`;
+            }
         });
 
         document.getElementById('view_total_dep').innerText = totalGeneral.toFixed(0);
@@ -232,22 +311,50 @@
 
         const bilanBody = document.querySelector('#bilan_table tbody');
         bilanBody.innerHTML = '';
+       
+        let labelsChart = [];
+        let dataChart = [];
+
         db.categories.forEach(cat => {
             const prev = db.previsions[cat.id] || 0;
             const reel = totaux[cat.id] || 0;
-            const ecart = prev - reel;
             const pct = prev > 0 ? Math.min((reel/prev)*100, 100) : 0;
             const status = reel <= prev ? '<span class="status-badge bg-success">OK</span>' : '<span class="status-badge bg-danger">DÉPASSÉ</span>';
-            bilanBody.innerHTML += `<tr><td>${cat.label}</td><td>${prev} €</td><td>${reel} €</td><td style="color:${ecart < 0 ? 'red' : 'green'}">${ecart > 0 ? '+' : ''}${ecart.toFixed(0)} €</td><td><div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%; background:${reel > prev ? 'var(--danger)' : 'var(--main)'}"></div></div></td><td>${status}</td></tr>`;
+            bilanBody.innerHTML += `<tr><td>${cat.label}</td><td>${prev} €</td><td>${reel} €</td><td style="color:${(prev-reel) < 0 ? 'red' : 'green'}">${(prev-reel).toFixed(0)} €</td><td><div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%"></div></div></td><td>${status}</td></tr>`;
+           
+            labelsChart.push(cat.label);
+            dataChart.push(reel);
+        });
+
+        if (chartInstance) chartInstance.destroy();
+        const ctx = document.getElementById('budgetChart').getContext('2d');
+        chartInstance = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labelsChart,
+                datasets: [{
+                    data: dataChart,
+                    backgroundColor: ['#6366f1', '#22c55e', '#f59e0b', '#ef4444', '#94a3b8']
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
         });
     }
 
     function resetMois() {
-        if(confirm("Effacer les dépenses ?")) {
+        if(confirm("Clôturer le mois ? L'épargne du mois sera ajoutée au coffre-fort et les dépenses vidées.")) {
+            let epargneMois = 0;
+            db.depenses.forEach(d => {
+                const cat = db.categories.find(c => c.id == d.ct);
+                if(cat && cat.label.toLowerCase().includes("épargne")) epargneMois += d.mt;
+            });
+            globalSavings += epargneMois;
+            localStorage.setItem('globalSavings', globalSavings);
             db.depenses = [];
             sauvegarder();
         }
     }
+   
     majAffichage();
 </script>
 </body>
