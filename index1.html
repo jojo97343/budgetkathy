@@ -286,10 +286,13 @@
 
         table { width: 100%; border-collapse: collapse; }
         thead { position: sticky; top: 0; background: var(--bg); z-index: 2; }
-        th { text-align: left; font-size: 0.75rem; color: var(--text-muted); padding: 10px 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 2px solid var(--bg2); }
-        td { padding: 10px 12px; border-top: 1px solid var(--bg2); font-size: 0.88rem; }
+        th { text-align: left; font-size: 0.75rem; color: var(--text-muted); padding: 10px 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 2px solid var(--bg2); background: var(--bg); }
+        td { padding: 10px 12px; border-top: 1px solid var(--bg2); font-size: 0.88rem; color: var(--text); background: transparent; }
         tbody tr { transition: background var(--transition); }
-        tbody tr:hover { background: var(--bg); }
+        tbody tr:hover { background: var(--bg2); }
+        .table-wrap { background: var(--card); }
+        [data-theme="dark"] thead th { background: var(--bg2); }
+        [data-theme="dark"] tbody tr:hover { background: rgba(99,102,241,0.08); }
         .new-row td { animation: rowIn 0.35s ease; }
         @keyframes rowIn { from { opacity:0; background: rgba(99,102,241,0.08); } to { opacity:1; } }
 
