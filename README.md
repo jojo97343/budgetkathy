@@ -2,7 +2,6 @@
 <html lang="fr" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>Mon Coach Finance - Gestion Totale</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -61,7 +60,6 @@
 
         .container { max-width: 1240px; margin: auto; padding: 28px 20px; position: relative; z-index: 1; }
 
-        /* HEADER */
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; gap: 16px; flex-wrap: wrap; }
         .header-title h1 {
             font-family: 'Inter', sans-serif; font-size: 1.8rem; font-weight: 800;
@@ -71,7 +69,6 @@
         .header-title p { color: var(--text-muted); font-size: 0.85rem; margin-top: 2px; }
         .header-actions { display: flex; gap: 10px; align-items: center; }
 
-        /* DARK MODE TOGGLE */
         .theme-toggle {
             width: 52px; height: 28px; background: var(--bg2); border-radius: 999px;
             border: 2px solid var(--card-border); cursor: pointer; position: relative;
@@ -85,7 +82,6 @@
         }
         [data-theme="dark"] .theme-toggle::after { content: '🌙'; transform: translateX(24px); }
 
-        /* CARDS */
         .card {
             background: var(--card); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
             padding: 24px; border-radius: var(--radius); border: 1px solid var(--card-border);
@@ -107,7 +103,6 @@
             border-radius: 50%; font-size: 0.75rem; margin-right: 8px;
         }
 
-        /* INPUTS */
         input[type="text"], input[type="number"], select {
             width: 100%; padding: 10px 14px; margin: 4px 0 12px 0;
             border-radius: 10px; border: 1.5px solid var(--bg2);
@@ -126,7 +121,6 @@
         }
         .btn-primary { background: linear-gradient(135deg, #6366f1, #818cf8); color: white; box-shadow: 0 4px 14px var(--main-glow); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--main-glow); }
-        .btn-primary:active { transform: translateY(0); }
         .btn-secondary { background: var(--bg2); color: var(--text-muted); }
         .btn-secondary:hover { background: #dde3f5; color: var(--text); }
         [data-theme="dark"] .btn-secondary:hover { background: #2a2d47; }
@@ -135,7 +129,6 @@
         .btn-icon { background: none; border: none; color: red; padding: 0; margin: 0; width: auto; font-size: 1rem; cursor: pointer; transition: transform var(--transition); }
         .btn-icon:hover { transform: scale(1.2); }
 
-        /* STAT GRID */
         .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
         .stat-box {
             background: var(--card); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
@@ -176,11 +169,11 @@
         .search-wrap { margin-bottom: 12px; }
         .search-wrap input { margin: 0; }
 
-        /* TABLE */
         .table-wrap { max-height: 250px; overflow-y: auto; border-radius: 10px; border: 1px solid var(--bg2); background: var(--card); }
         .table-wrap::-webkit-scrollbar { width: 6px; }
         .table-wrap::-webkit-scrollbar-track { background: transparent; }
         .table-wrap::-webkit-scrollbar-thumb { background: var(--main-light); border-radius: 3px; }
+
         table { width: 100%; border-collapse: collapse; }
         thead { position: sticky; top: 0; z-index: 2; }
         th { text-align: left; font-size: 0.75rem; color: var(--text-muted); padding: 10px 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 2px solid var(--bg2); background: var(--bg); }
@@ -204,12 +197,12 @@
 
         .bilan-layout { display: flex; gap: 24px; flex-wrap: wrap; }
         .bilan-table-side { flex: 2; min-width: 300px; }
+        .bilan-chart-side { flex: 0 0 280px; width: 280px; height: 280px; display: flex; align-items: center; justify-content: center; }
         #bilan_table th { font-size: 0.7rem; padding: 10px 14px; }
         #bilan_table td { padding: 12px 14px; vertical-align: middle; font-size: 0.85rem; }
         #bilan_table tbody tr { border-bottom: 1px solid var(--bg2); }
         #bilan_table tbody tr:last-child { border-bottom: none; }
         .bilan-cat-name { font-weight: 600; font-size: 0.88rem; color: var(--text); }
-        .bilan-chart-side { flex: 0 0 280px; width: 280px; height: 280px; display: flex; align-items: center; justify-content: center; }
 
         .recurring-tag { font-size: 0.68rem; color: var(--main); font-weight: 600; margin-left: 5px; background: var(--main-glow); padding: 1px 5px; border-radius: 20px; }
 
@@ -217,7 +210,6 @@
         .epargne-total-row .label { font-size: 0.85rem; color: #b45309; font-weight: 600; }
         .epargne-total-row .value { font-family: 'Inter', sans-serif; font-size: 1.3rem; font-weight: 800; color: #b45309; }
 
-        /* TOAST */
         #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
         .toast { padding: 12px 20px; border-radius: 12px; font-size: 0.88rem; font-weight: 600; color: white; box-shadow: 0 8px 24px rgba(0,0,0,0.2); backdrop-filter: blur(12px); animation: toastIn 0.35s ease both; display: flex; align-items: center; gap: 10px; pointer-events: auto; }
         .toast.success { background: linear-gradient(135deg, #22c55e, #16a34a); }
@@ -227,7 +219,6 @@
         @keyframes toastIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes toastOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(40px); } }
 
-        /* ── MODAL ── */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.55);
             backdrop-filter: blur(6px); z-index: 1000;
@@ -236,8 +227,7 @@
         .modal-box {
             background: var(--card); border: 1px solid var(--card-border);
             border-radius: var(--radius); padding: 32px; width: 90%; max-width: 420px;
-            box-shadow: 0 24px 64px rgba(0,0,0,0.3);
-            animation: slideUp 0.3s ease;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.3); animation: slideUp 0.3s ease;
         }
         .modal-box h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; color: var(--text); }
         .modal-box p { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 20px; line-height: 1.6; }
@@ -247,13 +237,8 @@
         .btn-cancel { background: var(--bg2); color: var(--text-muted); }
         .btn-cancel:hover { background: #dde3f5; color: var(--text); }
 
-        /* ── ARCHIVES ── */
         .archives-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 18px; margin-top: 4px; }
-        .archive-card {
-            background: var(--bg); border: 1px solid var(--bg2);
-            border-radius: 14px; padding: 18px 16px; transition: all var(--transition);
-            animation: slideUp 0.35s ease both;
-        }
+        .archive-card { background: var(--bg); border: 1px solid var(--bg2); border-radius: 14px; padding: 18px 16px; transition: all var(--transition); animation: slideUp 0.35s ease both; }
         .archive-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
         .arc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; gap: 8px; }
         .arc-name { font-weight: 800; font-size: 0.95rem; color: var(--text); line-height: 1.3; }
@@ -272,8 +257,6 @@
         .empty-icon { font-size: 3rem; margin-bottom: 12px; }
         .empty-archives p { font-size: 0.88rem; line-height: 1.6; }
 
-        /* RESPONSIVE */
-        /* ── TABLET ── */
         @media (max-width: 900px) {
             .stat-grid { grid-template-columns: repeat(2, 1fr); }
             .grid-top { grid-template-columns: 1fr; }
@@ -281,86 +264,14 @@
             .add-expense-grid button { grid-column: span 2; width: 100%; }
             .bilan-chart-side { flex: 0 0 220px; width: 220px; height: 220px; }
         }
-
-        /* ── MOBILE ── */
         @media (max-width: 600px) {
-            .container { padding: 14px 12px; }
-
-            /* Header */
-            header { flex-direction: column; align-items: flex-start; margin-bottom: 20px; gap: 10px; }
-            .header-title h1 { font-size: 1.4rem; }
-            .header-actions { width: 100%; justify-content: space-between; }
-            .header-actions .btn-secondary { flex: 1; text-align: center; font-size: 0.82rem; padding: 9px 10px; }
-
-            /* Stats */
-            .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
-            .stat-box { padding: 14px 10px; }
-            .stat-box .stat-label { font-size: 0.68rem; margin-bottom: 6px; }
-            .stat-box .stat-value { font-size: 1.6rem; }
-            .stat-box .stat-value span { font-size: 1.3rem !important; }
-
-            /* Cards */
-            .card { padding: 16px 14px; border-radius: 14px; margin-bottom: 14px; }
-            h2 { font-size: 0.92rem; }
-
-            /* Inputs */
-            input[type="text"], input[type="number"], select { padding: 10px 12px; font-size: 0.88rem; }
-
-            /* Ajout dépense : 1 colonne */
-            .add-expense-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-            .add-expense-grid > div:nth-child(3) { grid-column: span 2; }
-            .add-expense-grid button { grid-column: span 2; width: 100%; height: 44px; font-size: 1rem; }
-
-            /* Budget row */
-            .budget-row input { width: 80px; }
-
-            /* Tableau historique : masquer colonne date */
-            #log_table thead tr th:first-child,
-            #log_table tbody tr td:first-child { display: none; }
-
-            /* Bilan : tout en colonne */
-            .bilan-layout { flex-direction: column; }
-            .bilan-chart-side { flex: none; width: 220px; height: 220px; margin: 0 auto; }
-            /* Bilan mobile : masquer Progression */
-            #bilan_table thead tr th:nth-child(5),
-            #bilan_table tbody tr td:nth-child(5) { display: none; }
-            /* Réduire padding bilan sur mobile */
-            #bilan_table th { padding: 8px 8px; font-size: 0.65rem; }
-            #bilan_table td { padding: 10px 8px; font-size: 0.8rem; }
-            .bilan-cat-name { font-size: 0.82rem; }
-
-            /* Toast plus petit */
-            #toast-container { top: 10px; right: 10px; left: 10px; }
-            .toast { font-size: 0.82rem; padding: 10px 14px; }
-
-            /* Modal */
-            .modal-box { padding: 24px 18px; }
-
-            /* Archives */
-            .archives-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-            .arc-name { font-size: 0.82rem; }
-            .arc-date { font-size: 0.65rem; }
-            .arc-stats { font-size: 0.72rem; }
-            .arc-actions button { font-size: 0.72rem; padding: 6px 6px; }
-
-            /* Graphique évolution */
-            #evolution-section > div:last-child { height: 180px !important; }
-        }
-
-        /* ── TRÈS PETIT MOBILE (≤380px) ── */
-        @media (max-width: 380px) {
             .stat-grid { grid-template-columns: repeat(2, 1fr); }
-            .stat-box .stat-value { font-size: 1.3rem; }
-            .stat-box .stat-value span { font-size: 1.1rem !important; }
-            .archives-grid { grid-template-columns: 1fr; }
-            header { gap: 8px; }
         }
     </style>
 </head>
 <body>
 <div id="toast-container"></div>
 
-<!-- ══ MODAL CLÔTURE ══ -->
 <div id="modal-cloture" class="modal-overlay" style="display:none;">
     <div class="modal-box">
         <h3>📁 Clôturer le mois</h3>
@@ -480,11 +391,9 @@
         </div>
     </div>
 
-    <!-- ══ ARCHIVES ══ -->
     <div class="card">
         <h2>📅 Historique des mois archivés</h2>
 
-        <!-- GRAPHIQUE ÉVOLUTION -->
         <div id="evolution-section" style="display:none; margin-bottom:28px;">
             <div style="font-size:0.78rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:14px;">📈 Évolution mois par mois</div>
             <div style="position:relative;height:220px;"><canvas id="evolutionChart"></canvas></div>
@@ -512,9 +421,9 @@
     let globalSavings = parseFloat(localStorage.getItem('globalSavings')) || 0;
     let archives = JSON.parse(localStorage.getItem('budget_archives')) || [];
     let chartInstance = null;
+    let evolutionChartInstance = null;
     const colors = ['#6366f1','#22c55e','#f59e0b','#ef4444','#94a3b8','#06b6d4','#a855f7','#f97316'];
 
-    // THEME
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
     function toggleTheme() {
@@ -526,7 +435,6 @@
         afficherEvolution();
     }
 
-    // TOAST
     function showToast(message, type = 'success', duration = 3000) {
         const icons = { success: '✅', danger: '❌', info: 'ℹ️', warning: '⚠️' };
         const container = document.getElementById('toast-container');
@@ -540,7 +448,6 @@
         }, duration);
     }
 
-    // ── MODAL ──
     function ouvrirModal() {
         const now = new Date();
         const moisNoms = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
@@ -548,9 +455,7 @@
         document.getElementById('modal-cloture').style.display = 'flex';
         setTimeout(() => document.getElementById('modal-mois-nom').select(), 100);
     }
-    function fermerModal() {
-        document.getElementById('modal-cloture').style.display = 'none';
-    }
+    function fermerModal() { document.getElementById('modal-cloture').style.display = 'none'; }
     document.getElementById('modal-cloture').addEventListener('click', e => { if (e.target === e.currentTarget) fermerModal(); });
     document.getElementById('modal-mois-nom').addEventListener('keydown', e => {
         if (e.key === 'Enter') confirmerCloture();
@@ -560,8 +465,6 @@
     function confirmerCloture() {
         const nom = document.getElementById('modal-mois-nom').value.trim() || 'Mois sans nom';
         fermerModal();
-
-        // Calculer les totaux
         let totaux = {};
         db.categories.forEach(c => totaux[c.id] = 0);
         let totalDep = 0, totalEp = 0;
@@ -571,23 +474,15 @@
             if (cat && cat.label.toLowerCase().includes("épargne")) totalEp += d.mt;
             else totalDep += d.mt;
         });
-
-        // Sauvegarder l'archive
         const archive = {
-            id: Date.now(),
-            nom,
-            date: new Date().toLocaleDateString('fr-FR'),
-            revenu: db.revenu,
-            totalDep,
-            totalEp,
+            id: Date.now(), nom, date: new Date().toLocaleDateString('fr-FR'),
+            revenu: db.revenu, totalDep, totalEp,
             solde: db.revenu - totalDep - totalEp,
             labels: db.categories.map(c => c.label),
             data: db.categories.map(c => totaux[c.id] || 0)
         };
         archives.push(archive);
         localStorage.setItem('budget_archives', JSON.stringify(archives));
-
-        // Clôture du mois
         let epargneMois = 0;
         db.depenses.forEach(d => {
             const cat = db.categories.find(c => c.id == d.ct);
@@ -597,41 +492,28 @@
         localStorage.setItem('globalSavings', globalSavings);
         db.depenses = db.depenses.filter(d => d.recurring === true);
         sauvegarder();
-
         afficherArchives();
         afficherEvolution();
         showToast(`"${nom}" archivé ! +${epargneMois}€ au coffre-fort 🎉`, 'success', 4500);
     }
 
-    // ── AFFICHER ARCHIVES ──
     function afficherArchives() {
         const container = document.getElementById('archives-container');
         if (archives.length === 0) {
-            container.innerHTML = `
-                <div class="empty-archives">
-                    <div class="empty-icon">📭</div>
-                    <p>Aucun mois archivé pour l'instant.<br>Clôture ton premier mois pour le voir apparaître ici.</p>
-                </div>`;
+            container.innerHTML = `<div class="empty-archives"><div class="empty-icon">📭</div><p>Aucun mois archivé pour l'instant.<br>Clôture ton premier mois pour le voir apparaître ici.</p></div>`;
             return;
         }
-
         container.innerHTML = '<div class="archives-grid" id="archives-grid"></div>';
         const grid = document.getElementById('archives-grid');
-
         archives.slice().reverse().forEach(arc => {
             const card = document.createElement('div');
             card.className = 'archive-card';
             const soldeColor = arc.solde < 0 ? 'var(--danger)' : 'var(--success)';
             card.innerHTML = `
                 <div class="arc-header">
-                    <div>
-                        <div class="arc-name">${arc.nom}</div>
-                        <div class="arc-date">Archivé le ${arc.date}</div>
-                    </div>
+                    <div><div class="arc-name">${arc.nom}</div><div class="arc-date">Archivé le ${arc.date}</div></div>
                 </div>
-                <div class="arc-chart-wrap">
-                    <canvas id="arc-chart-${arc.id}" width="150" height="150"></canvas>
-                </div>
+                <div class="arc-chart-wrap"><canvas id="arc-chart-${arc.id}" width="150" height="150"></canvas></div>
                 <div class="arc-stats">
                     <div class="arc-stat-row"><span>💸 Dépensé</span><strong>${arc.totalDep} €</strong></div>
                     <div class="arc-stat-row"><span>🌱 Épargné</span><strong style="color:var(--success)">${arc.totalEp} €</strong></div>
@@ -643,34 +525,57 @@
                     <button class="btn-del-arc" onclick="supprimerArchive(${arc.id})" title="Supprimer">🗑️</button>
                 </div>`;
             grid.appendChild(card);
-
-            // Dessiner le camembert
             setTimeout(() => {
                 const ctx = document.getElementById(`arc-chart-${arc.id}`);
                 if (!ctx) return;
                 new Chart(ctx, {
                     type: 'pie',
-                    data: {
-                        labels: arc.labels,
-                        datasets: [{
-                            data: arc.data,
-                            backgroundColor: colors.slice(0, arc.labels.length),
-                            borderWidth: 2,
-                            borderColor: '#ffffff',
-                            hoverOffset: 5
-                        }]
-                    },
-                    options: {
-                        responsive: false,
-                        
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: { callbacks: { label: c => ` ${c.label}: ${c.parsed}€` } }
-                        },
-                        animation: { duration: 800 }
-                    }
+                    data: { labels: arc.labels, datasets: [{ data: arc.data, backgroundColor: colors.slice(0, arc.labels.length), borderWidth: 2, borderColor: '#ffffff', hoverOffset: 5 }] },
+                    options: { responsive: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ${c.label}: ${c.parsed}€` } } }, animation: { duration: 800 } }
                 });
             }, 60);
+        });
+    }
+
+    function afficherEvolution() {
+        const section = document.getElementById('evolution-section');
+        if (archives.length < 1) { section.style.display = 'none'; return; }
+        section.style.display = 'block';
+        const sorted = [...archives].sort((a, b) => a.id - b.id);
+        const labels = sorted.map(a => a.nom);
+        const revenus = sorted.map(a => a.revenu);
+        const depenses = sorted.map(a => a.totalDep);
+        const epargnes = sorted.map(a => a.totalEp);
+        const soldes = sorted.map(a => a.solde);
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const gridColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
+        const textColor = isDark ? '#94a3b8' : '#64748b';
+        if (evolutionChartInstance) evolutionChartInstance.destroy();
+        const ctx = document.getElementById('evolutionChart').getContext('2d');
+        evolutionChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [
+                    { label: 'Revenus', data: revenus, borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,0.08)', borderWidth: 2.5, pointBackgroundColor: '#6366f1', pointRadius: 5, pointHoverRadius: 7, fill: false, tension: 0.35 },
+                    { label: 'Dépenses', data: depenses, borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.07)', borderWidth: 2.5, pointBackgroundColor: '#ef4444', pointRadius: 5, pointHoverRadius: 7, fill: false, tension: 0.35 },
+                    { label: 'Épargne', data: epargnes, borderColor: '#22c55e', backgroundColor: 'rgba(34,197,94,0.07)', borderWidth: 2.5, pointBackgroundColor: '#22c55e', pointRadius: 5, pointHoverRadius: 7, fill: false, tension: 0.35 },
+                    { label: 'Solde', data: soldes, borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.07)', borderWidth: 2, borderDash: [6,3], pointBackgroundColor: '#f59e0b', pointRadius: 4, pointHoverRadius: 6, fill: false, tension: 0.35 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: { position: 'top', labels: { color: textColor, font: { family: 'Inter', size: 11 }, padding: 16, usePointStyle: true, pointStyleWidth: 8 } },
+                    tooltip: { backgroundColor: isDark ? '#1e2235' : '#ffffff', titleColor: isDark ? '#e2e8f0' : '#1e293b', bodyColor: isDark ? '#94a3b8' : '#64748b', borderColor: isDark ? 'rgba(99,102,241,0.3)' : '#e2e8f0', borderWidth: 1, padding: 12, callbacks: { label: ctx => ` ${ctx.dataset.label} : ${ctx.parsed.y} €` } }
+                },
+                scales: {
+                    x: { ticks: { color: textColor, font: { family: 'Inter', size: 11 } }, grid: { color: gridColor } },
+                    y: { ticks: { color: textColor, font: { family: 'Inter', size: 11 }, callback: v => v + ' €' }, grid: { color: gridColor } }
+                },
+                animation: { duration: 900 }
+            }
         });
     }
 
@@ -683,68 +588,14 @@
         showToast('Archive supprimée', 'warning');
     }
 
-    // ── EXPORT PDF ──
     function telechargerPDF(id) {
         const arc = archives.find(a => a.id === id);
         if (!arc) return;
-
         const chartCanvas = document.getElementById(`arc-chart-${arc.id}`);
         const chartImg = chartCanvas ? chartCanvas.toDataURL('image/png') : '';
         const soldeColor = arc.solde < 0 ? '#ef4444' : '#22c55e';
-
-        const legendRows = arc.labels.map((l, i) => `
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-                <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${colors[i % colors.length]};flex-shrink:0;"></span>
-                <span style="flex:1;">${l}</span>
-                <strong>${arc.data[i]} €</strong>
-            </div>`).join('');
-
-        const html = `<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Bilan ${arc.nom}</title>
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', Arial, sans-serif; background: white; color: #1e293b; padding: 48px 40px; max-width: 620px; margin: auto; }
-    .header { border-bottom: 3px solid #6366f1; padding-bottom: 18px; margin-bottom: 28px; }
-    .title { font-size: 1.7rem; font-weight: 800; color: #6366f1; margin-bottom: 4px; }
-    .sub { color: #64748b; font-size: 0.85rem; }
-    .chart-section { display: flex; gap: 32px; align-items: center; margin-bottom: 28px; }
-    .chart-section img { width: 160px; height: 160px; }
-    .legend { flex: 1; font-size: 0.85rem; }
-    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px; }
-    .stat { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; text-align: center; }
-    .stat .lbl { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
-    .stat .val { font-size: 1.6rem; font-weight: 800; }
-    .footer { margin-top: 32px; font-size: 0.72rem; color: #94a3b8; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 16px; }
-    @media print { body { padding: 20px; } }
-</style>
-</head>
-<body>
-<div class="header">
-    <div class="title">📊 ${arc.nom}</div>
-    <div class="sub">Archivé le ${arc.date} · Mon Coach Finance</div>
-</div>
-
-<div class="chart-section">
-    ${chartImg ? `<img src="${chartImg}">` : ''}
-    <div class="legend">${legendRows}</div>
-</div>
-
-<div class="stats-grid">
-    <div class="stat"><div class="lbl">💸 Dépensé</div><div class="val">${arc.totalDep} €</div></div>
-    <div class="stat"><div class="lbl">🌱 Épargné</div><div class="val" style="color:#22c55e">${arc.totalEp} €</div></div>
-    <div class="stat"><div class="lbl">⚖️ Solde</div><div class="val" style="color:${soldeColor}">${arc.solde} €</div></div>
-    <div class="stat"><div class="lbl">📥 Revenus</div><div class="val">${arc.revenu} €</div></div>
-</div>
-
-<div class="footer">Généré automatiquement par Mon Coach Finance</div>
-</body>
-</html>`;
-
+        const legendRows = arc.labels.map((l, i) => `<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${colors[i%colors.length]};flex-shrink:0;"></span><span style="flex:1;">${l}</span><strong>${arc.data[i]} €</strong></div>`).join('');
+        const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Bilan ${arc.nom}</title><style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Inter',Arial,sans-serif;background:white;color:#1e293b;padding:48px 40px;max-width:620px;margin:auto;}.header{border-bottom:3px solid #6366f1;padding-bottom:18px;margin-bottom:28px;}.title{font-size:1.7rem;font-weight:800;color:#6366f1;margin-bottom:4px;}.sub{color:#64748b;font-size:0.85rem;}.chart-section{display:flex;gap:32px;align-items:center;margin-bottom:28px;}.chart-section img{width:160px;height:160px;}.legend{flex:1;font-size:0.85rem;}.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;}.stat{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;text-align:center;}.stat .lbl{font-size:0.7rem;color:#64748b;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;}.stat .val{font-size:1.6rem;font-weight:800;}.footer{margin-top:32px;font-size:0.72rem;color:#94a3b8;text-align:center;border-top:1px solid #e2e8f0;padding-top:16px;}@media print{body{padding:20px;}}</style></head><body><div class="header"><div class="title">📊 ${arc.nom}</div><div class="sub">Archivé le ${arc.date} · Mon Coach Finance</div></div><div class="chart-section">${chartImg?`<img src="${chartImg}">`:''}<div class="legend">${legendRows}</div></div><div class="stats-grid"><div class="stat"><div class="lbl">💸 Dépensé</div><div class="val">${arc.totalDep} €</div></div><div class="stat"><div class="lbl">🌱 Épargné</div><div class="val" style="color:#22c55e">${arc.totalEp} €</div></div><div class="stat"><div class="lbl">⚖️ Solde</div><div class="val" style="color:${soldeColor}">${arc.solde} €</div></div><div class="stat"><div class="lbl">📥 Revenus</div><div class="val">${arc.revenu} €</div></div></div><div class="footer">Généré automatiquement par Mon Coach Finance</div></body></html>`;
         const blob = new Blob([html], { type: 'text/html' });
         const url = URL.createObjectURL(blob);
         const win = window.open(url, '_blank');
@@ -752,7 +603,6 @@
         showToast('PDF prêt — utilise "Enregistrer en PDF" dans l\'impression', 'info', 4000);
     }
 
-    // ── LOGIQUE PRINCIPALE ──
     function ajouterNouvelleCategorie() {
         const input = document.getElementById('new_cat_name');
         const name = input.value.trim();
@@ -921,8 +771,8 @@
             const pct = prev > 0 ? Math.min((reel / prev) * 100, 100) : 0;
             const over = reel > prev;
             const ecart = prev - reel;
-            const status = !over ? '<span class="status-badge bg-success">✓ OK</span>' : '<span class="status-badge bg-danger">⚠ DÉPASSÉ</span>';
             const rowBg = over ? 'background: rgba(239,68,68,0.04);' : '';
+            const status = !over ? '<span class="status-badge bg-success">✓ OK</span>' : '<span class="status-badge bg-danger">⚠ DÉPASSÉ</span>';
             bilanBody.innerHTML += `<tr style="${rowBg}">
                 <td><span class="bilan-cat-name">${cat.label}</span></td>
                 <td style="white-space:nowrap; color:var(--text-muted);">${prev} €</td>
@@ -959,138 +809,12 @@
                 }]
             },
             options: {
-                responsive: true, maintainAspectRatio: true, aspectRatio: 1, 
+                responsive: true, maintainAspectRatio: true, aspectRatio: 1,
                 plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { color: isDark ? '#94a3b8' : '#64748b', font: { family: 'Inter', size: 11 }, padding: 12, usePointStyle: true, pointStyleWidth: 8 }
-                    },
+                    legend: { position: 'bottom', labels: { color: isDark ? '#94a3b8' : '#64748b', font: { family: 'Inter', size: 11 }, padding: 12, usePointStyle: true, pointStyleWidth: 8 } },
                     tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}€` } }
                 },
                 animation: { animateRotate: true, duration: 900 }
-            }
-        });
-    }
-
-
-    let evolutionChartInstance = null;
-
-    function afficherEvolution() {
-        const section = document.getElementById('evolution-section');
-        if (archives.length < 1) { section.style.display = 'none'; return; }
-        section.style.display = 'block';
-
-        const sorted = [...archives].sort((a, b) => a.id - b.id);
-        const labels = sorted.map(a => a.nom);
-        const revenus = sorted.map(a => a.revenu);
-        const depenses = sorted.map(a => a.totalDep);
-        const epargnes = sorted.map(a => a.totalEp);
-        const soldes = sorted.map(a => a.solde);
-
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        const gridColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
-        const textColor = isDark ? '#94a3b8' : '#64748b';
-
-        if (evolutionChartInstance) evolutionChartInstance.destroy();
-        const ctx = document.getElementById('evolutionChart').getContext('2d');
-        evolutionChartInstance = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels,
-                datasets: [
-                    {
-                        label: 'Revenus',
-                        data: revenus,
-                        borderColor: '#6366f1',
-                        backgroundColor: 'rgba(99,102,241,0.08)',
-                        borderWidth: 2.5,
-                        pointBackgroundColor: '#6366f1',
-                        pointRadius: 5,
-                        pointHoverRadius: 7,
-                        fill: false,
-                        tension: 0.35
-                    },
-                    {
-                        label: 'Dépenses',
-                        data: depenses,
-                        borderColor: '#ef4444',
-                        backgroundColor: 'rgba(239,68,68,0.07)',
-                        borderWidth: 2.5,
-                        pointBackgroundColor: '#ef4444',
-                        pointRadius: 5,
-                        pointHoverRadius: 7,
-                        fill: false,
-                        tension: 0.35
-                    },
-                    {
-                        label: 'Épargne',
-                        data: epargnes,
-                        borderColor: '#22c55e',
-                        backgroundColor: 'rgba(34,197,94,0.07)',
-                        borderWidth: 2.5,
-                        pointBackgroundColor: '#22c55e',
-                        pointRadius: 5,
-                        pointHoverRadius: 7,
-                        fill: false,
-                        tension: 0.35
-                    },
-                    {
-                        label: 'Solde',
-                        data: soldes,
-                        borderColor: '#f59e0b',
-                        backgroundColor: 'rgba(245,158,11,0.07)',
-                        borderWidth: 2,
-                        borderDash: [6, 3],
-                        pointBackgroundColor: '#f59e0b',
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
-                        fill: false,
-                        tension: 0.35
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: { mode: 'index', intersect: false },
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        labels: {
-                            color: textColor,
-                            font: { family: 'Inter', size: 11 },
-                            padding: 16,
-                            usePointStyle: true,
-                            pointStyleWidth: 8
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: isDark ? '#1e2235' : '#ffffff',
-                        titleColor: isDark ? '#e2e8f0' : '#1e293b',
-                        bodyColor: isDark ? '#94a3b8' : '#64748b',
-                        borderColor: isDark ? 'rgba(99,102,241,0.3)' : '#e2e8f0',
-                        borderWidth: 1,
-                        padding: 12,
-                        callbacks: {
-                            label: ctx => ` ${ctx.dataset.label} : ${ctx.parsed.y} €`
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: { color: textColor, font: { family: 'Inter', size: 11 } },
-                        grid: { color: gridColor }
-                    },
-                    y: {
-                        ticks: {
-                            color: textColor,
-                            font: { family: 'Inter', size: 11 },
-                            callback: v => v + ' €'
-                        },
-                        grid: { color: gridColor }
-                    }
-                },
-                animation: { duration: 900 }
             }
         });
     }
