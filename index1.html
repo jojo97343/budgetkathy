@@ -294,7 +294,7 @@
         @keyframes rowIn { from { opacity:0; background: rgba(99,102,241,0.08); } to { opacity:1; } }
 
         /* STATUS BADGE */
-        .status-badge { padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; }
+        .status-badge { padding: 2px 6px; border-radius: 20px; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.02em; white-space: nowrap; }
         .bg-success { background: rgba(34,197,94,0.15); color: #16a34a; border: 1px solid rgba(34,197,94,0.3); }
         .bg-danger { background: rgba(239,68,68,0.12); color: #dc2626; border: 1px solid rgba(239,68,68,0.25); }
 
@@ -722,9 +722,9 @@
             
             bilanBody.innerHTML += `<tr>
                 <td><strong>${cat.label}</strong></td>
-                <td>${prev} €</td>
-                <td style="font-weight:600">${reel} €</td>
-                <td style="color:${ecart < 0 ? 'var(--danger)' : 'var(--success)'}; font-weight:700">${ecart >= 0 ? '+' : ''}${ecart.toFixed(0)} €</td>
+                <td style="white-space:nowrap">${prev} €</td>
+                <td style="font-weight:600; white-space:nowrap">${reel} €</td>
+                <td style="color:${ecart < 0 ? 'var(--danger)' : 'var(--success)'}; font-weight:700; white-space:nowrap">${ecart >= 0 ? '+' : ''}${ecart.toFixed(0)} €</td>
                 <td>
                     <div class="progress-wrap">
                         <div class="progress-bar-bg" style="width:80px">
