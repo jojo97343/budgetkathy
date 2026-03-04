@@ -2,6 +2,7 @@
 <html lang="fr" data-theme="light">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>Mon Coach Finance - Gestion Totale</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -172,9 +173,8 @@
         .recurring-row { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); margin: 8px 0 14px; }
         .recurring-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--main); cursor: pointer; margin: 0; }
 
-        .search-wrap { position: relative; margin-bottom: 12px; }
-        .search-wrap input { padding-left: 36px; margin: 0; }
-        .search-wrap::before { content: '🔍'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 0.85rem; z-index: 1; pointer-events: none; }
+        .search-wrap { margin-bottom: 12px; }
+        .search-wrap input { margin: 0; }
 
         /* TABLE */
         .table-wrap { max-height: 250px; overflow-y: auto; border-radius: 10px; border: 1px solid var(--bg2); background: var(--card); }
@@ -204,6 +204,11 @@
 
         .bilan-layout { display: flex; gap: 24px; flex-wrap: wrap; }
         .bilan-table-side { flex: 2; min-width: 300px; }
+        #bilan_table th { font-size: 0.7rem; padding: 10px 14px; }
+        #bilan_table td { padding: 12px 14px; vertical-align: middle; font-size: 0.85rem; }
+        #bilan_table tbody tr { border-bottom: 1px solid var(--bg2); }
+        #bilan_table tbody tr:last-child { border-bottom: none; }
+        .bilan-cat-name { font-weight: 600; font-size: 0.88rem; color: var(--text); }
         .bilan-chart-side { flex: 0 0 280px; width: 280px; height: 280px; display: flex; align-items: center; justify-content: center; }
 
         .recurring-tag { font-size: 0.68rem; color: var(--main); font-weight: 600; margin-left: 5px; background: var(--main-glow); padding: 1px 5px; border-radius: 20px; }
@@ -268,6 +273,7 @@
         .empty-archives p { font-size: 0.88rem; line-height: 1.6; }
 
         /* RESPONSIVE */
+        /* ── TABLET ── */
         @media (max-width: 900px) {
             .stat-grid { grid-template-columns: repeat(2, 1fr); }
             .grid-top { grid-template-columns: 1fr; }
@@ -275,8 +281,79 @@
             .add-expense-grid button { grid-column: span 2; width: 100%; }
             .bilan-chart-side { flex: 0 0 220px; width: 220px; height: 220px; }
         }
+
+        /* ── MOBILE ── */
         @media (max-width: 600px) {
+            .container { padding: 14px 12px; }
+
+            /* Header */
+            header { flex-direction: column; align-items: flex-start; margin-bottom: 20px; gap: 10px; }
+            .header-title h1 { font-size: 1.4rem; }
+            .header-actions { width: 100%; justify-content: space-between; }
+            .header-actions .btn-secondary { flex: 1; text-align: center; font-size: 0.82rem; padding: 9px 10px; }
+
+            /* Stats */
+            .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+            .stat-box { padding: 14px 10px; }
+            .stat-box .stat-label { font-size: 0.68rem; margin-bottom: 6px; }
+            .stat-box .stat-value { font-size: 1.6rem; }
+            .stat-box .stat-value span { font-size: 1.3rem !important; }
+
+            /* Cards */
+            .card { padding: 16px 14px; border-radius: 14px; margin-bottom: 14px; }
+            h2 { font-size: 0.92rem; }
+
+            /* Inputs */
+            input[type="text"], input[type="number"], select { padding: 10px 12px; font-size: 0.88rem; }
+
+            /* Ajout dépense : 1 colonne */
+            .add-expense-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .add-expense-grid > div:nth-child(3) { grid-column: span 2; }
+            .add-expense-grid button { grid-column: span 2; width: 100%; height: 44px; font-size: 1rem; }
+
+            /* Budget row */
+            .budget-row input { width: 80px; }
+
+            /* Tableau historique : masquer colonne date */
+            #log_table thead tr th:first-child,
+            #log_table tbody tr td:first-child { display: none; }
+
+            /* Bilan : tout en colonne */
+            .bilan-layout { flex-direction: column; }
+            .bilan-chart-side { flex: none; width: 220px; height: 220px; margin: 0 auto; }
+            /* Bilan mobile : masquer Progression */
+            #bilan_table thead tr th:nth-child(5),
+            #bilan_table tbody tr td:nth-child(5) { display: none; }
+            /* Réduire padding bilan sur mobile */
+            #bilan_table th { padding: 8px 8px; font-size: 0.65rem; }
+            #bilan_table td { padding: 10px 8px; font-size: 0.8rem; }
+            .bilan-cat-name { font-size: 0.82rem; }
+
+            /* Toast plus petit */
+            #toast-container { top: 10px; right: 10px; left: 10px; }
+            .toast { font-size: 0.82rem; padding: 10px 14px; }
+
+            /* Modal */
+            .modal-box { padding: 24px 18px; }
+
+            /* Archives */
+            .archives-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .arc-name { font-size: 0.82rem; }
+            .arc-date { font-size: 0.65rem; }
+            .arc-stats { font-size: 0.72rem; }
+            .arc-actions button { font-size: 0.72rem; padding: 6px 6px; }
+
+            /* Graphique évolution */
+            #evolution-section > div:last-child { height: 180px !important; }
+        }
+
+        /* ── TRÈS PETIT MOBILE (≤380px) ── */
+        @media (max-width: 380px) {
             .stat-grid { grid-template-columns: repeat(2, 1fr); }
+            .stat-box .stat-value { font-size: 1.3rem; }
+            .stat-box .stat-value span { font-size: 1.1rem !important; }
+            .archives-grid { grid-template-columns: 1fr; }
+            header { gap: 8px; }
         }
     </style>
 </head>
@@ -333,7 +410,7 @@
         <div class="card">
             <h2><span class="step-badge">1</span> Je prévois mon mois</h2>
             <label>Salaire / Revenus (€)</label>
-            <input type="number" id="prev_revenu" placeholder="Ex: 1800" onchange="sauvegarder()">
+            <input type="number" inputmode="decimal" id="prev_revenu" placeholder="Ex: 1800" onchange="sauvegarder()">
             <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; font-weight: 500;">Fixe tes limites par catégorie :</p>
             <div id="setup_categories"></div>
             <div class="add-cat-box">
@@ -353,7 +430,7 @@
             <h2><span class="step-badge">2</span> J'ajoute mes dépenses</h2>
             <div class="add-expense-grid">
                 <div><label>Objet</label><input type="text" id="add_desc" placeholder="Ex: Courses Lidl"></div>
-                <div><label>Montant (€)</label><input type="number" id="add_mt" placeholder="0.00"></div>
+                <div><label>Montant (€)</label><input type="number" inputmode="decimal" id="add_mt" placeholder="0.00"></div>
                 <div><label>Catégorie</label><select id="add_cat"></select></div>
                 <button onclick="ajouterDepense()" style="align-self:end; margin-bottom: 12px;">+</button>
             </div>
@@ -626,6 +703,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Bilan ${arc.nom}</title>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
@@ -789,7 +867,7 @@
                 <div class="budget-row">
                     <button class="btn-danger-soft" onclick="supprimerCategorie('${cat.id}')">✕</button>
                     <span class="cat-label">${cat.label}</span>
-                    <input type="number" class="prev-input" data-cat="${cat.id}" value="${val}" onchange="sauvegarder()">
+                    <input type="number" inputmode="decimal" class="prev-input" data-cat="${cat.id}" value="${val}" onchange="sauvegarder()">
                 </div>`;
             selectAdd.innerHTML += `<option value="${cat.id}">${cat.label}</option>`;
         });
@@ -844,14 +922,15 @@
             const over = reel > prev;
             const ecart = prev - reel;
             const status = !over ? '<span class="status-badge bg-success">✓ OK</span>' : '<span class="status-badge bg-danger">⚠ DÉPASSÉ</span>';
-            bilanBody.innerHTML += `<tr>
-                <td><strong>${cat.label}</strong></td>
-                <td style="white-space:nowrap">${prev} €</td>
-                <td style="font-weight:600; white-space:nowrap">${reel} €</td>
+            const rowBg = over ? 'background: rgba(239,68,68,0.04);' : '';
+            bilanBody.innerHTML += `<tr style="${rowBg}">
+                <td><span class="bilan-cat-name">${cat.label}</span></td>
+                <td style="white-space:nowrap; color:var(--text-muted);">${prev} €</td>
+                <td style="font-weight:700; white-space:nowrap;">${reel} €</td>
                 <td style="color:${ecart < 0 ? 'var(--danger)' : 'var(--success)'}; font-weight:700; white-space:nowrap">${ecart >= 0 ? '+' : ''}${ecart.toFixed(0)} €</td>
                 <td>
                     <div class="progress-wrap">
-                        <div class="progress-bar-bg" style="width:80px">
+                        <div class="progress-bar-bg" style="width:90px">
                             <div class="progress-bar-fill ${over ? 'over' : ''}" style="width:${pct}%"></div>
                         </div>
                         <span class="progress-pct">${pct.toFixed(0)}%</span>
