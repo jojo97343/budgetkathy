@@ -424,22 +424,33 @@
             body { padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom)); }
             .container { padding: 10px 12px calc(var(--nav-h) + env(safe-area-inset-bottom) + 16px); max-width: 100%; }
 
-            #page-bilan { overflow: visible; }
-            #page-bilan .card { overflow: visible; }
-            #page-bilan .bilan-table-side {
-                width: 100%;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
+            /* Bilan : la card devient le conteneur scroll, pas de débordement */
+            #page-bilan .card { padding: 14px 0 14px 0; overflow: hidden; }
+            #page-bilan .card .card-title { padding: 0 14px; }
+            #page-bilan .bilan-layout { flex-direction: column; gap: 0; }
+            #page-bilan .bilan-table-side { width: 100%; min-width: 0; }
             #page-bilan .table-scroll {
-                overflow-x: auto !important;
+                overflow-x: auto;
+                overflow-y: visible;
                 -webkit-overflow-scrolling: touch;
-                margin: 0 -14px;
                 border-radius: 0;
                 border-left: none;
                 border-right: none;
+                margin: 0;
+                width: 100%;
             }
-            #page-bilan .table-scroll table { min-width: 500px; }
+            #page-bilan .table-scroll table {
+                min-width: 520px;
+                width: max-content;
+            }
+            #page-bilan thead th { padding: 9px 14px; font-size: 0.7rem; }
+            #page-bilan tbody td { padding: 10px 14px; font-size: 0.84rem; }
+            #page-bilan .bilan-chart-side {
+                width: 100%; flex: none;
+                display: flex; justify-content: center;
+                padding: 14px 14px 0;
+            }
+            #page-bilan .bilan-chart-side canvas { max-width: 180px !important; max-height: 180px !important; }
 
             .page { display: none; }
             .page.active { display: block; }
@@ -459,8 +470,6 @@
             .archives-grid { grid-template-columns: 1fr; gap: 12px; }
 
             .bilan-layout { flex-direction: column; }
-            .bilan-chart-side { width: 100%; flex: none; display: flex; justify-content: center; }
-            .bilan-chart-side canvas { max-width: 180px !important; max-height: 180px !important; }
             .bilan-table-side { width: 100%; min-width: 0; }
 
             .budget-row { gap: 6px; }
@@ -664,10 +673,13 @@
         <!-- Formulaire ajout -->
         <div class="card">
             <div class="card-title"><span class="badge">2</span> Ajouter une dépense</div>
-            <div class="expense-grid">
-                <div class="field-full"><label>Objet</label><input type="text" id="add_desc" placeholder="Ex: Courses Lidl"></div>
-                <div><label>Montant (€)</label><input type="number" inputmode="decimal" id="add_mt" placeholder="0.00"></div>
-                <div><label>Catégorie</label><select id="add_cat"></select></div>
+            <div>
+                <label>Objet</label>
+                <input type="text" id="add_desc" placeholder="Ex: Courses Lidl">
+                <label>Montant (€)</label>
+                <input type="number" inputmode="decimal" id="add_mt" placeholder="0.00">
+                <label>Catégorie</label>
+                <select id="add_cat"></select>
             </div>
             <div class="recurring-row">
                 <input type="checkbox" id="add_recurring">
@@ -948,14 +960,19 @@
 
     /* ═══════════ CATÉGORIES ═══════════ */
     function ajouterNouvelleCategorie() {
-        const inp = document.getElementById('new_cat_name') || document.getElementById('new_cat_name_d');
+        // Cherche le champ visible (celui qui a une valeur)
+        const inpM = document.getElementById('new_cat_name');
+        const inpD = document.getElementById('new_cat_name_d');
+        const inp = (inpM && inpM.value.trim()) ? inpM : (inpD && inpD.value.trim()) ? inpD : inpM;
         const name = inp ? inp.value.trim() : '';
-        if (!name) return;
+        if (!name) { showToast('Écris le nom de la catégorie', 'warning'); return; }
         const newId = 'cat_' + Date.now();
         db.categories.push({ id:newId, label:name });
         db.previsions[newId]=0;
-        if (inp) inp.value='';
-        sauvegarder();
+        if (inpM) inpM.value='';
+        if (inpD) inpD.value='';
+        localStorage.setItem('budget_vGestion', JSON.stringify(db));
+        majAffichage();
         showToast(`Catégorie "${name}" ajoutée`, 'info');
     }
     function supprimerCategorie(id) {
@@ -1004,9 +1021,18 @@
 
     /* ═══════════ SAUVEGARDER ═══════════ */
     function sauvegarder() {
-        const revEl=document.getElementById('prev_revenu')||document.getElementById('prev_revenu_d');
-        if (revEl && revEl.value!=='') db.revenu=parseFloat(revEl.value)||0;
-        document.querySelectorAll('.prev-input').forEach(inp => { db.previsions[inp.dataset.cat]=parseFloat(inp.value)||0; });
+        // Lit le revenu uniquement depuis le champ actif (non caché avec valeur non vide)
+        ['prev_revenu','prev_revenu_d'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el && el.value !== '' && el.offsetParent !== null) {
+                db.revenu = parseFloat(el.value) || 0;
+            }
+        });
+        document.querySelectorAll('.prev-input').forEach(inp => {
+            if (inp.offsetParent !== null) {
+                db.previsions[inp.dataset.cat] = parseFloat(inp.value) || 0;
+            }
+        });
         localStorage.setItem('budget_vGestion', JSON.stringify(db));
         majAffichage();
     }
