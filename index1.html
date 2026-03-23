@@ -325,6 +325,30 @@
         .epargne-total .label { font-size: 0.85rem; color: #b45309; font-weight: 600; }
         .epargne-total .value { font-size: 1.25rem; font-weight: 700; color: #b45309; }
 
+        /* ── TOP 3 ── */
+        .top3-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 14px; border-radius: 12px;
+            margin-bottom: 8px; border: 1px solid var(--bg2);
+            background: var(--bg);
+        }
+        .top3-item:last-child { margin-bottom: 0; }
+        .top3-rank {
+            width: 28px; height: 28px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 700; flex-shrink: 0;
+        }
+        .top3-rank.r1 { background: rgba(239,68,68,0.15); color: #dc2626; }
+        .top3-rank.r2 { background: rgba(245,158,11,0.15); color: #d97706; }
+        .top3-rank.r3 { background: rgba(99,102,241,0.15); color: #4f46e5; }
+        .top3-info { flex: 1; min-width: 0; }
+        .top3-name { font-size: 0.88rem; font-weight: 600; color: var(--text); }
+        .top3-detail { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+        .top3-bar-wrap { width: 70px; flex-shrink: 0; }
+        .top3-bar-bg { height: 6px; border-radius: 3px; background: var(--bg2); overflow: hidden; }
+        .top3-bar-fill { height: 100%; border-radius: 3px; background: var(--danger); }
+        .top3-pct { font-size: 0.72rem; color: var(--text-muted); text-align: right; margin-top: 3px; }
+
         /* ── ARCHIVES ── */
         .archives-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
         .archive-card { background: var(--bg); border: 1px solid var(--bg2); border-radius: 14px; padding: 16px; }
@@ -735,6 +759,13 @@
                 </div>
             </div>
         </div>
+
+        <!-- Top 3 catégories à surveiller -->
+        <div class="card" id="top3-card" style="display:none;">
+            <div class="card-title">🎯 Top 3 catégories à surveiller</div>
+            <div id="top3-list"></div>
+        </div>
+
         <div class="card">
             <div class="card-title">🏦 Espace Épargne</div>
             <div class="expense-list-scroll" style="max-height:220px;">
@@ -947,7 +978,19 @@
             const cat=db.categories.find(c=>c.id===d.ct);
             if (cat && cat.label.toLowerCase().includes("épargne")) totalEp+=d.mt; else totalDep+=d.mt;
         });
-        const archive = { id:Date.now(), nom, date:new Date().toLocaleDateString('fr-FR'), revenu:db.revenu, totalDep, totalEp, solde:db.revenu-totalDep-totalEp, labels:db.categories.map(c=>c.label), data:db.categories.map(c=>totaux[c.id]||0) };
+        const archive = { 
+            id:Date.now(), nom, date:new Date().toLocaleDateString('fr-FR'), 
+            revenu:db.revenu, totalDep, totalEp, 
+            solde:db.revenu-totalDep-totalEp, 
+            labels:db.categories.map(c=>c.label), 
+            data:db.categories.map(c=>totaux[c.id]||0),
+            previsions: {...db.previsions},
+            catIds: db.categories.map(c=>c.id),
+            depenses: db.depenses.map(d => {
+                const cat = db.categories.find(c=>c.id===d.ct);
+                return { ...d, catLabel: cat ? cat.label : 'N/A' };
+            })
+        };
         archives.push(archive);
         localStorage.setItem('budget_archives', JSON.stringify(archives));
         let epargneMois=0;
@@ -1165,6 +1208,46 @@
         };
         chartInstance  = renderBilan('bilan_table',  'budgetChart',   chartInstance);
         chartInstanceD = renderBilan('bilan_table_d','budgetChart_d', chartInstanceD);
+
+        /* ── TOP 3 CATÉGORIES À SURVEILLER ── */
+        const top3Card = document.getElementById('top3-card');
+        const top3List = document.getElementById('top3-list');
+        if (top3Card && top3List) {
+            // Catégories avec dépassement ou forte utilisation, triées par % décroissant
+            const scored = db.categories.map(cat => {
+                const prev = db.previsions[cat.id] || 0;
+                const reel = totaux[cat.id] || 0;
+                const pct = prev > 0 ? (reel / prev) * 100 : (reel > 0 ? 999 : 0);
+                return { label: cat.label, prev, reel, pct };
+            }).filter(c => c.reel > 0).sort((a, b) => b.pct - a.pct).slice(0, 3);
+
+            if (scored.length > 0) {
+                top3Card.style.display = 'block';
+                const rankClass = ['r1','r2','r3'];
+                const rankEmoji = ['🔴','🟡','🔵'];
+                const conseils = (c) => {
+                    if (c.pct >= 100) return `Dépassement de ${Math.round(c.reel - c.prev)}€ — à réduire le mois prochain`;
+                    if (c.pct >= 80)  return `${Math.round(c.pct)}% du budget utilisé — attention`;
+                    return `${Math.round(c.pct)}% utilisé — surveille cette catégorie`;
+                };
+                top3List.innerHTML = scored.map((c, i) => `
+                    <div class="top3-item">
+                        <div class="top3-rank ${rankClass[i]}">${i+1}</div>
+                        <div class="top3-info">
+                            <div class="top3-name">${rankEmoji[i]} ${c.label}</div>
+                            <div class="top3-detail">${conseils(c)}</div>
+                        </div>
+                        <div class="top3-bar-wrap">
+                            <div class="top3-bar-bg">
+                                <div class="top3-bar-fill" style="width:${Math.min(c.pct,100)}%;background:${c.pct>=100?'#ef4444':c.pct>=80?'#f59e0b':'#5b5ef4'}"></div>
+                            </div>
+                            <div class="top3-pct">${c.prev > 0 ? Math.round(c.pct)+'%' : c.reel+'€'}</div>
+                        </div>
+                    </div>`).join('');
+            } else {
+                top3Card.style.display = 'none';
+            }
+        }
     }
 
     /* ═══════════ ARCHIVES ═══════════ */
@@ -1242,18 +1325,112 @@
     }
 
     function telechargerPDF(id) {
-        const arc=archives.find(a=>a.id===id); if(!arc) return;
-        const canvasIds=[`arc-chart-${arc.id}-archives-container`,`arc-chart-${arc.id}-archives-container-d`];
-        let chartImg='';
-        for(const cid of canvasIds){ const c=document.getElementById(cid); if(c){ chartImg=c.toDataURL('image/png'); break; } }
-        const sc=arc.solde<0?'#ef4444':'#10b981';
-        const legendRows=arc.labels.map((l,i)=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${colors[i%colors.length]};flex-shrink:0;"></span><span style="flex:1;">${l}</span><strong>${arc.data[i]} €</strong></div>`).join('');
-        const html=`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Bilan ${arc.nom}</title><style>@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap');*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'DM Sans',Arial,sans-serif;background:white;color:#1a1d2e;padding:48px 40px;max-width:620px;margin:auto;}.header{border-bottom:3px solid #5b5ef4;padding-bottom:18px;margin-bottom:28px;}.title{font-size:1.6rem;font-weight:700;color:#5b5ef4;margin-bottom:4px;}.sub{color:#6b7280;font-size:0.84rem;}.chart-section{display:flex;gap:28px;align-items:center;margin-bottom:28px;}.chart-section img{width:150px;height:150px;}.legend{flex:1;font-size:0.84rem;}.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px;}.stat{background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:14px;text-align:center;}.stat .lbl{font-size:0.68rem;color:#6b7280;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;}.stat .val{font-size:1.5rem;font-weight:700;}.footer{margin-top:28px;font-size:0.7rem;color:#9ca3af;text-align:center;border-top:1px solid #e5e7eb;padding-top:14px;}@media print{body{padding:20px;}}</style></head><body><div class="header"><div class="title">📊 ${arc.nom}</div><div class="sub">Archivé le ${arc.date} · Mon Coach Finance</div></div><div class="chart-section">${chartImg?`<img src="${chartImg}">`:''}<div class="legend">${legendRows}</div></div><div class="stats-grid"><div class="stat"><div class="lbl">💸 Dépensé</div><div class="val">${arc.totalDep} €</div></div><div class="stat"><div class="lbl">🌱 Épargné</div><div class="val" style="color:#10b981">${arc.totalEp} €</div></div><div class="stat"><div class="lbl">⚖️ Solde</div><div class="val" style="color:${sc}">${arc.solde} €</div></div><div class="stat"><div class="lbl">📥 Revenus</div><div class="val">${arc.revenu} €</div></div></div><div class="footer">Généré par Mon Coach Finance</div></body></html>`;
-        const blob=new Blob([html],{type:'text/html'});
-        const url=URL.createObjectURL(blob);
-        const win=window.open(url,'_blank');
-        if(win) win.addEventListener('load',()=>setTimeout(()=>win.print(),500));
-        showToast('PDF prêt — utilise "Enregistrer en PDF"','info',4000);
+        const arc = archives.find(a => a.id === id); if (!arc) return;
+        const canvasIds = [`arc-chart-${arc.id}-archives-container`, `arc-chart-${arc.id}-archives-container-d`];
+        let chartImg = '';
+        for (const cid of canvasIds) { const c = document.getElementById(cid); if (c) { chartImg = c.toDataURL('image/png'); break; } }
+        const sc = arc.solde < 0 ? '#ef4444' : '#10b981';
+
+        // Comparaison prévu vs réel avec barres visuelles
+        const compRows = arc.labels.map((label, i) => {
+            const catId = arc.catIds ? arc.catIds[i] : null;
+            const prev = (arc.previsions && catId) ? (arc.previsions[catId] || 0) : 0;
+            const reel = arc.data[i] || 0;
+            const pct = prev > 0 ? Math.min(Math.round((reel / prev) * 100), 100) : 0;
+            const over = prev > 0 && reel > prev;
+            const barColor = over ? '#ef4444' : pct >= 80 ? '#f59e0b' : '#5b5ef4';
+            const ecart = prev - reel;
+            return `<tr>
+                <td style="padding:10px 12px;font-weight:600;font-size:0.85rem;">${label}</td>
+                <td style="padding:10px 12px;color:#6b7280;font-size:0.85rem;">${prev} €</td>
+                <td style="padding:10px 12px;font-weight:700;font-size:0.85rem;">${reel} €</td>
+                <td style="padding:10px 12px;color:${ecart<0?'#ef4444':'#10b981'};font-weight:700;font-size:0.85rem;">${ecart>=0?'+':''}${ecart} €</td>
+                <td style="padding:10px 12px;min-width:120px;">
+                    <div style="background:#f3f4f6;height:8px;border-radius:4px;overflow:hidden;margin-bottom:3px;">
+                        <div style="height:100%;width:${pct}%;background:${barColor};border-radius:4px;"></div>
+                    </div>
+                    <span style="font-size:0.72rem;color:#6b7280;">${prev > 0 ? pct+'%' : '—'}</span>
+                </td>
+            </tr>`;
+        }).join('');
+
+        // Liste complète des dépenses archivées
+        const depArchive = arc.depenses || [];
+        const depRows = depArchive.length > 0
+            ? depArchive.map(d => `<tr>
+                <td style="padding:8px 12px;font-size:0.82rem;color:#6b7280;">${d.date}</td>
+                <td style="padding:8px 12px;font-size:0.82rem;">${d.desc}${d.recurring ? ' 🔄' : ''}</td>
+                <td style="padding:8px 12px;font-size:0.82rem;color:#6b7280;">${d.catLabel || ''}</td>
+                <td style="padding:8px 12px;font-size:0.82rem;font-weight:700;text-align:right;">${d.mt} €</td>
+            </tr>`).join('')
+            : `<tr><td colspan="4" style="padding:16px;text-align:center;color:#9ca3af;font-size:0.82rem;">Dépenses non enregistrées dans cette archive</td></tr>`;
+
+        const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Bilan ${arc.nom}</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=DM+Serif+Display&display=swap');
+            * { box-sizing:border-box; margin:0; padding:0; }
+            body { font-family:'DM Sans',Arial,sans-serif; background:white; color:#1a1d2e; padding:40px 36px; max-width:700px; margin:auto; }
+            .header { display:flex; justify-content:space-between; align-items:flex-end; border-bottom:3px solid #5b5ef4; padding-bottom:16px; margin-bottom:28px; }
+            .title { font-family:'DM Serif Display',serif; font-size:1.8rem; color:#5b5ef4; }
+            .sub { color:#6b7280; font-size:0.82rem; margin-top:4px; }
+            .header-right { text-align:right; font-size:0.8rem; color:#6b7280; }
+            .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:28px; }
+            .stat { background:#f9fafb; border:1px solid #e5e7eb; border-radius:10px; padding:12px; text-align:center; }
+            .stat .lbl { font-size:0.66rem; color:#6b7280; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:5px; }
+            .stat .val { font-size:1.3rem; font-weight:700; }
+            .section-title { font-size:0.72rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #e5e7eb; }
+            .chart-row { display:flex; gap:24px; align-items:center; margin-bottom:28px; }
+            .chart-row img { width:140px; height:140px; flex-shrink:0; }
+            .legend { flex:1; }
+            .leg-item { display:flex; align-items:center; gap:8px; margin-bottom:6px; font-size:0.83rem; }
+            .leg-dot { width:11px; height:11px; border-radius:50%; flex-shrink:0; }
+            table { width:100%; border-collapse:collapse; margin-bottom:28px; }
+            thead th { background:#f9fafb; padding:9px 12px; text-align:left; font-size:0.7rem; color:#6b7280; text-transform:uppercase; letter-spacing:0.06em; border-bottom:2px solid #e5e7eb; }
+            tbody tr:nth-child(even) { background:#fafafa; }
+            tbody tr { border-bottom:1px solid #f3f4f6; }
+            .footer { margin-top:24px; font-size:0.7rem; color:#9ca3af; text-align:center; border-top:1px solid #e5e7eb; padding-top:14px; }
+            @media print { body { padding:20px; } }
+        </style></head><body>
+
+        <div class="header">
+            <div>
+                <div class="title">📊 ${arc.nom}</div>
+                <div class="sub">Archivé le ${arc.date} · Mon Coach Finance</div>
+            </div>
+            <div class="header-right">Revenus : <strong>${arc.revenu} €</strong></div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat"><div class="lbl">💸 Dépensé</div><div class="val">${arc.totalDep} €</div></div>
+            <div class="stat"><div class="lbl">🌱 Épargné</div><div class="val" style="color:#10b981">${arc.totalEp} €</div></div>
+            <div class="stat"><div class="lbl">⚖️ Solde</div><div class="val" style="color:${sc}">${arc.solde} €</div></div>
+            <div class="stat"><div class="lbl">📥 Revenus</div><div class="val">${arc.revenu} €</div></div>
+        </div>
+
+        <div class="section-title">Répartition des dépenses</div>
+        <div class="chart-row">
+            ${chartImg ? `<img src="${chartImg}">` : ''}
+            <div class="legend">
+                ${arc.labels.map((l,i) => `<div class="leg-item"><span class="leg-dot" style="background:${colors[i%colors.length]}"></span><span style="flex:1">${l}</span><strong>${arc.data[i]} €</strong></div>`).join('')}
+            </div>
+        </div>
+
+        <div class="section-title">Prévu vs Réel par catégorie</div>
+        <table>
+            <thead><tr><th>Catégorie</th><th>Prévu</th><th>Réel</th><th>Écart</th><th>Progression</th></tr></thead>
+            <tbody>${compRows}</tbody>
+        </table>
+
+        ${depArchive.length > 0 ? `` : ''}
+
+        <div class="footer">Généré par Mon Coach Finance · ${new Date().toLocaleDateString('fr-FR')}</div>
+        </body></html>`;
+
+        const blob = new Blob([html], { type:'text/html' });
+        const url = URL.createObjectURL(blob);
+        const win = window.open(url, '_blank');
+        if (win) win.addEventListener('load', () => setTimeout(() => win.print(), 600));
+        showToast('PDF amélioré prêt 🎉', 'info', 4000);
     }
 
     /* ═══════════ INIT ═══════════ */
