@@ -349,6 +349,23 @@
         .top3-bar-fill { height: 100%; border-radius: 3px; background: var(--danger); }
         .top3-pct { font-size: 0.72rem; color: var(--text-muted); text-align: right; margin-top: 3px; }
 
+        /* ── TENDANCE ── */
+        .tendance-box {
+            display: flex; align-items: center; gap: 10px;
+            padding: 11px 14px; border-radius: 11px;
+            background: var(--bg); border: 1px solid var(--bg2);
+            margin-bottom: 8px;
+        }
+        .tendance-box:last-child { margin-bottom: 0; }
+        .tendance-arrow { font-size: 1.1rem; flex-shrink: 0; }
+        .tendance-info { flex: 1; min-width: 0; }
+        .tendance-label { font-size: 0.86rem; font-weight: 600; color: var(--text); }
+        .tendance-detail { font-size: 0.74rem; color: var(--text-muted); margin-top: 2px; }
+        .tendance-badge { font-size: 0.72rem; font-weight: 700; padding: 3px 9px; border-radius: 20px; flex-shrink: 0; white-space: nowrap; }
+        .tendance-up   { background: rgba(239,68,68,0.1);  color: #dc2626; }
+        .tendance-down { background: rgba(16,185,129,0.1); color: #059669; }
+        .tendance-flat { background: rgba(107,114,128,0.1); color: #6b7280; }
+
         /* ── ARCHIVES ── */
         .archives-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
         .archive-card { background: var(--bg); border: 1px solid var(--bg2); border-radius: 14px; padding: 16px; }
@@ -785,14 +802,30 @@
          PAGE ARCHIVES (mobile)
     ════════════════════════════ -->
     <div id="page-archives" class="page">
+
+        <!-- Évolution par catégorie (en haut) -->
+        <div class="card" id="cat-evolution-card" style="display:none;">
+            <div class="card-title">📊 Évolution par catégorie</div>
+            <div style="margin-bottom:14px;">
+                <select id="cat-select" onchange="afficherEvolutionCategorie()" style="margin:0;"></select>
+            </div>
+            <div style="position:relative;height:200px;margin-bottom:16px;">
+                <canvas id="catEvolutionChart"></canvas>
+            </div>
+            <!-- Tendances vs mois précédent -->
+            <div id="cat-tendance"></div>
+        </div>
+
+        <!-- Évolution globale -->
         <div class="card">
             <div class="card-title">📅 Mois archivés</div>
             <div id="evolution-section" style="display:none;margin-bottom:24px;">
-                <div class="chart-title">📈 Évolution mois par mois</div>
+                <div class="chart-title">📈 Évolution globale mois par mois</div>
                 <div class="evolution-wrap"><canvas id="evolutionChart"></canvas></div>
             </div>
             <div id="archives-container"></div>
         </div>
+
     </div>
 
     <!-- ════════════════════════════
@@ -1315,6 +1348,146 @@
     function afficherEvolution() {
         buildEvolution('evolutionChart','evolution-section');
         buildEvolution('evolutionChartD','evolution-section-d');
+        afficherEvolutionCategorie();
+    }
+
+    /* ── GRAPHIQUE PAR CATÉGORIE + TENDANCES ── */
+    let catChartInstance = null;
+
+    function afficherEvolutionCategorie() {
+        const card = document.getElementById('cat-evolution-card');
+        if (!card) return;
+
+        // Besoin d'au moins 2 archives
+        if (archives.length < 2) { card.style.display = 'none'; return; }
+        card.style.display = 'block';
+
+        // Source unique : db.categories (toujours à jour, pas de doublon)
+        const sel = document.getElementById('cat-select');
+        if (sel) {
+            const cur = sel.value;
+            sel.innerHTML = '';
+            db.categories.forEach(cat => {
+                sel.innerHTML += `<option value="${cat.id}">${cat.label}</option>`;
+            });
+            // Restaure la sélection précédente si elle existe encore
+            if (cur && db.categories.find(c => c.id === cur)) sel.value = cur;
+        }
+
+        const selectedId = sel ? sel.value : (db.categories[0] ? db.categories[0].id : null);
+        if (!selectedId) return;
+        const selectedLabel = db.categories.find(c => c.id === selectedId)?.label || '';
+
+        // Données par mois pour la catégorie sélectionnée
+        const sorted = [...archives].sort((a, b) => a.id - b.id);
+        const labels = sorted.map(a => a.nom);
+        const data = sorted.map(arc => {
+            // Cherche d'abord par catId, puis par label pour les vieilles archives
+            let idx = arc.catIds ? arc.catIds.indexOf(selectedId) : -1;
+            if (idx === -1) idx = arc.labels.indexOf(selectedLabel);
+            return idx !== -1 ? (arc.data[idx] || 0) : 0;
+        });
+        const prevData = sorted.map(arc => {
+            let idx = arc.catIds ? arc.catIds.indexOf(selectedId) : -1;
+            return idx !== -1 && arc.previsions ? (arc.previsions[selectedId] || 0) : 0;
+        });
+
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const gc = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)';
+        const tc = isDark ? '#9ca3af' : '#6b7280';
+
+        if (catChartInstance) { catChartInstance.destroy(); catChartInstance = null; }
+        const ctx = document.getElementById('catEvolutionChart');
+        if (!ctx) return;
+
+        catChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [
+                    {
+                        label: 'Réel',
+                        data,
+                        borderColor: '#5b5ef4',
+                        backgroundColor: 'rgba(91,94,244,0.08)',
+                        borderWidth: 2.5,
+                        pointBackgroundColor: '#5b5ef4',
+                        pointRadius: 5,
+                        fill: true,
+                        tension: 0.35
+                    },
+                    {
+                        label: 'Prévu',
+                        data: prevData,
+                        borderColor: '#10b981',
+                        borderWidth: 2,
+                        borderDash: [5, 3],
+                        pointBackgroundColor: '#10b981',
+                        pointRadius: 4,
+                        fill: false,
+                        tension: 0.35
+                    }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: { position: 'top', labels: { color: tc, font: { family: 'DM Sans', size: 11 }, padding: 12, usePointStyle: true, pointStyleWidth: 7 } },
+                    tooltip: { backgroundColor: isDark ? '#1c1e2b' : '#fff', titleColor: isDark ? '#e8eaf2' : '#1a1d2e', bodyColor: tc, borderColor: isDark ? 'rgba(255,255,255,0.1)' : '#e5e7eb', borderWidth: 1, padding: 10, callbacks: { label: c => ` ${c.dataset.label} : ${c.parsed.y} €` } }
+                },
+                scales: {
+                    x: { ticks: { color: tc, font: { family: 'DM Sans', size: 10 } }, grid: { color: gc } },
+                    y: { ticks: { color: tc, font: { family: 'DM Sans', size: 10 }, callback: v => v + ' €' }, grid: { color: gc } }
+                },
+                animation: { duration: 600 }
+            }
+        });
+
+        // ── TENDANCES vs MOIS PRÉCÉDENT ──
+        const tendDiv = document.getElementById('cat-tendance');
+        if (!tendDiv) return;
+
+        if (sorted.length < 2) { tendDiv.innerHTML = ''; return; }
+
+        const dernierMois = sorted[sorted.length - 1];
+        const moisPrec    = sorted[sorted.length - 2];
+
+        const tendances = db.categories.map(cat => {
+            const getVal = (arc) => {
+                let idx = arc.catIds ? arc.catIds.indexOf(cat.id) : -1;
+                if (idx === -1) idx = arc.labels.indexOf(cat.label);
+                return idx !== -1 ? (arc.data[idx] || 0) : 0;
+            };
+            const valPrec = getVal(moisPrec);
+            const valDern = getVal(dernierMois);
+            if (valPrec === 0 && valDern === 0) return null;
+            const diff = valDern - valPrec;
+            const pct  = valPrec > 0 ? Math.round((diff / valPrec) * 100) : null;
+            return { label: cat.label, valPrec, valDern, diff, pct };
+        }).filter(Boolean).sort((a, b) => Math.abs(b.diff) - Math.abs(a.diff));
+
+        if (tendances.length === 0) { tendDiv.innerHTML = ''; return; }
+
+        tendDiv.innerHTML = `<div style="font-size:0.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.07em;margin:14px 0 10px;">Vs mois précédent (${moisPrec.nom})</div>` +
+            tendances.map(t => {
+                const flat  = t.diff === 0;
+                const up    = t.diff > 0;
+                const arrow = flat ? '➡️' : up ? '📈' : '📉';
+                const cls   = flat ? 'tendance-flat' : up ? 'tendance-up' : 'tendance-down';
+                const badge = flat ? 'Stable' : `${up ? '+' : ''}${t.pct !== null ? t.pct + '%' : t.diff.toFixed(0) + ' €'}`;
+                const detail = flat
+                    ? `Identique à ${t.valDern} €`
+                    : `${t.valPrec} € → ${t.valDern} € (${up ? '+' : ''}${t.diff.toFixed(0)} €)`;
+                return `<div class="tendance-box">
+                    <span class="tendance-arrow">${arrow}</span>
+                    <div class="tendance-info">
+                        <div class="tendance-label">${t.label}</div>
+                        <div class="tendance-detail">${detail}</div>
+                    </div>
+                    <span class="tendance-badge ${cls}">${badge}</span>
+                </div>`;
+            }).join('');
     }
 
     function supprimerArchive(id) {
