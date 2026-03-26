@@ -618,7 +618,7 @@
         let totalGeneral=0, totalEpargne=0;
         db.depenses.forEach(d=>{ if(d.ct in totaux) totaux[d.ct]+=d.mt; const cat=db.categories.find(c=>c.id===d.ct); if(cat&&cat.label.toLowerCase().includes("épargne")) totalEpargne+=d.mt; else totalGeneral+=d.mt; });
         const solde=db.revenu-totalGeneral-totalEpargne;
-        const setN=(id,v)=>{ const el=document.getElementById(id); if(el) el.innerText=Math.round(v); };
+        const setN=(id,v)=>{ const el=document.getElementById(id); if(el) el.innerText=parseFloat(v).toFixed(2); };
         setN('view_total_dep',totalGeneral); setN('view_total_ep',totalEpargne); setN('view_solde',solde); setN('view_global_ep',globalSavings);
         setN('m_dep',totalGeneral); setN('m_ep',totalEpargne); setN('m_solde',solde); setN('m_coffre',globalSavings);
         const sc=solde<0?'var(--danger)':'var(--success)';
