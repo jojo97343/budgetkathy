@@ -751,16 +751,14 @@
         const card = document.getElementById('suggestions-card');
         const list = document.getElementById('suggestions-list');
         if (!card || !list) return;
-        if (archives.length === 0) { card.style.display='none'; return; }
 
         const suggestions = [];
         db.categories.forEach(cat => {
             if (cat.label.toLowerCase().includes('épargne')) return;
             const prev = db.previsions[cat.id] || 0;
             const reel = totaux[cat.id] || 0;
-            if (reel === 0 && prev === 0) return;
 
-            // Calcule la moyenne de cette catégorie sur les archives
+            // Calcule la moyenne historique
             let sommeMois = 0, nbMois = 0;
             archives.forEach(arc => {
                 const idx = arc.catIds ? arc.catIds.indexOf(cat.id) : arc.labels.indexOf(cat.label);
@@ -769,36 +767,25 @@
             const moyenne = nbMois > 0 ? sommeMois / nbMois : 0;
 
             if (prev > 0 && reel > prev) {
-                // Dépassement ce mois
+                // Dépassement
                 const depasse = reel - prev;
-                const suggere = Math.ceil((prev + depasse * 0.5) / 5) * 5; // arrondi au 5 sup
-                suggestions.push({
-                    icon: '⚠️',
-                    label: cat.label,
-                    msg: `Tu as dépassé de <strong>${depasse.toFixed(2)} €</strong>. Vise <strong>${suggere} €</strong> le mois prochain.`,
-                    badge: 'suggestion-over',
-                    badgeTxt: 'Dépassement'
-                });
-            } else if (moyenne > 0 && prev === 0) {
-                // Pas de budget prévu mais dépenses historiques
-                const suggere = Math.ceil(moyenne * 1.1 / 5) * 5;
-                suggestions.push({
-                    icon: '📌',
-                    label: cat.label,
-                    msg: `Moyenne historique : <strong>${moyenne.toFixed(2)} €</strong>. Pense à prévoir <strong>${suggere} €</strong>.`,
-                    badge: 'suggestion-ok',
-                    badgeTxt: 'Conseil'
-                });
+                const suggere = Math.ceil((prev + depasse * 0.5) / 5) * 5;
+                suggestions.push({ icon:'⚠️', label:cat.label, msg:`Tu as dépassé de <strong>${depasse.toFixed(2)} €</strong>. Vise <strong>${suggere} €</strong> le mois prochain.`, badge:'suggestion-over', badgeTxt:'Dépassement' });
             } else if (prev > 0 && reel <= prev * 0.5 && reel > 0) {
-                // Sous-utilisation importante
+                // Sous-utilisation
                 const suggere = Math.ceil(reel * 1.2 / 5) * 5;
-                suggestions.push({
-                    icon: '✅',
-                    label: cat.label,
-                    msg: `Tu n'as utilisé que <strong>${reel.toFixed(2)} €</strong> sur ${prev} € prévu. Tu pourrais réduire à <strong>${suggere} €</strong>.`,
-                    badge: 'suggestion-ok',
-                    badgeTxt: 'Économie'
-                });
+                suggestions.push({ icon:'✅', label:cat.label, msg:`Seulement <strong>${reel.toFixed(2)} €</strong> utilisés sur ${prev} € prévu. Tu pourrais réduire à <strong>${suggere} €</strong>.`, badge:'suggestion-ok', badgeTxt:'Économie' });
+            } else if (prev === 0 && reel > 0) {
+                // Pas de budget prévu mais dépenses existantes
+                const suggere = Math.ceil((moyenne > 0 ? moyenne : reel) * 1.1 / 5) * 5;
+                suggestions.push({ icon:'📌', label:cat.label, msg:`Aucun budget prévu mais <strong>${reel.toFixed(2)} €</strong> dépensés. Pense à prévoir <strong>${suggere} €</strong>.`, badge:'suggestion-over', badgeTxt:'Sans budget' });
+            } else if (prev > 0 && reel === 0) {
+                // Budget prévu mais rien dépensé
+                suggestions.push({ icon:'💤', label:cat.label, msg:`Budget de <strong>${prev} €</strong> prévu mais rien dépensé ce mois-ci.`, badge:'suggestion-ok', badgeTxt:'Inutilisé' });
+            } else if (prev > 0 && reel <= prev) {
+                // Dans les clous
+                const pct = Math.round((reel / prev) * 100);
+                suggestions.push({ icon:'👍', label:cat.label, msg:`<strong>${reel.toFixed(2)} €</strong> sur ${prev} € prévu (${pct}%). Continue comme ça !`, badge:'suggestion-ok', badgeTxt:'OK' });
             }
         });
 
@@ -817,7 +804,6 @@
 
     /* ═══════════ PARTAGE LECTURE SEULE ═══════════ */
     function ouvrirPartage() {
-        // Encode uniquement les données du mois en cours (pas les archives)
         const payload = {
             revenu: db.revenu,
             caf: db.caf || 0,
@@ -826,7 +812,8 @@
             depenses: db.depenses
         };
         const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-        const url = window.location.href.split('?')[0] + '?view=' + encoded;
+        const base = window.location.href.split('#')[0].split('?')[0];
+        const url = base + '#view=' + encoded;
         document.getElementById('partage-lien').value = url;
         document.getElementById('modal-partage').style.display = 'flex';
     }
@@ -846,11 +833,12 @@
 
     // Détecte si on est en mode lecture seule (lien partagé)
     function checkModePartage() {
-        const params = new URLSearchParams(window.location.search);
-        const view = params.get('view');
-        if (!view) return;
+        const hash = window.location.hash;
+        if (!hash.startsWith('#view=')) return;
+        const encoded = hash.slice(6);
+        if (!encoded) return;
         try {
-            const payload = JSON.parse(decodeURIComponent(escape(atob(view))));
+            const payload = JSON.parse(decodeURIComponent(escape(atob(encoded))));
             db = { ...db, ...payload };
             majAffichage();
             // Bannière lecture seule
