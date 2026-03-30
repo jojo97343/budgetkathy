@@ -250,11 +250,36 @@
             .page { display: block !important; }
             .desktop-header { display: flex; }
         }
+        /* ── SUGGESTIONS ── */
+        .suggestion-item { display:flex; align-items:flex-start; gap:12px; padding:12px 14px; border-radius:12px; margin-bottom:8px; border:1px solid var(--bg2); background:var(--bg); }
+        .suggestion-item:last-child { margin-bottom:0; }
+        .suggestion-icon { font-size:1.3rem; flex-shrink:0; margin-top:1px; }
+        .suggestion-text { flex:1; font-size:0.84rem; color:var(--text); line-height:1.5; }
+        .suggestion-text strong { color:var(--main); }
+        .suggestion-badge { font-size:0.7rem; font-weight:700; padding:2px 8px; border-radius:20px; flex-shrink:0; white-space:nowrap; margin-top:2px; }
+        .suggestion-over { background:rgba(239,68,68,0.1); color:#dc2626; }
+        .suggestion-ok   { background:rgba(16,185,129,0.1); color:#059669; }
     </style>
 </head>
 <body>
 
 <div id="toast-container"></div>
+
+<!-- MODAL PARTAGE -->
+<div id="modal-partage" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+        <h3>🔗 Partager mon budget</h3>
+        <p>Ce lien permet à n'importe qui de voir ton budget en lecture seule. Tes données sont encodées directement dans le lien.</p>
+        <div style="display:flex;gap:8px;margin-bottom:16px;">
+            <input type="text" id="partage-lien" readonly style="margin:0;font-size:0.78rem;background:var(--bg2);cursor:pointer;" onclick="this.select()">
+            <button class="btn btn-primary" style="width:auto;padding:0 16px;flex-shrink:0;" onclick="copierLien()">📋</button>
+        </div>
+        <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:16px;">⚠️ Le lien contient uniquement les données du mois en cours (pas les archives).</p>
+        <div class="modal-actions">
+            <button class="btn btn-cancel" onclick="fermerPartage()">Fermer</button>
+        </div>
+    </div>
+</div>
 
 <div id="modal-cloture" class="modal-overlay" style="display:none;">
     <div class="modal-box">
@@ -272,6 +297,7 @@
 <div class="mobile-header">
     <span class="mobile-header-title">💰 Mon Coach Finance</span>
     <div class="mobile-header-actions">
+        <button onclick="ouvrirPartage()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;padding:4px;">🔗</button>
         <button class="theme-toggle" onclick="toggleTheme()"></button>
     </div>
 </div>
@@ -310,6 +336,7 @@
     </div>
     <div class="header-actions">
         <button class="theme-toggle" onclick="toggleTheme()"></button>
+        <button class="btn-cloture" onclick="ouvrirPartage()" style="background:var(--bg2);color:var(--text-muted);">🔗 Partager</button>
         <button class="btn-cloture" onclick="ouvrirModal()">📁 Clôturer le mois</button>
     </div>
 </div>
@@ -407,6 +434,10 @@
         <div class="card" id="top3-card" style="display:none;">
             <div class="card-title">🎯 Top 3 catégories à surveiller</div>
             <div id="top3-list"></div>
+        </div>
+        <div class="card" id="suggestions-card" style="display:none;">
+            <div class="card-title">💡 Suggestions pour le mois prochain</div>
+            <div id="suggestions-list"></div>
         </div>
         <div class="card">
             <div class="card-title">🏦 Espace Épargne</div>
@@ -657,6 +688,7 @@
 
         const top3Card=document.getElementById('top3-card'), top3List=document.getElementById('top3-list');
         if(top3Card&&top3List){ const scored=db.categories.map(cat=>{ const prev=db.previsions[cat.id]||0,reel=totaux[cat.id]||0,pct=prev>0?(reel/prev)*100:(reel>0?999:0); return{label:cat.label,prev,reel,pct}; }).filter(c=>c.reel>0).sort((a,b)=>b.pct-a.pct).slice(0,3); if(scored.length>0){ top3Card.style.display='block'; const rankClass=['r1','r2','r3'],rankEmoji=['🔴','🟡','🔵'],conseils=(c)=>{ if(c.pct>=100) return`Dépassement de ${Math.round(c.reel-c.prev)}€ — à réduire le mois prochain`; if(c.pct>=80) return`${Math.round(c.pct)}% du budget utilisé — attention`; return`${Math.round(c.pct)}% utilisé — surveille cette catégorie`; }; top3List.innerHTML=scored.map((c,i)=>`<div class="top3-item"><div class="top3-rank ${rankClass[i]}">${i+1}</div><div class="top3-info"><div class="top3-name">${rankEmoji[i]} ${c.label}</div><div class="top3-detail">${conseils(c)}</div></div><div class="top3-bar-wrap"><div class="top3-bar-bg"><div class="top3-bar-fill" style="width:${Math.min(c.pct,100)}%;background:${c.pct>=100?'#ef4444':c.pct>=80?'#f59e0b':'#5b5ef4'}"></div></div><div class="top3-pct">${c.prev>0?Math.round(c.pct)+'%':c.reel+'€'}</div></div></div>`).join(''); } else { top3Card.style.display='none'; } }
+        majSuggestions(totaux);
     }
 
     function buildArchiveCards(containerId) {
@@ -713,6 +745,137 @@
 
     majAffichage(); afficherArchives(); afficherEvolution();
     document.getElementById('new_cat_name').addEventListener('keydown', e=>{ if(e.key==='Enter') ajouterNouvelleCategorie(); });
+
+    /* ═══════════ SUGGESTIONS MOIS PROCHAIN ═══════════ */
+    function majSuggestions(totaux) {
+        const card = document.getElementById('suggestions-card');
+        const list = document.getElementById('suggestions-list');
+        if (!card || !list) return;
+        if (archives.length === 0) { card.style.display='none'; return; }
+
+        const suggestions = [];
+        db.categories.forEach(cat => {
+            if (cat.label.toLowerCase().includes('épargne')) return;
+            const prev = db.previsions[cat.id] || 0;
+            const reel = totaux[cat.id] || 0;
+            if (reel === 0 && prev === 0) return;
+
+            // Calcule la moyenne de cette catégorie sur les archives
+            let sommeMois = 0, nbMois = 0;
+            archives.forEach(arc => {
+                const idx = arc.catIds ? arc.catIds.indexOf(cat.id) : arc.labels.indexOf(cat.label);
+                if (idx !== -1) { sommeMois += arc.data[idx] || 0; nbMois++; }
+            });
+            const moyenne = nbMois > 0 ? sommeMois / nbMois : 0;
+
+            if (prev > 0 && reel > prev) {
+                // Dépassement ce mois
+                const depasse = reel - prev;
+                const suggere = Math.ceil((prev + depasse * 0.5) / 5) * 5; // arrondi au 5 sup
+                suggestions.push({
+                    icon: '⚠️',
+                    label: cat.label,
+                    msg: `Tu as dépassé de <strong>${depasse.toFixed(2)} €</strong>. Vise <strong>${suggere} €</strong> le mois prochain.`,
+                    badge: 'suggestion-over',
+                    badgeTxt: 'Dépassement'
+                });
+            } else if (moyenne > 0 && prev === 0) {
+                // Pas de budget prévu mais dépenses historiques
+                const suggere = Math.ceil(moyenne * 1.1 / 5) * 5;
+                suggestions.push({
+                    icon: '📌',
+                    label: cat.label,
+                    msg: `Moyenne historique : <strong>${moyenne.toFixed(2)} €</strong>. Pense à prévoir <strong>${suggere} €</strong>.`,
+                    badge: 'suggestion-ok',
+                    badgeTxt: 'Conseil'
+                });
+            } else if (prev > 0 && reel <= prev * 0.5 && reel > 0) {
+                // Sous-utilisation importante
+                const suggere = Math.ceil(reel * 1.2 / 5) * 5;
+                suggestions.push({
+                    icon: '✅',
+                    label: cat.label,
+                    msg: `Tu n'as utilisé que <strong>${reel.toFixed(2)} €</strong> sur ${prev} € prévu. Tu pourrais réduire à <strong>${suggere} €</strong>.`,
+                    badge: 'suggestion-ok',
+                    badgeTxt: 'Économie'
+                });
+            }
+        });
+
+        if (suggestions.length === 0) { card.style.display='none'; return; }
+        card.style.display = 'block';
+        list.innerHTML = suggestions.map(s => `
+            <div class="suggestion-item">
+                <span class="suggestion-icon">${s.icon}</span>
+                <div class="suggestion-text">
+                    <div style="font-weight:600;margin-bottom:3px;">${s.label}</div>
+                    <div>${s.msg}</div>
+                </div>
+                <span class="suggestion-badge ${s.badge}">${s.badgeTxt}</span>
+            </div>`).join('');
+    }
+
+    /* ═══════════ PARTAGE LECTURE SEULE ═══════════ */
+    function ouvrirPartage() {
+        // Encode uniquement les données du mois en cours (pas les archives)
+        const payload = {
+            revenu: db.revenu,
+            caf: db.caf || 0,
+            categories: db.categories,
+            previsions: db.previsions,
+            depenses: db.depenses
+        };
+        const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+        const url = window.location.href.split('?')[0] + '?view=' + encoded;
+        document.getElementById('partage-lien').value = url;
+        document.getElementById('modal-partage').style.display = 'flex';
+    }
+    function fermerPartage() { document.getElementById('modal-partage').style.display = 'none'; }
+    function copierLien() {
+        const input = document.getElementById('partage-lien');
+        input.select();
+        navigator.clipboard.writeText(input.value).then(() => {
+            showToast('Lien copié ! 🔗', 'success');
+            fermerPartage();
+        }).catch(() => {
+            document.execCommand('copy');
+            showToast('Lien copié ! 🔗', 'success');
+            fermerPartage();
+        });
+    }
+
+    // Détecte si on est en mode lecture seule (lien partagé)
+    function checkModePartage() {
+        const params = new URLSearchParams(window.location.search);
+        const view = params.get('view');
+        if (!view) return;
+        try {
+            const payload = JSON.parse(decodeURIComponent(escape(atob(view))));
+            db = { ...db, ...payload };
+            majAffichage();
+            // Bannière lecture seule
+            const banner = document.createElement('div');
+            banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#f59e0b;color:white;text-align:center;padding:10px;font-size:0.85rem;font-weight:700;';
+            banner.innerHTML = '👁️ Mode lecture seule — Budget partagé par quelqu\'un d\'autre';
+            document.body.prepend(banner);
+            // Désactive les boutons visuellement
+            document.querySelectorAll('.btn-primary, .btn-add-cat, .btn-icon-sm, .btn-delete, .mobile-fab, .btn-cloture, .reset-coffre').forEach(el => {
+                el.style.opacity = '0.4';
+                el.style.pointerEvents = 'none';
+            });
+            // Bloque toutes les fonctions d'écriture
+            const noOp = () => { showToast('Mode lecture seule — modification impossible', 'warning'); };
+            window.sauvegarder = noOp;
+            window.ajouterDepense = noOp;
+            window.ajouterDepenseDesktop = noOp;
+            window.supprimer = noOp;
+            window.resetCoffre = noOp;
+            window.confirmerCloture = noOp;
+            window.ajouterNouvelleCategorie = noOp;
+            window.supprimerCategorie = noOp;
+        } catch(e) { console.error('Lien invalide'); }
+    }
+    checkModePartage();
 
     function scrollDepenses() { const el=document.getElementById('expense-scroll'); if(!el) return; const atBottom=el.scrollHeight-el.scrollTop-el.clientHeight<10; el.scrollTo({top:atBottom?0:el.scrollHeight,behavior:'smooth'}); }
     function updateScrollBtn() { const el=document.getElementById('expense-scroll'),btn=document.getElementById('scroll-down-btn'); if(!el||!btn) return; const atBottom=el.scrollHeight-el.scrollTop-el.clientHeight<10; btn.innerText=atBottom?'↑':'↓'; btn.style.opacity=el.scrollHeight>el.clientHeight?'1':'0'; btn.style.pointerEvents=el.scrollHeight>el.clientHeight?'auto':'none'; }
