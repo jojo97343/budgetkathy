@@ -31,7 +31,39 @@
         .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; background: none; border: none; cursor: pointer; padding: 6px 4px; border-radius: 12px; transition: color var(--transition); color: var(--text-muted); font-family: 'DM Sans', sans-serif; }
         .nav-btn.active { color: var(--main); }
         .nav-btn svg { width: 22px; height: 22px; }
-        .nav-btn span { font-size: 10px; font-weight: 500; letter-spacing: 0.01em; white-space: nowrap; }
+        .nav-btn span { font-size: 9px; font-weight: 500; letter-spacing: 0.01em; white-space: nowrap; }
+        .nav-btn svg  { width: 20px; height: 20px; }
+
+        /* ── COUPLE ── */
+        .couple-budget-bar { background:var(--bg2); border-radius:12px; height:14px; overflow:hidden; margin:10px 0 4px; }
+        .couple-budget-fill { height:100%; border-radius:12px; background:var(--main); transition:width 0.7s cubic-bezier(.4,0,.2,1); }
+        .couple-budget-fill.over { background:var(--danger); }
+        .couple-cat-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+        .couple-cat-box { background:var(--bg); border:1px solid var(--bg2); border-radius:12px; padding:12px; }
+        .couple-cat-name { font-size:0.78rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px; }
+        .couple-cat-amounts { display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:6px; }
+        .couple-cat-bar { background:var(--bg2); border-radius:6px; height:6px; overflow:hidden; }
+        .couple-cat-fill { height:100%; border-radius:6px; background:var(--main); }
+        .couple-cat-fill.over { background:var(--danger); }
+        .couple-dep-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--bg2); font-size:0.84rem; }
+        .couple-dep-row:last-child { border-bottom:none; }
+        .couple-dep-who { font-size:0.7rem; font-weight:700; padding:2px 8px; border-radius:20px; }
+        .who-moi  { background:rgba(91,94,244,0.12); color:var(--main); }
+        .who-elle { background:rgba(236,72,153,0.12); color:#db2777; }
+        .couple-session-badge { display:inline-flex; align-items:center; gap:6px; background:var(--bg2); border-radius:20px; padding:4px 12px; font-size:0.78rem; font-weight:600; color:var(--text-muted); cursor:pointer; }
+        .sync-dot { width:8px; height:8px; border-radius:50%; background:#10b981; animation:pulse 1.5s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+        .sync-dot.off { background:#ef4444; animation:none; }
+        /* ── ARCHIVES COUPLE ── */
+        .couple-arc-card { background:var(--bg); border:1px solid var(--bg2); border-radius:12px; padding:14px; margin-bottom:10px; }
+        .couple-arc-card:last-child { margin-bottom:0; }
+        .couple-arc-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+        .couple-arc-nom { font-weight:700; font-size:0.9rem; }
+        .couple-arc-date { font-size:0.7rem; color:var(--text-muted); }
+        .couple-arc-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:8px; }
+        .couple-arc-stat { text-align:center; background:var(--card); border:1px solid var(--bg2); border-radius:8px; padding:8px; }
+        .couple-arc-stat .lbl { font-size:0.65rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; }
+        .couple-arc-stat .val { font-size:0.95rem; font-weight:700; margin-top:3px; }
         .mobile-header { display: none; position: sticky; top: 0; height: var(--header-h); background: var(--card); border-bottom: 1px solid var(--card-border); z-index: 90; align-items: center; justify-content: space-between; padding: 0 20px; padding-top: env(safe-area-inset-top); }
         .mobile-header-title { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--text); }
         .mobile-header-actions { display: flex; gap: 8px; align-items: center; }
@@ -320,6 +352,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
             <span>Bilan</span>
         </button>
+        <button class="nav-btn" id="nav-couple" onclick="goTo('couple')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <span>Couple</span>
+        </button>
         <button class="nav-btn" id="nav-archives" onclick="goTo('archives')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
             <span>Archives</span>
@@ -446,6 +482,100 @@
         </div>
     </div>
 
+    <!-- ════════ PAGE COUPLE ════════ -->
+    <div id="page-couple" class="page">
+
+        <!-- Session -->
+        <div class="card">
+            <div class="card-title">💑 Budget Couple
+                <span class="couple-session-badge" onclick="copierSessionCouple()" style="margin-left:auto;">
+                    <span class="sync-dot" id="sync-dot"></span>
+                    <span id="session-label">Non connecté</span>
+                </span>
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:12px;">
+                <input type="text" id="couple-session-input" placeholder="Code session (ex: ENZO-2026)" style="margin:0;flex:1;text-transform:uppercase;">
+                <button class="btn btn-primary" style="width:auto;padding:0 14px;flex-shrink:0;" onclick="rejoindreSession()">Rejoindre</button>
+            </div>
+            <p style="font-size:0.75rem;color:var(--text-muted);">Entrez le même code sur les deux téléphones pour synchroniser le budget en temps réel.</p>
+        </div>
+
+        <!-- Budget global -->
+        <div class="card" id="couple-main-card" style="display:none;">
+            <div class="card-title">💰 Budget commun du mois</div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+                <span style="font-size:0.84rem;color:var(--text-muted);">Dépensé</span>
+                <span style="font-size:1.1rem;font-weight:700;" id="couple-total-dep">0.00 €</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+                <span style="font-size:0.84rem;color:var(--text-muted);">Budget total</span>
+                <span style="font-size:1.1rem;font-weight:700;color:var(--main);" id="couple-total-budget">0.00 €</span>
+            </div>
+            <div class="couple-budget-bar"><div class="couple-budget-fill" id="couple-bar" style="width:0%"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.78rem;color:var(--text-muted);">
+                <span id="couple-pct">0%</span>
+                <span id="couple-reste">Reste : 0.00 €</span>
+            </div>
+        </div>
+
+        <!-- Catégories -->
+        <div class="card" id="couple-cats-card" style="display:none;">
+            <div class="card-title">📊 Par catégorie</div>
+            <div class="couple-cat-grid" id="couple-cat-grid"></div>
+            <div style="margin-top:8px;">
+                <label style="font-size:0.78rem;">Modifier les budgets par catégorie</label>
+                <div id="couple-budget-inputs"></div>
+            <div class="add-cat-box" style="margin-top:12px;">
+                <input type="text" id="couple-new-cat" placeholder="Nouvelle catégorie..." style="margin:0;flex:1;">
+                <button class="btn-add-cat" onclick="ajouterCategorieCouple()">+</button>
+            </div>
+            </div>
+        </div>
+
+        <!-- Ajouter dépense -->
+        <div class="card" id="couple-form-card" style="display:none;">
+            <div class="card-title">➕ Ajouter une dépense commune</div>
+            <label>Objet</label>
+            <input type="text" id="couple-desc" placeholder="Ex: Restaurant La Bonne Table">
+            <label>Montant (€)</label>
+            <input type="number" inputmode="decimal" id="couple-mt" placeholder="0.00">
+            <label>Catégorie</label>
+            <select id="couple-cat" style="margin-bottom:12px;"></select>
+            <label>Payé par</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+                <button id="btn-moi" class="btn btn-primary" onclick="selectAuteur('moi')" style="min-height:40px;">👤 Moi</button>
+                <button id="btn-elle" class="btn btn-secondary" onclick="selectAuteur('elle')" style="min-height:40px;">👤 Ma copine</button>
+            </div>
+            <button class="btn btn-primary" onclick="ajouterDepenseCouple()">+ Ajouter</button>
+        </div>
+
+        <!-- Historique -->
+        <div class="card" id="couple-history-card" style="display:none;">
+            <div class="card-title">🧾 Historique commun</div>
+            <!-- Filtre par catégorie -->
+            <div style="margin-bottom:12px;">
+                <select id="couple-filtre-cat" onchange="majAffichageCouple()" style="margin:0;">
+                    <option value="">Toutes les catégories</option>
+                </select>
+            </div>
+            <div id="couple-history-list"></div>
+        </div>
+
+        <!-- Clôture mensuelle -->
+        <div class="card" id="couple-cloture-card" style="display:none;">
+            <div class="card-title">📁 Clôture du mois</div>
+            <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px;line-height:1.6;">Archive le budget de ce mois et repart à zéro pour le mois suivant. Les dépenses Supabase seront conservées dans l'historique local.</p>
+            <button class="btn btn-primary" onclick="cloturerMoisCouple()">📁 Clôturer le mois couple</button>
+        </div>
+
+        <!-- Archives couple -->
+        <div class="card" id="couple-archives-card" style="display:none;">
+            <div class="card-title">🗂️ Archives couple</div>
+            <div id="couple-archives-list"></div>
+        </div>
+
+    </div>
+
     <div id="page-archives" class="page">
         <div class="card" id="cat-evolution-card" style="display:none;">
             <div class="card-title">📊 Évolution par catégorie</div>
@@ -526,7 +656,7 @@
 
 <style>
     @media (min-width: 769px) {
-        #page-tableau, #page-budget, #page-depenses, #page-bilan, #page-archives { display: none !important; }
+        #page-tableau, #page-budget, #page-depenses, #page-bilan, #page-couple, #page-archives { display: none !important; }
         .desktop-budget, .desktop-depenses, .desktop-bilan, .desktop-epargne, .desktop-archives { display: block !important; }
     }
     @media (max-width: 768px) {
@@ -535,6 +665,7 @@
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
     let db = JSON.parse(localStorage.getItem('budget_vGestion')) || {
         revenu: 0,
@@ -559,7 +690,7 @@
         majAffichage(); afficherEvolution();
     }
 
-    const PAGES = ['tableau','budget','depenses','bilan','archives'];
+    const PAGES = ['tableau','budget','depenses','bilan','couple','archives'];
     function goTo(name) {
         PAGES.forEach(p => { const el=document.getElementById('page-'+p), btn=document.getElementById('nav-'+p); if(el) el.classList.remove('active'); if(btn) btn.classList.remove('active'); });
         const el=document.getElementById('page-'+name), btn=document.getElementById('nav-'+name);
@@ -746,7 +877,354 @@
     majAffichage(); afficherArchives(); afficherEvolution();
     document.getElementById('new_cat_name').addEventListener('keydown', e=>{ if(e.key==='Enter') ajouterNouvelleCategorie(); });
 
-    /* ═══════════ SUGGESTIONS MOIS PROCHAIN ═══════════ */
+    /* ══════════════════════════════════
+       BUDGET COUPLE — SUPABASE REALTIME
+    ══════════════════════════════════ */
+    const SUPABASE_URL = 'https://qridhnhidcrfffzejzgt.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyaWRobmhpZGNyZmZmemVqemd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2ODk0MzIsImV4cCI6MjA5MjI2NTQzMn0.aRZyOhnFNn-1uUY5fArvqVlmEoGgvLXNTAsJ2zlM1GM';
+
+    const COUPLE_CATS = [
+        { id:'sorties',  label:'Sorties / Loisirs', budget:100 },
+        { id:'resto',    label:'Restaurants',        budget:80  },
+        { id:'vacances', label:'Vacances',           budget:200 },
+        { id:'courses',  label:'Courses communes',   budget:60  }
+    ];
+
+    let coupleSession = localStorage.getItem('couple_session') || '';
+    let coupleDepenses = [];
+    let coupleBudgets = JSON.parse(localStorage.getItem('couple_budgets')) || {};
+    let coupleAuteur = 'moi';
+    let coupleRealtimeChannel = null;
+
+    // Init budgets par défaut
+    COUPLE_CATS.forEach(c => { if (!coupleBudgets[c.id]) coupleBudgets[c.id] = c.budget; });
+
+    async function supabaseFetch(path, options = {}) {
+        const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, {
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': 'Bearer ' + SUPABASE_KEY,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=representation',
+                ...options.headers
+            },
+            ...options
+        });
+        if (!res.ok) throw new Error(await res.text());
+        return res.json().catch(() => []);
+    }
+
+    function selectAuteur(who) {
+        coupleAuteur = who;
+        document.getElementById('btn-moi').className  = who === 'moi'  ? 'btn btn-primary' : 'btn btn-secondary';
+        document.getElementById('btn-elle').className = who === 'elle' ? 'btn btn-primary' : 'btn btn-secondary';
+        document.getElementById('btn-elle').style.background = who === 'elle' ? '#db2777' : '';
+    }
+
+    async function rejoindreSession() {
+        const input = document.getElementById('couple-session-input');
+        const code = input.value.trim().toUpperCase();
+        if (!code) { showToast('Entre un code de session', 'warning'); return; }
+        coupleSession = code;
+        localStorage.setItem('couple_session', code);
+        input.value = '';
+        await chargerDepensesCouple();
+        demarrerRealtime();
+    }
+
+    async function chargerDepensesCouple() {
+        if (!coupleSession) return;
+        try {
+            coupleDepenses = await supabaseFetch(`couple_budget?session_id=eq.${encodeURIComponent(coupleSession)}&order=created_at.desc`);
+            majAffichageCouple();
+            majSyncDot(true);
+        } catch(e) {
+            majSyncDot(false);
+            showToast('Erreur de connexion Supabase', 'danger');
+        }
+    }
+
+    function demarrerRealtime() {
+        if (coupleRealtimeChannel) coupleRealtimeChannel.close?.();
+        // Polling toutes les 3 secondes (Supabase Realtime via WebSocket nécessite la lib JS)
+        coupleRealtimeChannel = setInterval(chargerDepensesCouple, 3000);
+        document.getElementById('session-label').textContent = coupleSession;
+        majSyncDot(true);
+    }
+
+    function majSyncDot(ok) {
+        const dot = document.getElementById('sync-dot');
+        const label = document.getElementById('session-label');
+        if (dot) { dot.className = 'sync-dot' + (ok ? '' : ' off'); }
+        if (label && coupleSession) label.textContent = coupleSession;
+    }
+
+    function copierSessionCouple() {
+        if (!coupleSession) { showToast('Pas de session active', 'warning'); return; }
+        navigator.clipboard.writeText(coupleSession).then(() => showToast('Code "' + coupleSession + '" copié ! 📋', 'success'));
+    }
+
+    async function ajouterDepenseCouple() {
+        if (!coupleSession) { showToast('Rejoins une session d\'abord', 'warning'); return; }
+        const desc = document.getElementById('couple-desc').value.trim();
+        const mt   = parseFloat(document.getElementById('couple-mt').value);
+        const cat  = document.getElementById('couple-cat').value;
+        if (!desc || isNaN(mt) || mt <= 0) { showToast('Remplis tous les champs', 'warning'); return; }
+        try {
+            await supabaseFetch('couple_budget', {
+                method: 'POST',
+                body: JSON.stringify({
+                    session_id: coupleSession,
+                    nom: desc, montant: mt, categorie: cat,
+                    date: new Date().toLocaleDateString('fr-FR'),
+                    auteur: coupleAuteur
+                })
+            });
+            document.getElementById('couple-desc').value = '';
+            document.getElementById('couple-mt').value = '';
+            showToast(`${desc} — ${mt.toFixed(2)} € ajouté 💑`, 'success');
+            await chargerDepensesCouple();
+        } catch(e) { showToast('Erreur lors de l\'ajout', 'danger'); }
+    }
+
+    async function supprimerDepenseCouple(id) {
+        try {
+            await supabaseFetch(`couple_budget?id=eq.${id}`, { method: 'DELETE' });
+            await chargerDepensesCouple();
+            showToast('Dépense supprimée', 'danger');
+        } catch(e) { showToast('Erreur suppression', 'danger'); }
+    }
+
+    function majAffichageCouple() {
+        const hasSession = !!coupleSession;
+        ['couple-main-card','couple-cats-card','couple-form-card','couple-history-card','couple-cloture-card'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = hasSession ? 'block' : 'none';
+        });
+        // Archives toujours visibles si on en a
+        const arcCard = document.getElementById('couple-archives-card');
+        const coupleArchives = JSON.parse(localStorage.getItem('couple_archives') || '[]');
+        if (arcCard) arcCard.style.display = coupleArchives.length > 0 ? 'block' : 'none';
+        if (!hasSession) { majArchivesCouple(); return; }
+
+        // Peuple le select catégorie du formulaire
+        const sel = document.getElementById('couple-cat');
+        if (sel) {
+            const curVal = sel.value;
+            sel.innerHTML = '';
+            COUPLE_CATS.forEach(c => { sel.innerHTML += `<option value="${c.id}">${c.label}</option>`; });
+            if (curVal && COUPLE_CATS.find(c => c.id === curVal)) sel.value = curVal;
+        }
+
+        // Peuple le filtre catégorie historique
+        const filtSel = document.getElementById('couple-filtre-cat');
+        if (filtSel) {
+            const curFilt = filtSel.value;
+            filtSel.innerHTML = '<option value="">Toutes les catégories</option>';
+            COUPLE_CATS.forEach(c => { filtSel.innerHTML += `<option value="${c.id}">${c.label}</option>`; });
+            if (curFilt) filtSel.value = curFilt;
+        }
+
+        // Calcul totaux
+        let totalDep = 0;
+        const parCat = {};
+        COUPLE_CATS.forEach(c => { parCat[c.id] = 0; });
+        coupleDepenses.forEach(d => { totalDep += d.montant; if (parCat[d.categorie] !== undefined) parCat[d.categorie] += d.montant; });
+        const totalBudget = COUPLE_CATS.reduce((s, c) => s + (coupleBudgets[c.id] || 0), 0);
+        const pct = totalBudget > 0 ? Math.min((totalDep / totalBudget) * 100, 100) : 0;
+        const reste = totalBudget - totalDep;
+
+        document.getElementById('couple-total-dep').textContent = totalDep.toFixed(2) + ' €';
+        document.getElementById('couple-total-budget').textContent = totalBudget.toFixed(2) + ' €';
+        document.getElementById('couple-pct').textContent = pct.toFixed(0) + '%';
+        document.getElementById('couple-reste').textContent = (reste < 0 ? '⚠️ Dépassé de ' + Math.abs(reste).toFixed(2) : 'Reste : ' + reste.toFixed(2)) + ' €';
+        const bar = document.getElementById('couple-bar');
+        if (bar) { bar.style.width = pct + '%'; bar.className = 'couple-budget-fill' + (reste < 0 ? ' over' : ''); }
+
+        // Grille catégories
+        const grid = document.getElementById('couple-cat-grid');
+        if (grid) {
+            grid.innerHTML = COUPLE_CATS.map(c => {
+                const dep = parCat[c.id] || 0, bud = coupleBudgets[c.id] || 0;
+                const p = bud > 0 ? Math.min((dep/bud)*100, 100) : 0;
+                const over = dep > bud && bud > 0;
+                return `<div class="couple-cat-box" onclick="filtrerParCat('${c.id}')" style="cursor:pointer;">
+                    <div class="couple-cat-name">${c.label}</div>
+                    <div class="couple-cat-amounts"><span>${dep.toFixed(2)} €</span><span style="color:var(--text-muted)">${bud} €</span></div>
+                    <div class="couple-cat-bar"><div class="couple-cat-fill${over?' over':''}" style="width:${p}%"></div></div>
+                </div>`;
+            }).join('');
+        }
+
+        // Inputs budgets
+        const inputs = document.getElementById('couple-budget-inputs');
+        if (inputs && inputs.children.length === 0) {
+            inputs.innerHTML = COUPLE_CATS.map(c => `
+                <div class="budget-row" id="couple-row-${c.id}">
+                    <button class="btn-icon-sm" onclick="supprimerCategorieCouple('${c.id}')">✕</button>
+                    <span class="cat-label">${c.label}</span>
+                    <input type="number" inputmode="decimal" id="couple-bud-${c.id}" value="${coupleBudgets[c.id]||0}" style="width:80px;margin:0;" onchange="miseAJourBudgetCouple('${c.id}', this.value)">
+                </div>`).join('');
+        } else if (inputs) {
+            COUPLE_CATS.forEach(c => {
+                const el = document.getElementById('couple-bud-' + c.id);
+                if (el && document.activeElement !== el) el.value = coupleBudgets[c.id] || 0;
+            });
+        }
+
+        // Historique avec filtre
+        const filtre = (document.getElementById('couple-filtre-cat') || {}).value || '';
+        const hist = document.getElementById('couple-history-list');
+        const depFiltrees = filtre ? coupleDepenses.filter(d => d.categorie === filtre) : coupleDepenses;
+        if (hist) {
+            if (depFiltrees.length === 0) {
+                hist.innerHTML = `<div class="empty-state" style="padding:20px"><div class="empty-icon">💸</div><p>${filtre ? 'Aucune dépense dans cette catégorie.' : 'Aucune dépense commune pour l\'instant.'}</p></div>`;
+            } else {
+                hist.innerHTML = depFiltrees.map(d => `
+                    <div class="couple-dep-row">
+                        <div>
+                            <div style="font-weight:600">${d.nom}</div>
+                            <div style="font-size:0.73rem;color:var(--text-muted)">${d.date} · ${COUPLE_CATS.find(c=>c.id===d.categorie)?.label||d.categorie}</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px">
+                            <span class="couple-dep-who ${d.auteur==='moi'?'who-moi':'who-elle'}">${d.auteur==='moi'?'Moi':'Elle'}</span>
+                            <strong>${parseFloat(d.montant).toFixed(2)} €</strong>
+                            <button class="btn-delete" onclick="supprimerDepenseCouple('${d.id}')">✕</button>
+                        </div>
+                    </div>`).join('');
+            }
+        }
+
+        majArchivesCouple();
+    }
+
+    function filtrerParCat(catId) {
+        const sel = document.getElementById('couple-filtre-cat');
+        if (!sel) return;
+        sel.value = sel.value === catId ? '' : catId;
+        majAffichageCouple();
+    }
+
+    /* ── CLÔTURE MENSUELLE COUPLE ── */
+    function cloturerMoisCouple() {
+        if (!coupleSession) return;
+        const moisNoms = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+        const now = new Date();
+        const nom = prompt('Nom du mois à archiver :', `${moisNoms[now.getMonth()]} ${now.getFullYear()}`);
+        if (!nom) return;
+
+        // Calcul des totaux
+        let totalDep = 0, totalMoi = 0, totalElle = 0;
+        const parCat = {};
+        COUPLE_CATS.forEach(c => { parCat[c.id] = 0; });
+        coupleDepenses.forEach(d => {
+            totalDep += d.montant;
+            if (d.auteur === 'moi') totalMoi += d.montant; else totalElle += d.montant;
+            if (parCat[d.categorie] !== undefined) parCat[d.categorie] += d.montant;
+        });
+        const totalBudget = COUPLE_CATS.reduce((s, c) => s + (coupleBudgets[c.id] || 0), 0);
+
+        // Sauvegarde archive
+        const coupleArchives = JSON.parse(localStorage.getItem('couple_archives') || '[]');
+        coupleArchives.push({
+            id: Date.now(), nom, date: now.toLocaleDateString('fr-FR'),
+            totalDep, totalBudget, totalMoi, totalElle,
+            parCat: { ...parCat },
+            cats: COUPLE_CATS.map(c => ({ ...c })),
+            budgets: { ...coupleBudgets },
+            depenses: [...coupleDepenses]
+        });
+        localStorage.setItem('couple_archives', JSON.stringify(coupleArchives));
+
+        // Supprime les dépenses Supabase de cette session
+        supprimerToutesDepensesCouple();
+        showToast(`"${nom}" archivé 🎉`, 'success', 4000);
+    }
+
+    async function supprimerToutesDepensesCouple() {
+        try {
+            await supabaseFetch(`couple_budget?session_id=eq.${encodeURIComponent(coupleSession)}`, { method: 'DELETE' });
+            coupleDepenses = [];
+            majAffichageCouple();
+        } catch(e) { showToast('Erreur suppression Supabase', 'danger'); }
+    }
+
+    function majArchivesCouple() {
+        const arcCard = document.getElementById('couple-archives-card');
+        const arcList = document.getElementById('couple-archives-list');
+        if (!arcCard || !arcList) return;
+        const coupleArchives = JSON.parse(localStorage.getItem('couple_archives') || '[]');
+        if (coupleArchives.length === 0) { arcCard.style.display = 'none'; return; }
+        arcCard.style.display = 'block';
+        arcList.innerHTML = [...coupleArchives].reverse().map(arc => {
+            const sc = arc.totalDep > arc.totalBudget ? 'var(--danger)' : 'var(--success)';
+            return `<div class="couple-arc-card">
+                <div class="couple-arc-header">
+                    <div>
+                        <div class="couple-arc-nom">💑 ${arc.nom}</div>
+                        <div class="couple-arc-date">Archivé le ${arc.date}</div>
+                    </div>
+                    <button class="btn-delete" onclick="supprimerArchiveCouple(${arc.id})">✕</button>
+                </div>
+                <div class="couple-arc-stats">
+                    <div class="couple-arc-stat"><div class="lbl">💸 Dépensé</div><div class="val" style="color:${sc}">${arc.totalDep.toFixed(2)} €</div></div>
+                    <div class="couple-arc-stat"><div class="lbl">👤 Moi</div><div class="val" style="color:var(--main)">${arc.totalMoi.toFixed(2)} €</div></div>
+                    <div class="couple-arc-stat"><div class="lbl">👤 Elle</div><div class="val" style="color:#db2777">${arc.totalElle.toFixed(2)} €</div></div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    function supprimerArchiveCouple(id) {
+        if (!confirm('Supprimer cette archive ?')) return;
+        let coupleArchives = JSON.parse(localStorage.getItem('couple_archives') || '[]');
+        coupleArchives = coupleArchives.filter(a => a.id !== id);
+        localStorage.setItem('couple_archives', JSON.stringify(coupleArchives));
+        majArchivesCouple();
+        showToast('Archive supprimée', 'warning');
+    }
+
+    function miseAJourBudgetCouple(catId, val) {
+        coupleBudgets[catId] = parseFloat(val) || 0;
+        localStorage.setItem('couple_budgets', JSON.stringify(coupleBudgets));
+        majAffichageCouple();
+    }
+
+    function supprimerCategorieCouple(catId) {
+        const cat = COUPLE_CATS.find(c => c.id === catId);
+        if (!confirm(`Supprimer la catégorie "${cat?.label}" ?`)) return;
+        const idx = COUPLE_CATS.findIndex(c => c.id === catId);
+        if (idx !== -1) COUPLE_CATS.splice(idx, 1);
+        delete coupleBudgets[catId];
+        localStorage.setItem('couple_budgets', JSON.stringify(coupleBudgets));
+        // Recrée les inputs
+        const inputs = document.getElementById('couple-budget-inputs');
+        if (inputs) inputs.innerHTML = '';
+        majAffichageCouple();
+        showToast('Catégorie supprimée', 'warning');
+    }
+
+    function ajouterCategorieCouple() {
+        const inp = document.getElementById('couple-new-cat');
+        const name = inp ? inp.value.trim() : '';
+        if (!name) { showToast('Écris le nom de la catégorie', 'warning'); return; }
+        const newId = 'cat_' + Date.now();
+        COUPLE_CATS.push({ id: newId, label: name, budget: 0 });
+        coupleBudgets[newId] = 0;
+        localStorage.setItem('couple_budgets', JSON.stringify(coupleBudgets));
+        if (inp) inp.value = '';
+        // Recrée les inputs
+        const inputs = document.getElementById('couple-budget-inputs');
+        if (inputs) inputs.innerHTML = '';
+        majAffichageCouple();
+        showToast(`Catégorie "${name}" ajoutée`, 'info');
+    }
+
+    // Init si session déjà enregistrée
+    if (coupleSession) {
+        document.getElementById('session-label').textContent = coupleSession;
+        chargerDepensesCouple().then(() => demarrerRealtime());
+    }
     function majSuggestions(totaux) {
         const card = document.getElementById('suggestions-card');
         const list = document.getElementById('suggestions-list');
