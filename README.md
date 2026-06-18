@@ -904,14 +904,14 @@
 
     async function supabaseFetch(path, options = {}) {
         const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, {
+            ...options,
             headers: {
                 'apikey': SUPABASE_KEY,
                 'Authorization': 'Bearer ' + SUPABASE_KEY,
                 'Content-Type': 'application/json',
                 'Prefer': 'return=representation',
                 ...options.headers
-            },
-            ...options
+            }
         });
         if (!res.ok) throw new Error(await res.text());
         return res.json().catch(() => []);
@@ -1408,8 +1408,10 @@
                     updated_at: new Date().toISOString()
                 })
             });
+            showToast('✅ Sync widget ok', 'info', 1200);
         } catch (e) {
-            // Pas grave si ça échoue ponctuellement : la prochaine modif réessaiera
+            // Erreur visible temporairement pour le débogage depuis iPhone
+            showToast('Sync widget échouée : ' + (e && e.message ? e.message : e), 'danger', 6000);
             console.warn('Sync widget perso échouée :', e);
         }
     }
