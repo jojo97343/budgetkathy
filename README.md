@@ -329,6 +329,7 @@
 <div class="mobile-header">
     <span class="mobile-header-title">💰 Mon Coach Finance</span>
     <div class="mobile-header-actions">
+        <button onclick="afficherCodeWidget()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;padding:4px;">📱</button>
         <button onclick="ouvrirPartage()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;padding:4px;">🔗</button>
         <button class="theme-toggle" onclick="toggleTheme()"></button>
     </div>
@@ -372,6 +373,7 @@
     </div>
     <div class="header-actions">
         <button class="theme-toggle" onclick="toggleTheme()"></button>
+        <button class="btn-cloture" onclick="afficherCodeWidget()" style="background:var(--bg2);color:var(--text-muted);">📱 Code widget</button>
         <button class="btn-cloture" onclick="ouvrirPartage()" style="background:var(--bg2);color:var(--text-muted);">🔗 Partager</button>
         <button class="btn-cloture" onclick="ouvrirModal()">📁 Clôturer le mois</button>
     </div>
@@ -820,6 +822,7 @@
         const top3Card=document.getElementById('top3-card'), top3List=document.getElementById('top3-list');
         if(top3Card&&top3List){ const scored=db.categories.map(cat=>{ const prev=db.previsions[cat.id]||0,reel=totaux[cat.id]||0,pct=prev>0?(reel/prev)*100:(reel>0?999:0); return{label:cat.label,prev,reel,pct}; }).filter(c=>c.reel>0).sort((a,b)=>b.pct-a.pct).slice(0,3); if(scored.length>0){ top3Card.style.display='block'; const rankClass=['r1','r2','r3'],rankEmoji=['🔴','🟡','🔵'],conseils=(c)=>{ if(c.pct>=100) return`Dépassement de ${Math.round(c.reel-c.prev)}€ — à réduire le mois prochain`; if(c.pct>=80) return`${Math.round(c.pct)}% du budget utilisé — attention`; return`${Math.round(c.pct)}% utilisé — surveille cette catégorie`; }; top3List.innerHTML=scored.map((c,i)=>`<div class="top3-item"><div class="top3-rank ${rankClass[i]}">${i+1}</div><div class="top3-info"><div class="top3-name">${rankEmoji[i]} ${c.label}</div><div class="top3-detail">${conseils(c)}</div></div><div class="top3-bar-wrap"><div class="top3-bar-bg"><div class="top3-bar-fill" style="width:${Math.min(c.pct,100)}%;background:${c.pct>=100?'#ef4444':c.pct>=80?'#f59e0b':'#5b5ef4'}"></div></div><div class="top3-pct">${c.prev>0?Math.round(c.pct)+'%':c.reel+'€'}</div></div></div>`).join(''); } else { top3Card.style.display='none'; } }
         majSuggestions(totaux);
+        if (typeof syncSoloBudget === 'function') { clearTimeout(window._soloSyncTimer); window._soloSyncTimer = setTimeout(syncSoloBudget, 800); }
     }
 
     function buildArchiveCards(containerId) {
@@ -1348,6 +1351,69 @@
     document.getElementById('expense-scroll').addEventListener('scroll', updateScrollBtn);
     const _origMaj=majAffichage;
     majAffichage=function(){ _origMaj(); setTimeout(updateScrollBtn,100); };
+
+    /* ══════════════════════════════════
+       CODE WIDGET PERSO — identifie cet appareil
+       (pour que toi et ta copine ayez chacun votre propre ligne)
+    ══════════════════════════════════ */
+    function genererCodeWidget() {
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        let code = '';
+        for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+        return code;
+    }
+    let soloDeviceCode = localStorage.getItem('solo_device_code');
+    if (!soloDeviceCode) {
+        soloDeviceCode = genererCodeWidget();
+        localStorage.setItem('solo_device_code', soloDeviceCode);
+    }
+    function afficherCodeWidget() {
+        navigator.clipboard?.writeText(soloDeviceCode).catch(() => {});
+        showToast(`Ton code widget : <strong>${soloDeviceCode}</strong> (copié) — colle-le dans MON_CODE du script Scriptable`, 'info', 7000);
+    }
+
+    /* ══════════════════════════════════
+       SYNC BUDGET PERSO → SUPABASE (pour le widget iPhone)
+    ══════════════════════════════════ */
+    async function syncSoloBudget() {
+        try {
+            let totaux = {};
+            db.categories.forEach(c => { totaux[c.id] = 0; });
+            let totalDep = 0, totalEp = 0;
+            db.depenses.forEach(d => {
+                if (d.ct in totaux) totaux[d.ct] += d.mt;
+                const cat = db.categories.find(c => c.id === d.ct);
+                if (cat && cat.label.toLowerCase().includes("épargne")) totalEp += d.mt;
+                else totalDep += d.mt;
+            });
+            const revenuTotal = (db.revenu || 0) + (db.caf || 0);
+            const solde = revenuTotal - totalDep - totalEp;
+            const parCategorie = db.categories.map(c => ({
+                label: c.label,
+                prevu: db.previsions[c.id] || 0,
+                reel: totaux[c.id] || 0
+            }));
+
+            await supabaseFetch('solo_budget', {
+                method: 'POST',
+                headers: { 'Prefer': 'resolution=merge-duplicates,return=representation' },
+                body: JSON.stringify({
+                    code: soloDeviceCode,
+                    depense_totale: totalDep,
+                    epargne_totale: totalEp,
+                    solde: solde,
+                    coffre: globalSavings,
+                    revenu_total: revenuTotal,
+                    par_categorie: parCategorie,
+                    updated_at: new Date().toISOString()
+                })
+            });
+        } catch (e) {
+            // Pas grave si ça échoue ponctuellement : la prochaine modif réessaiera
+            console.warn('Sync widget perso échouée :', e);
+        }
+    }
+
 </script>
 </body>
 </html>
