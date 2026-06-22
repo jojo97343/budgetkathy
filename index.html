@@ -470,6 +470,8 @@
             <input type="number" inputmode="decimal" id="add_mt" placeholder="0.00">
             <label>Catégorie</label>
             <select id="add_cat"></select>
+            <label style="margin-top:4px;">📝 Note <span style="font-weight:400;color:var(--text-hint);">(optionnel)</span></label>
+            <input type="text" id="add_note" placeholder="Ex: remboursement prévu, achat pour la maison...">
             <div class="recurring-row">
                 <input type="checkbox" id="add_recurring">
                 <label for="add_recurring" style="margin:0;cursor:pointer;">🔄 Dépense récurrente</label>
@@ -651,6 +653,7 @@
                 <div><label>Objet</label><input type="text" id="add_desc_d" placeholder="Ex: Courses Lidl"></div>
                 <div><label>Montant (€)</label><input type="number" inputmode="decimal" id="add_mt_d" placeholder="0.00"></div>
                 <div class="field-full"><label>Catégorie</label><select id="add_cat_d"></select></div>
+                <div class="field-full"><label>📝 Note <span style="font-weight:400;color:var(--text-hint);">(optionnel)</span></label><input type="text" id="add_note_d" placeholder="Ex: remboursement prévu, achat pour la maison..."></div>
             </div>
             <div class="recurring-row">
                 <input type="checkbox" id="add_recurring_d">
@@ -780,22 +783,22 @@
         if(confirm(`Supprimer "${cat?cat.label:''}" ?`)){ db.categories=db.categories.filter(c=>c.id!==id); delete db.previsions[id]; sauvegarder(); showToast('Catégorie supprimée','warning'); }
     }
 
-    function _ajouter(descId,mtId,catId,recurId) {
-        const descEl=document.getElementById(descId),mtEl=document.getElementById(mtId),catEl=document.getElementById(catId),recurEl=document.getElementById(recurId);
+    function _ajouter(descId,mtId,catId,recurId,noteId) {
+        const descEl=document.getElementById(descId),mtEl=document.getElementById(mtId),catEl=document.getElementById(catId),recurEl=document.getElementById(recurId),noteEl=document.getElementById(noteId);
         if(!descEl||!mtEl||!catEl){ showToast('Formulaire introuvable','danger'); return; }
-        const desc=descEl.value.trim(),mt=parseFloat(mtEl.value),ctId=catEl.value,isRec=recurEl?recurEl.checked:false;
+        const desc=descEl.value.trim(),mt=parseFloat(mtEl.value),ctId=catEl.value,isRec=recurEl?recurEl.checked:false,note=noteEl?noteEl.value.trim():'';
         if(!desc||isNaN(mt)||mt<=0){ showToast('Remplis tous les champs correctement','warning'); return; }
         if(!ctId){ showToast('Sélectionne une catégorie','warning'); return; }
-        const expense={id:Date.now(),date:new Date().toLocaleDateString('fr-FR'),desc,mt,ct:ctId,recurring:isRec};
+        const expense={id:Date.now(),date:new Date().toLocaleDateString('fr-FR'),desc,mt,ct:ctId,recurring:isRec,note:note||''};
         db.depenses.push(expense);
         const catObj=db.categories.find(c=>c.id===ctId);
         if(catObj&&catObj.label.toLowerCase().includes("épargne")) db.historiqueEpargne.push(expense);
-        descEl.value=''; mtEl.value=''; if(recurEl) recurEl.checked=false;
+        descEl.value=''; mtEl.value=''; if(recurEl) recurEl.checked=false; if(noteEl) noteEl.value='';
         localStorage.setItem('budget_vGestion',JSON.stringify(db)); majAffichage();
         showToast(`${desc} — ${mt}€ ajouté${isRec?' 🔄':''}`,'success');
     }
-    function ajouterDepense()        { _ajouter('add_desc','add_mt','add_cat','add_recurring'); }
-    function ajouterDepenseDesktop() { _ajouter('add_desc_d','add_mt_d','add_cat_d','add_recurring_d'); }
+    function ajouterDepense()        { _ajouter('add_desc','add_mt','add_cat','add_recurring','add_note'); }
+    function ajouterDepenseDesktop() { _ajouter('add_desc_d','add_mt_d','add_cat_d','add_recurring_d','add_note_d'); }
 
     function supprimer(id) {
         const idx=db.historiqueEpargne.findIndex(d=>d.id===id);
@@ -837,7 +840,7 @@
         const sm=(document.getElementById('search_input')||{}).value||'', st=(document.getElementById('search_input_tableau')||{}).value||'', sd=(document.getElementById('search_input_d')||{}).value||'';
         const searchTerm=(sm||st||sd).toLowerCase();
 
-        const renderLog=(tbodyId)=>{ const tbody=document.querySelector('#'+tbodyId+' tbody'); if(!tbody) return; tbody.innerHTML=''; [...db.depenses].reverse().forEach(d=>{ const cat=db.categories.find(c=>c.id===d.ct),catLabel=cat?cat.label.toLowerCase():''; if(!searchTerm||d.desc.toLowerCase().includes(searchTerm)||catLabel.includes(searchTerm)){ tbody.innerHTML+=`<tr><td style="color:var(--text-muted);font-size:0.76rem;white-space:nowrap">${d.date}</td><td>${d.desc}${d.recurring?'<span class="recurring-tag">🔄</span>':''}</td><td><span class="cat-pill">${cat?cat.label:'N/A'}</span></td><td><strong>${parseFloat(d.mt).toFixed(2)}€</strong></td><td><button class="btn-delete" onclick="supprimer(${d.id})">✕</button></td></tr>`; } }); };
+        const renderLog=(tbodyId)=>{ const tbody=document.querySelector('#'+tbodyId+' tbody'); if(!tbody) return; tbody.innerHTML=''; [...db.depenses].reverse().forEach(d=>{ const cat=db.categories.find(c=>c.id===d.ct),catLabel=cat?cat.label.toLowerCase():''; if(!searchTerm||d.desc.toLowerCase().includes(searchTerm)||catLabel.includes(searchTerm)||(d.note&&d.note.toLowerCase().includes(searchTerm))){ const noteHtml=d.note?`<div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;font-style:italic;padding-left:2px;border-left:2px solid var(--main);padding-left:6px;">📝 ${d.note}</div>`:''; tbody.innerHTML+=`<tr><td style="color:var(--text-muted);font-size:0.76rem;white-space:nowrap">${d.date}</td><td>${d.desc}${d.recurring?'<span class="recurring-tag">🔄</span>':''}${noteHtml}</td><td><span class="cat-pill">${cat?cat.label:'N/A'}</span></td><td><strong>${parseFloat(d.mt).toFixed(2)}€</strong></td><td><button class="btn-delete" onclick="supprimer(${d.id})">✕</button></td></tr>`; } }); };
         renderLog('log_table'); renderLog('log_table_d'); renderLog('log_table_tableau');
 
         db.historiqueEpargne.sort((a,b)=>a.desc.toLowerCase().localeCompare(b.desc.toLowerCase()));
