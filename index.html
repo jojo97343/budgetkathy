@@ -397,6 +397,17 @@
             <div class="stat-box"><div class="stat-label">⚖️ Solde</div><div class="stat-value" id="m_solde_wrap"><span id="m_solde">0</span><small> €</small></div></div>
             <div class="stat-box stat-box-gold"><div class="stat-label">🏦 Coffre-fort</div><div class="stat-value"><span id="m_coffre">0</span><small> €</small></div><button class="reset-coffre" onclick="resetCoffre()">Reset</button></div>
         </div>
+
+        <!-- ── PROJECTION : 4 chiffres clés ── -->
+        <div class="mobile-stat-row" id="proj-stat-row" style="flex-wrap:wrap;">
+            <div class="stat-box" style="flex:1;min-width:140px;"><div class="stat-label">📅 Rythme / jour</div><div class="stat-value" style="font-size:1.2rem;"><span id="m_rythme">0</span><small> €</small></div></div>
+            <div class="stat-box" id="proj-estim-box" style="flex:1;min-width:140px;"><div class="stat-label">🔮 Estimé fin de mois</div><div class="stat-value" style="font-size:1.2rem;"><span id="m_estime">0</span><small> €</small></div></div>
+        </div>
+        <div class="mobile-stat-row" style="flex-wrap:wrap;">
+            <div class="stat-box" style="flex:1;min-width:140px;"><div class="stat-label">📆 Jours restants</div><div class="stat-value" style="font-size:1.2rem;"><span id="m_jours_restants">0</span></div></div>
+            <div class="stat-box" id="proj-budget-jour-box" style="flex:1;min-width:140px;"><div class="stat-label">💡 Budget / jour restant</div><div class="stat-value" style="font-size:1.2rem;"><span id="m_budget_jour">0</span><small> €</small></div></div>
+        </div>
+
         <div class="card">
             <div class="card-title">🧾 Dépenses récentes</div>
             <div class="search-wrap"><input type="text" id="search_input_tableau" placeholder="Rechercher..." oninput="majAffichage()"></div>
@@ -406,6 +417,26 @@
             <div class="card-title">🏦 Épargne</div>
             <div class="expense-list-scroll" style="max-height:200px;"><table id="epargne_history_table"><thead><tr><th>Date</th><th>Nom</th><th>Montant</th><th></th></tr></thead><tbody></tbody></table></div>
             <div class="epargne-total"><span class="label">Total</span><span class="value"><span id="local_epargne_total">0</span> €</span></div>
+        </div>
+
+        <!-- ── PROJECTION : barre globale + détail catégories ── -->
+        <div class="card" id="proj-global-card" style="display:none;">
+            <div class="card-title">🔮 Projection fin de mois</div>
+            <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:10px;" id="proj-subtitle"></div>
+            <div style="background:var(--bg2);border-radius:8px;height:10px;overflow:visible;position:relative;margin-bottom:8px;">
+                <div id="proj-bar-actual" style="height:100%;border-radius:8px;background:var(--main);transition:width 0.7s;position:absolute;top:0;left:0;"></div>
+                <div id="proj-bar-extra" style="height:100%;border-radius:0 8px 8px 0;opacity:0.4;transition:width 0.7s left 0.7s;position:absolute;top:0;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-muted);">
+                <span>0 €</span>
+                <span id="proj-bar-label" style="font-weight:700;"></span>
+                <span id="proj-bar-max"></span>
+            </div>
+        </div>
+
+        <div class="card" id="proj-cats-card" style="display:none;">
+            <div class="card-title">📊 Projection par catégorie</div>
+            <div id="proj-cats-list"></div>
         </div>
     </div>
 
@@ -823,6 +854,7 @@
         if(top3Card&&top3List){ const scored=db.categories.map(cat=>{ const prev=db.previsions[cat.id]||0,reel=totaux[cat.id]||0,pct=prev>0?(reel/prev)*100:(reel>0?999:0); return{label:cat.label,prev,reel,pct}; }).filter(c=>c.reel>0).sort((a,b)=>b.pct-a.pct).slice(0,3); if(scored.length>0){ top3Card.style.display='block'; const rankClass=['r1','r2','r3'],rankEmoji=['🔴','🟡','🔵'],conseils=(c)=>{ if(c.pct>=100) return`Dépassement de ${Math.round(c.reel-c.prev)}€ — à réduire le mois prochain`; if(c.pct>=80) return`${Math.round(c.pct)}% du budget utilisé — attention`; return`${Math.round(c.pct)}% utilisé — surveille cette catégorie`; }; top3List.innerHTML=scored.map((c,i)=>`<div class="top3-item"><div class="top3-rank ${rankClass[i]}">${i+1}</div><div class="top3-info"><div class="top3-name">${rankEmoji[i]} ${c.label}</div><div class="top3-detail">${conseils(c)}</div></div><div class="top3-bar-wrap"><div class="top3-bar-bg"><div class="top3-bar-fill" style="width:${Math.min(c.pct,100)}%;background:${c.pct>=100?'#ef4444':c.pct>=80?'#f59e0b':'#5b5ef4'}"></div></div><div class="top3-pct">${c.prev>0?Math.round(c.pct)+'%':c.reel+'€'}</div></div></div>`).join(''); } else { top3Card.style.display='none'; } }
         majSuggestions(totaux);
         if (typeof syncSoloBudget === 'function') { clearTimeout(window._soloSyncTimer); window._soloSyncTimer = setTimeout(syncSoloBudget, 800); }
+        majProjection(totaux, totalGeneral);
     }
 
     function buildArchiveCards(containerId) {
@@ -1351,6 +1383,94 @@
     document.getElementById('expense-scroll').addEventListener('scroll', updateScrollBtn);
     const _origMaj=majAffichage;
     majAffichage=function(){ _origMaj(); setTimeout(updateScrollBtn,100); };
+
+    /* ══════════════════════════════════
+       PROJECTION FIN DE MOIS
+    ══════════════════════════════════ */
+    function majProjection(totaux, totalGeneral) {
+        const now = new Date();
+        const jourActuel = now.getDate();
+        const joursTotal = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+        const joursRestants = joursTotal - jourActuel;
+        const rythme = jourActuel > 0 ? totalGeneral / jourActuel : 0;
+        const estime = totalGeneral + (rythme * joursRestants);
+        const revenuTotal = (db.revenu || 0) + (db.caf || 0);
+        const totalPrevu = db.categories.reduce((s, c) => s + (db.previsions[c.id] || 0), 0);
+        const budgetRef = totalPrevu > 0 ? totalPrevu : revenuTotal;
+        const budgetJourRestant = joursRestants > 0 ? Math.max(0, budgetRef - totalGeneral) / joursRestants : 0;
+
+        // 4 chiffres clés
+        const setEl = (id, v) => { const el = document.getElementById(id); if (el) el.innerText = v; };
+        setEl('m_rythme', rythme.toFixed(2));
+        setEl('m_estime', estime.toFixed(2));
+        setEl('m_jours_restants', joursRestants);
+        setEl('m_budget_jour', budgetJourRestant.toFixed(2));
+
+        // Couleur estimé
+        const estimBox = document.getElementById('proj-estim-box');
+        const budgetJourBox = document.getElementById('proj-budget-jour-box');
+        if (estimBox) {
+            const pct = budgetRef > 0 ? estime / budgetRef : 0;
+            const val = estimBox.querySelector('.stat-value');
+            if (val) val.style.color = pct >= 1 ? 'var(--danger)' : pct >= 0.85 ? 'var(--warning)' : 'var(--success)';
+        }
+        if (budgetJourBox) {
+            const val = budgetJourBox.querySelector('.stat-value');
+            if (val) val.style.color = budgetJourRestant < rythme ? 'var(--danger)' : 'var(--success)';
+        }
+
+        // Barre globale
+        const globalCard = document.getElementById('proj-global-card');
+        if (globalCard && budgetRef > 0) {
+            globalCard.style.display = 'block';
+            const pctActuel = Math.min(totalGeneral / budgetRef, 1);
+            const pctEstime = Math.min(estime / budgetRef, 1);
+            const over = estime > budgetRef;
+            const barActual = document.getElementById('proj-bar-actual');
+            const barExtra = document.getElementById('proj-bar-extra');
+            if (barActual) { barActual.style.width = (pctActuel * 100) + '%'; barActual.style.background = over ? 'var(--danger)' : 'var(--main)'; }
+            if (barExtra) { barExtra.style.left = (pctActuel * 100) + '%'; barExtra.style.width = ((pctEstime - pctActuel) * 100) + '%'; barExtra.style.background = over ? 'var(--danger)' : 'var(--warning)'; barExtra.style.display = pctEstime > pctActuel ? 'block' : 'none'; }
+            const subtitle = document.getElementById('proj-subtitle');
+            if (subtitle) subtitle.innerText = `Jour ${jourActuel} / ${joursTotal} — rythme actuel : ${rythme.toFixed(2)} €/jour`;
+            const lbl = document.getElementById('proj-bar-label');
+            if (lbl) { lbl.innerText = `Estimé : ${estime.toFixed(0)} €`; lbl.style.color = over ? 'var(--danger)' : 'var(--warning)'; }
+            const mx = document.getElementById('proj-bar-max');
+            if (mx) mx.innerText = `Budget : ${budgetRef.toFixed(0)} €`;
+        } else if (globalCard) { globalCard.style.display = 'none'; }
+
+        // Projection par catégorie
+        const catsCard = document.getElementById('proj-cats-card');
+        const catsList = document.getElementById('proj-cats-list');
+        if (!catsCard || !catsList) return;
+        const catRows = db.categories.filter(c => !c.label.toLowerCase().includes('épargne')).map(c => {
+            const reel = totaux[c.id] || 0;
+            const prevu = db.previsions[c.id] || 0;
+            const rythmeC = jourActuel > 0 ? reel / jourActuel : 0;
+            const estimeC = reel + rythmeC * joursRestants;
+            const over = prevu > 0 && estimeC > prevu;
+            const pctReel = prevu > 0 ? Math.min(reel / prevu, 1) : (reel > 0 ? 1 : 0);
+            const pctEstime = prevu > 0 ? Math.min(estimeC / prevu, 1) : 0;
+            const couleur = estimeC > prevu && prevu > 0 ? 'var(--danger)' : pctEstime >= 0.85 ? 'var(--warning)' : 'var(--main)';
+            const badge = over ? `<span style="font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(239,68,68,0.1);color:var(--danger);">+${(estimeC - prevu).toFixed(0)} €</span>`
+                : pctEstime >= 0.85 ? `<span style="font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(245,158,11,0.1);color:var(--warning);">Attention</span>`
+                : `<span style="font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(16,185,129,0.1);color:var(--success);">OK</span>`;
+            return `<div style="margin-bottom:14px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <span style="font-size:0.85rem;font-weight:600;">${c.label}</span>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:0.75rem;color:var(--text-muted);">${reel.toFixed(0)} € → <strong>${estimeC.toFixed(0)} €</strong> / ${prevu > 0 ? prevu + ' €' : '?'}</span>
+                        ${badge}
+                    </div>
+                </div>
+                <div style="background:var(--bg2);border-radius:4px;height:6px;position:relative;overflow:hidden;">
+                    <div style="position:absolute;left:0;top:0;height:100%;width:${pctReel*100}%;background:${couleur};border-radius:4px;"></div>
+                    <div style="position:absolute;left:${pctReel*100}%;top:0;height:100%;width:${Math.max(0,(pctEstime-pctReel)*100)}%;background:${couleur};opacity:0.35;"></div>
+                </div>
+            </div>`;
+        });
+        if (catRows.length > 0) { catsCard.style.display = 'block'; catsList.innerHTML = catRows.join(''); }
+        else { catsCard.style.display = 'none'; }
+    }
 
     /* ══════════════════════════════════
        CODE WIDGET PERSO — identifie cet appareil
