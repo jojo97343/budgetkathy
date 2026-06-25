@@ -1069,11 +1069,30 @@
         if (!coupleSession) return;
         try {
             coupleDepenses = await supabaseFetch(`couple_budget?session_id=eq.${encodeURIComponent(coupleSession)}&order=created_at.desc`);
+            await chargerArchivesCouple();
             majAffichageCouple();
             majSyncDot(true);
         } catch(e) {
             majSyncDot(false);
             showToast('Erreur de connexion Supabase', 'danger');
+        }
+    }
+
+    async function chargerArchivesCouple() {
+        try {
+            const rows = await supabaseFetch(`couple_archives?session_id=eq.${encodeURIComponent(coupleSession)}&order=id.asc`);
+            if (!rows || rows.length === 0) return;
+            const local = JSON.parse(localStorage.getItem('couple_archives') || '[]');
+            const localIds = new Set(local.map(a => a.id));
+            rows.forEach(row => {
+                if (row.data && !localIds.has(row.data.id)) {
+                    local.push(row.data);
+                    localIds.add(row.data.id);
+                }
+            });
+            localStorage.setItem('couple_archives', JSON.stringify(local));
+        } catch(e) {
+            console.warn('Chargement archives couple Supabase échoué :', e);
         }
     }
 
@@ -1257,17 +1276,26 @@
         });
         const totalBudget = COUPLE_CATS.reduce((s, c) => s + (coupleBudgets[c.id] || 0), 0);
 
-        // Sauvegarde archive
-        const coupleArchives = JSON.parse(localStorage.getItem('couple_archives') || '[]');
-        coupleArchives.push({
-            id: Date.now(), nom, date: now.toLocaleDateString('fr-FR'),
+        const archiveId = Date.now();
+        const archive = {
+            id: archiveId, nom, date: now.toLocaleDateString('fr-FR'),
             totalDep, totalBudget, totalMoi, totalElle,
             parCat: { ...parCat },
             cats: COUPLE_CATS.map(c => ({ ...c })),
             budgets: { ...coupleBudgets },
             depenses: [...coupleDepenses]
-        });
+        };
+
+        // Sauvegarde locale
+        const coupleArchives = JSON.parse(localStorage.getItem('couple_archives') || '[]');
+        coupleArchives.push(archive);
         localStorage.setItem('couple_archives', JSON.stringify(coupleArchives));
+
+        // Sauvegarde Supabase — partagée avec le/la partenaire
+        supabaseFetch('couple_archives', {
+            method: 'POST',
+            body: JSON.stringify({ id: archiveId, session_id: coupleSession, data: archive })
+        }).catch(e => console.warn('Sauvegarde archive Supabase échouée :', e));
 
         // Supprime les dépenses Supabase de cette session
         supprimerToutesDepensesCouple();
@@ -1710,7 +1738,6 @@
             });
             showToast('✅ Sync widget ok', 'info', 1200);
         } catch (e) {
-            // Erreur visible temporairement pour le débogage depuis iPhone
             showToast('Sync widget échouée : ' + (e && e.message ? e.message : e), 'danger', 6000);
             console.warn('Sync widget perso échouée :', e);
         }
