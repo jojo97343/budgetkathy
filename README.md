@@ -344,7 +344,6 @@
 <div class="mobile-header">
     <span class="mobile-header-title">💰 Mon Coach Finance</span>
     <div class="mobile-header-actions">
-        <button onclick="document.getElementById('modal-notif').style.display='flex';majAffichageNotif();" style="background:none;border:none;font-size:1.2rem;cursor:pointer;padding:4px;">🔔</button>
         <button onclick="afficherCodeWidget()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;padding:4px;">📱</button>
         <button class="theme-toggle" onclick="toggleTheme()"></button>
     </div>
@@ -388,7 +387,6 @@
     </div>
     <div class="header-actions">
         <button class="theme-toggle" onclick="toggleTheme()"></button>
-        <button class="btn-cloture" onclick="document.getElementById('modal-notif').style.display='flex';majAffichageNotif();" style="background:var(--bg2);color:var(--text-muted);">🔔 Rappel</button>
         <button class="btn-cloture" onclick="afficherCodeWidget()" style="background:var(--bg2);color:var(--text-muted);">📱 Code widget</button>
         <button class="btn-cloture" onclick="ouvrirModal()">📁 Clôturer le mois</button>
     </div>
@@ -1713,124 +1711,6 @@
         }
     }
 
-    /* ══════════════════════════════════
-       NOTIFICATIONS — RAPPEL QUOTIDIEN
-    ══════════════════════════════════ */
-    let notifTimer = null;
-
-    function getNotifHeure() {
-        return localStorage.getItem('notif_heure') || '20:00';
-    }
-
-    function planifierNotification() {
-        if (notifTimer) clearTimeout(notifTimer);
-        if (Notification.permission !== 'granted') return;
-
-        const heure = getNotifHeure();
-        const [h, m] = heure.split(':').map(Number);
-        const now = new Date();
-        const cible = new Date();
-        cible.setHours(h, m, 0, 0);
-        if (cible <= now) cible.setDate(cible.getDate() + 1);
-
-        const delai = cible - now;
-        notifTimer = setTimeout(() => {
-            envoyerNotification();
-            planifierNotification(); // replanifie pour le lendemain
-        }, delai);
-    }
-
-    function envoyerNotification() {
-        if (Notification.permission !== 'granted') return;
-        const heure = getNotifHeure();
-        new Notification('💰 Mon Coach Finance', {
-            body: `Il est ${heure} — pense à renseigner tes dépenses du jour !`,
-            icon: 'https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Money%20bag/3D/money_bag_3d.png',
-            badge: 'https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Money%20bag/3D/money_bag_3d.png',
-            tag: 'rappel-budget',
-            renotify: true
-        });
-    }
-
-    async function demanderPermissionNotif() {
-        if (!('Notification' in window)) {
-            showToast('Les notifications ne sont pas supportées sur ce navigateur', 'warning', 5000);
-            return;
-        }
-        if (Notification.permission === 'granted') {
-            showToast('Notifications déjà activées ✅', 'success');
-            planifierNotification();
-            return;
-        }
-        if (Notification.permission === 'denied') {
-            showToast('Notifications bloquées — autorise-les dans les réglages Safari', 'danger', 6000);
-            return;
-        }
-        const perm = await Notification.requestPermission();
-        if (perm === 'granted') {
-            localStorage.setItem('notif_activees', '1');
-            planifierNotification();
-            showToast(`Rappel activé à ${getNotifHeure()} chaque jour 🔔`, 'success', 4000);
-            majAffichageNotif();
-        } else {
-            showToast('Permission refusée — pas de rappel', 'warning');
-        }
-    }
-
-    function majAffichageNotif() {
-        const heurEl = document.getElementById('notif-heure-input');
-        if (heurEl) heurEl.value = getNotifHeure();
-        const statusEl = document.getElementById('notif-status');
-        if (statusEl) {
-            if (!('Notification' in window)) {
-                statusEl.textContent = 'Non supporté';
-                statusEl.style.color = 'var(--text-muted)';
-            } else if (Notification.permission === 'granted') {
-                statusEl.textContent = `Actif à ${getNotifHeure()}`;
-                statusEl.style.color = 'var(--success)';
-            } else if (Notification.permission === 'denied') {
-                statusEl.textContent = 'Bloqué dans Safari';
-                statusEl.style.color = 'var(--danger)';
-            } else {
-                statusEl.textContent = 'Non activé';
-                statusEl.style.color = 'var(--text-muted)';
-            }
-        }
-    }
-
-    function changerHeureNotif(val) {
-        localStorage.setItem('notif_heure', val);
-        if (Notification.permission === 'granted') {
-            planifierNotification();
-            showToast(`Rappel déplacé à ${val} 🔔`, 'info');
-        }
-        majAffichageNotif();
-    }
-
-    // Initialisation au chargement
-    if (localStorage.getItem('notif_activees') === '1' && Notification.permission === 'granted') {
-        planifierNotification();
-    }
-    majAffichageNotif();
-
 </script>
-
-<!-- MODAL NOTIFICATIONS -->
-<div id="modal-notif" class="modal-overlay" style="display:none;">
-    <div class="modal-box">
-        <h3>🔔 Rappel quotidien</h3>
-        <p>Reçois une notification chaque soir pour penser à renseigner tes dépenses. Fonctionne uniquement si l'app est installée depuis Safari → "Sur l'écran d'accueil".</p>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding:10px 14px;background:var(--bg);border-radius:10px;">
-            <span style="font-size:0.85rem;font-weight:600;">Statut</span>
-            <span id="notif-status" style="font-size:0.85rem;font-weight:700;">—</span>
-        </div>
-        <label>Heure du rappel</label>
-        <input type="time" id="notif-heure-input" value="20:00" onchange="changerHeureNotif(this.value)" style="margin-bottom:16px;">
-        <div class="modal-actions">
-            <button class="btn btn-cancel" onclick="document.getElementById('modal-notif').style.display='none'">Fermer</button>
-            <button class="btn btn-primary" onclick="demanderPermissionNotif()">🔔 Activer</button>
-        </div>
-    </div>
-</div>
 </body>
 </html>
