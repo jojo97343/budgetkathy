@@ -283,32 +283,47 @@
             .desktop-header { display: flex; }
         }
         /* ── SUGGESTIONS ── */
-        .suggestion-item { display:flex; align-items:flex-start; gap:12px; padding:12px 14px; border-radius:12px; margin-bottom:8px; border:1px solid var(--bg2); background:var(--bg); }
+        .suggestion-item { display:flex; flex-direction:column; gap:5px; padding:14px 14px 14px 18px; border-radius:14px; margin-bottom:8px; background:var(--card); border:1px solid var(--bg2); position:relative; overflow:hidden; }
         .suggestion-item:last-child { margin-bottom:0; }
-        .suggestion-icon { font-size:1.3rem; flex-shrink:0; margin-top:1px; }
-        .suggestion-text { flex:1; font-size:0.84rem; color:var(--text); line-height:1.5; }
-        .suggestion-text strong { color:var(--main); }
-        .suggestion-badge { font-size:0.7rem; font-weight:700; padding:2px 8px; border-radius:20px; flex-shrink:0; white-space:nowrap; margin-top:2px; }
-        .suggestion-over { background:rgba(239,68,68,0.1); color:#dc2626; }
-        .suggestion-ok   { background:rgba(16,185,129,0.1); color:#059669; }
+        .suggestion-item::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:4px 0 0 4px; }
+        .suggestion-item.s-over::before { background:var(--danger); }
+        .suggestion-item.s-warn::before { background:var(--warning); }
+        .suggestion-item.s-ok::before { background:var(--success); }
+        .suggestion-item.s-info::before { background:var(--main); }
+        .suggestion-header { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+        .suggestion-cat { font-size:0.88rem; font-weight:700; color:var(--text); }
+        .suggestion-badge { font-size:0.68rem; font-weight:700; padding:3px 10px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
+        .s-over .suggestion-badge { background:rgba(239,68,68,0.1); color:#dc2626; }
+        .s-warn .suggestion-badge { background:rgba(245,158,11,0.1); color:#d97706; }
+        .s-ok .suggestion-badge { background:rgba(16,185,129,0.1); color:#059669; }
+        .s-info .suggestion-badge { background:rgba(91,94,244,0.1); color:var(--main); }
+        .suggestion-msg { font-size:0.82rem; color:var(--text-muted); line-height:1.55; }
+        .suggestion-msg strong { color:var(--text); font-weight:600; }
     </style>
 </head>
 <body>
 
 <div id="toast-container"></div>
 
-<!-- MODAL PARTAGE -->
-<div id="modal-partage" class="modal-overlay" style="display:none;">
+<div id="modal-edit-depense" class="modal-overlay" style="display:none;">
     <div class="modal-box">
-        <h3>🔗 Partager mon budget</h3>
-        <p>Ce lien permet à n'importe qui de voir ton budget en lecture seule. Tes données sont encodées directement dans le lien.</p>
-        <div style="display:flex;gap:8px;margin-bottom:16px;">
-            <input type="text" id="partage-lien" readonly style="margin:0;font-size:0.78rem;background:var(--bg2);cursor:pointer;" onclick="this.select()">
-            <button class="btn btn-primary" style="width:auto;padding:0 16px;flex-shrink:0;" onclick="copierLien()">📋</button>
+        <h3>✏️ Modifier la dépense</h3>
+        <input type="hidden" id="edit-id">
+        <label>Objet</label>
+        <input type="text" id="edit-desc" placeholder="Nom de la dépense">
+        <label>Montant (€)</label>
+        <input type="number" inputmode="decimal" id="edit-mt" placeholder="0.00">
+        <label>Catégorie</label>
+        <select id="edit-cat"></select>
+        <label style="margin-top:4px;">📝 Note <span style="font-weight:400;color:var(--text-hint);">(optionnel)</span></label>
+        <input type="text" id="edit-note" placeholder="Ex: remboursement prévu...">
+        <div class="recurring-row" style="margin-top:4px;">
+            <input type="checkbox" id="edit-recurring">
+            <label for="edit-recurring" style="margin:0;cursor:pointer;">🔄 Dépense récurrente</label>
         </div>
-        <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:16px;">⚠️ Le lien contient uniquement les données du mois en cours (pas les archives).</p>
         <div class="modal-actions">
-            <button class="btn btn-cancel" onclick="fermerPartage()">Fermer</button>
+            <button class="btn btn-cancel" onclick="fermerEditDepense()">Annuler</button>
+            <button class="btn btn-primary" onclick="sauvegarderEditDepense()">💾 Enregistrer</button>
         </div>
     </div>
 </div>
@@ -329,8 +344,8 @@
 <div class="mobile-header">
     <span class="mobile-header-title">💰 Mon Coach Finance</span>
     <div class="mobile-header-actions">
+        <button onclick="document.getElementById('modal-notif').style.display='flex';majAffichageNotif();" style="background:none;border:none;font-size:1.2rem;cursor:pointer;padding:4px;">🔔</button>
         <button onclick="afficherCodeWidget()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;padding:4px;">📱</button>
-        <button onclick="ouvrirPartage()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;padding:4px;">🔗</button>
         <button class="theme-toggle" onclick="toggleTheme()"></button>
     </div>
 </div>
@@ -373,8 +388,8 @@
     </div>
     <div class="header-actions">
         <button class="theme-toggle" onclick="toggleTheme()"></button>
+        <button class="btn-cloture" onclick="document.getElementById('modal-notif').style.display='flex';majAffichageNotif();" style="background:var(--bg2);color:var(--text-muted);">🔔 Rappel</button>
         <button class="btn-cloture" onclick="afficherCodeWidget()" style="background:var(--bg2);color:var(--text-muted);">📱 Code widget</button>
-        <button class="btn-cloture" onclick="ouvrirPartage()" style="background:var(--bg2);color:var(--text-muted);">🔗 Partager</button>
         <button class="btn-cloture" onclick="ouvrirModal()">📁 Clôturer le mois</button>
     </div>
 </div>
@@ -389,55 +404,94 @@
     </div>
 
     <div id="page-tableau" class="page active">
-        <div class="mobile-stat-row">
-            <div class="stat-box"><div class="stat-label">💸 Dépensé</div><div class="stat-value"><span id="m_dep">0</span><small> €</small></div></div>
-            <div class="stat-box"><div class="stat-label">🌱 Épargné</div><div class="stat-value" style="color:var(--success)"><span id="m_ep">0</span><small> €</small></div></div>
-        </div>
-        <div class="mobile-stat-row">
-            <div class="stat-box"><div class="stat-label">⚖️ Solde</div><div class="stat-value" id="m_solde_wrap"><span id="m_solde">0</span><small> €</small></div></div>
-            <div class="stat-box stat-box-gold"><div class="stat-label">🏦 Coffre-fort</div><div class="stat-value"><span id="m_coffre">0</span><small> €</small></div><button class="reset-coffre" onclick="resetCoffre()">Reset</button></div>
-        </div>
 
-        <!-- ── PROJECTION : 4 chiffres clés ── -->
-        <div class="mobile-stat-row" id="proj-stat-row" style="flex-wrap:wrap;">
-            <div class="stat-box" style="flex:1;min-width:140px;"><div class="stat-label">📅 Rythme / jour</div><div class="stat-value" style="font-size:1.2rem;"><span id="m_rythme">0</span><small> €</small></div></div>
-            <div class="stat-box" id="proj-estim-box" style="flex:1;min-width:140px;"><div class="stat-label">🔮 Estimé fin de mois</div><div class="stat-value" style="font-size:1.2rem;"><span id="m_estime">0</span><small> €</small></div></div>
-        </div>
-        <div class="mobile-stat-row" style="flex-wrap:wrap;">
-            <div class="stat-box" style="flex:1;min-width:140px;"><div class="stat-label">📆 Jours restants</div><div class="stat-value" style="font-size:1.2rem;"><span id="m_jours_restants">0</span></div></div>
-            <div class="stat-box" id="proj-budget-jour-box" style="flex:1;min-width:140px;"><div class="stat-label">💡 Budget / jour restant</div><div class="stat-value" style="font-size:1.2rem;"><span id="m_budget_jour">0</span><small> €</small></div></div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">🧾 Dépenses récentes</div>
-            <div class="search-wrap"><input type="text" id="search_input_tableau" placeholder="Rechercher..." oninput="majAffichage()"></div>
-            <div class="expense-list-scroll"><table id="log_table_tableau"><thead><tr><th>Date</th><th>Nom</th><th>Cat.</th><th>Prix</th><th></th></tr></thead><tbody></tbody></table></div>
-        </div>
-        <div class="card">
-            <div class="card-title">🏦 Épargne</div>
-            <div class="expense-list-scroll" style="max-height:200px;"><table id="epargne_history_table"><thead><tr><th>Date</th><th>Nom</th><th>Montant</th><th></th></tr></thead><tbody></tbody></table></div>
-            <div class="epargne-total"><span class="label">Total</span><span class="value"><span id="local_epargne_total">0</span> €</span></div>
-        </div>
-
-        <!-- ── PROJECTION : barre globale + détail catégories ── -->
-        <div class="card" id="proj-global-card" style="display:none;">
-            <div class="card-title">🔮 Projection fin de mois</div>
-            <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:10px;" id="proj-subtitle"></div>
-            <div style="background:var(--bg2);border-radius:8px;height:10px;overflow:visible;position:relative;margin-bottom:8px;">
-                <div id="proj-bar-actual" style="height:100%;border-radius:8px;background:var(--main);transition:width 0.7s;position:absolute;top:0;left:0;"></div>
-                <div id="proj-bar-extra" style="height:100%;border-radius:0 8px 8px 0;opacity:0.4;transition:width 0.7s left 0.7s;position:absolute;top:0;"></div>
+        <!-- ── CARTE PRINCIPALE : solde + sous-stats + barre budget ── -->
+        <div class="card" style="margin-bottom:12px;">
+            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:4px;">Solde du mois</div>
+            <div id="m_solde_wrap" style="font-size:2.2rem;font-weight:700;line-height:1;margin-bottom:14px;color:var(--success);"><span id="m_solde">0</span> €</div>
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:14px;">
+                <div style="background:var(--bg);border-radius:10px;padding:8px 10px;">
+                    <div style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2px;">Dépensé</div>
+                    <div style="font-size:0.95rem;font-weight:700;color:var(--text);"><span id="m_dep">0</span> €</div>
+                </div>
+                <div style="background:var(--bg);border-radius:10px;padding:8px 10px;">
+                    <div style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2px;">Épargné</div>
+                    <div style="font-size:0.95rem;font-weight:700;color:var(--success);"><span id="m_ep">0</span> €</div>
+                </div>
+                <div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-radius:10px;padding:8px 10px;">
+                    <div style="font-size:0.68rem;color:#d97706;margin-bottom:2px;">Coffre</div>
+                    <div style="font-size:0.95rem;font-weight:700;color:#b45309;"><span id="m_coffre">0</span> €</div>
+                    <button class="reset-coffre" onclick="resetCoffre()" style="margin-top:4px;">Reset</button>
+                </div>
             </div>
-            <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-muted);">
-                <span>0 €</span>
-                <span id="proj-bar-label" style="font-weight:700;"></span>
-                <span id="proj-bar-max"></span>
+            <div style="font-size:0.7rem;color:var(--text-muted);display:flex;justify-content:space-between;margin-bottom:4px;">
+                <span>Budget utilisé</span>
+                <span id="m_budget_bar_label">0 € / 0 €</span>
+            </div>
+            <div style="background:var(--bg2);border-radius:999px;height:6px;overflow:hidden;">
+                <div id="m_budget_bar" style="height:100%;border-radius:999px;background:var(--main);transition:width 0.7s;width:0%;"></div>
+            </div>
+            <div style="font-size:0.7rem;color:var(--text-muted);text-align:right;margin-top:3px;" id="m_budget_pct">0%</div>
+        </div>
+
+        <!-- ── PROJECTION : 4 chiffres groupés ── -->
+        <div class="card" style="margin-bottom:12px;">
+            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:10px;">Projection fin de mois</div>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;">
+                <div style="background:var(--bg);border-radius:10px;padding:8px 10px;">
+                    <div style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2px;">Rythme / jour</div>
+                    <div style="font-size:1.1rem;font-weight:700;color:var(--text);"><span id="m_rythme">0</span> €</div>
+                </div>
+                <div id="proj-estim-box" style="background:var(--bg);border-radius:10px;padding:8px 10px;">
+                    <div style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2px;">Estimé fin de mois</div>
+                    <div style="font-size:1.1rem;font-weight:700;"><span id="m_estime">0</span> €</div>
+                </div>
+                <div style="background:var(--bg);border-radius:10px;padding:8px 10px;">
+                    <div style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2px;">Jours restants</div>
+                    <div style="font-size:1.1rem;font-weight:700;color:var(--text);"><span id="m_jours_restants">0</span></div>
+                </div>
+                <div id="proj-budget-jour-box" style="background:var(--bg);border-radius:10px;padding:8px 10px;">
+                    <div style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2px;">Budget / jour restant</div>
+                    <div style="font-size:1.1rem;font-weight:700;"><span id="m_budget_jour">0</span> €</div>
+                </div>
             </div>
         </div>
 
-        <div class="card" id="proj-cats-card" style="display:none;">
-            <div class="card-title">📊 Projection par catégorie</div>
-            <div id="proj-cats-list"></div>
+        <!-- ── DÉPENSES RÉCENTES ── -->
+        <div class="card" style="margin-bottom:12px;">
+            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:10px;">Dépenses récentes</div>
+            <div class="search-wrap"><input type="text" id="search_input_tableau" placeholder="Rechercher..." oninput="majAffichage()" style="margin-bottom:8px;"></div>
+            <div id="log_list_tableau"></div>
+            <table id="log_table_tableau" style="display:none;"><tbody></tbody></table>
         </div>
+
+        <!-- ── ÉPARGNE ── -->
+        <div class="card" style="margin-bottom:12px;">
+            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:10px;">Épargne</div>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px;">
+                <div style="background:var(--bg);border-radius:10px;padding:8px 10px;">
+                    <div style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2px;">Ce mois</div>
+                    <div style="font-size:1.1rem;font-weight:700;color:var(--success);"><span id="m_ep_epargne">0</span> €</div>
+                </div>
+                <div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-radius:10px;padding:8px 10px;">
+                    <div style="font-size:0.68rem;color:#d97706;margin-bottom:2px;">Coffre-fort total</div>
+                    <div style="font-size:1.1rem;font-weight:700;color:#b45309;"><span id="m_coffre_ep">0</span> €</div>
+                </div>
+            </div>
+            <div id="ep_list_tableau"></div>
+            <table id="epargne_history_table" style="display:none;"><tbody></tbody></table>
+            <span id="local_epargne_total" style="display:none;">0</span>
+        </div>
+
+        <!-- IDs desktop conservés pour compat JS -->
+        <div id="proj-global-card" style="display:none;">
+            <div id="proj-subtitle"></div>
+            <div id="proj-bar-actual"></div>
+            <div id="proj-bar-extra"></div>
+            <span id="proj-bar-label"></span>
+            <span id="proj-bar-max"></span>
+        </div>
+        <div id="proj-cats-card" style="display:none;"><div id="proj-cats-list"></div></div>
     </div>
 
     <div id="page-budget" class="page">
@@ -459,11 +513,31 @@
             </div>
             <button class="btn btn-primary" onclick="sauvegarder()" style="margin-top:14px;">Mettre à jour</button>
         </div>
+
+        <!-- ── SECTION 2 : DÉPENSES PRÉVUES MOIS PROCHAIN ── -->
+        <div class="card">
+            <div class="card-title"><span class="badge">2</span> Je prévois pour le mois prochain</div>
+            <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px;line-height:1.6;">Note les dépenses que tu anticipes pour le mois suivant. Elles seront conservées automatiquement à la clôture.</p>
+            <div style="display:flex;gap:8px;margin-bottom:8px;">
+                <input type="text" id="prev_desc" placeholder="Ex: Anniversaire, Dentiste..." style="margin:0;flex:1;">
+                <input type="number" inputmode="decimal" id="prev_mt" placeholder="0" style="margin:0;width:80px;flex-shrink:0;">
+                <button class="btn-add-cat" onclick="ajouterPrevision()" style="flex-shrink:0;">+</button>
+            </div>
+            <select id="prev_cat_select" style="margin-bottom:12px;"></select>
+            <div id="previsions-list"></div>
+            <div id="previsions-total" style="display:none;margin-top:10px;padding:10px 14px;background:var(--bg);border-radius:10px;border:1px solid var(--bg2);display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:0.82rem;color:var(--text-muted);">Total anticipé</span>
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <strong id="previsions-total-val" style="font-size:0.95rem;">0 €</strong>
+                    <button onclick="toutTransferer()" style="background:var(--success);color:white;border:none;border-radius:8px;padding:5px 12px;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;">✓ Tout transférer</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="page-depenses" class="page">
         <div class="card">
-            <div class="card-title"><span class="badge">2</span> Ajouter une dépense</div>
+            <div class="card-title">➕ Ajouter une dépense</div>
             <label>Objet</label>
             <input type="text" id="add_desc" placeholder="Ex: Courses Lidl">
             <label>Montant (€)</label>
@@ -764,7 +838,9 @@
         globalSavings+=em; localStorage.setItem('globalSavings',globalSavings);
         db.depenses=db.depenses.filter(d=>d.recurring===true);
         sauvegarder(); afficherArchives(); afficherEvolution();
-        showToast(`"${nom}" archivé ! +${em}€ au coffre 🎉`,'success',4000);
+        const nbPrev = previsionsMoisProchain.length;
+        const prevMsg = nbPrev > 0 ? ` · ${nbPrev} prévision${nbPrev > 1 ? 's' : ''} conservée${nbPrev > 1 ? 's' : ''} 📋` : '';
+        showToast(`"${nom}" archivé ! +${em}€ au coffre 🎉${prevMsg}`,'success',5000);
     }
 
     function ajouterNouvelleCategorie() {
@@ -828,6 +904,23 @@
         setN('m_dep',totalGeneral); setN('m_ep',totalEpargne); setN('m_solde',solde); setN('m_coffre',globalSavings);
         const sc=solde<0?'var(--danger)':'var(--success)';
         ['view_solde_wrapper','m_solde_wrap'].forEach(id=>{ const el=document.getElementById(id); if(el) el.style.color=sc; });
+
+        // Barre de budget
+        const totalPrevBudget=db.categories.reduce((s,c)=>s+(db.previsions[c.id]||0),0);
+        const budgetBarRef=totalPrevBudget>0?totalPrevBudget:revenuTotal;
+        const budgetBarPct=budgetBarRef>0?Math.min(Math.round((totalGeneral/budgetBarRef)*100),100):0;
+        const barEl=document.getElementById('m_budget_bar');
+        if(barEl){barEl.style.width=budgetBarPct+'%';barEl.style.background=budgetBarPct>=100?'var(--danger)':budgetBarPct>=85?'var(--warning)':'var(--main)';}
+        const barLbl=document.getElementById('m_budget_bar_label');
+        if(barLbl)barLbl.innerText=totalGeneral.toFixed(0)+' € / '+budgetBarRef.toFixed(0)+' €';
+        const barPct=document.getElementById('m_budget_pct');
+        if(barPct)barPct.innerText=budgetBarPct+'%';
+
+        // Épargne résumé
+        const epEpEl=document.getElementById('m_ep_epargne');
+        if(epEpEl)epEpEl.innerText=totalEpargne.toFixed(2);
+        const coffreEpEl=document.getElementById('m_coffre_ep');
+        if(coffreEpEl)coffreEpEl.innerText=globalSavings.toFixed(2);
         ['prev_revenu','prev_revenu_d'].forEach(id=>{ const el=document.getElementById(id); if(el&&document.activeElement!==el) el.value=db.revenu||''; });
         ['prev_caf','prev_caf_d'].forEach(id=>{ const el=document.getElementById(id); if(el&&document.activeElement!==el) el.value=db.caf||''; });
 
@@ -840,14 +933,16 @@
         const sm=(document.getElementById('search_input')||{}).value||'', st=(document.getElementById('search_input_tableau')||{}).value||'', sd=(document.getElementById('search_input_d')||{}).value||'';
         const searchTerm=(sm||st||sd).toLowerCase();
 
-        const renderLog=(tbodyId)=>{ const tbody=document.querySelector('#'+tbodyId+' tbody'); if(!tbody) return; tbody.innerHTML=''; [...db.depenses].reverse().forEach(d=>{ const cat=db.categories.find(c=>c.id===d.ct),catLabel=cat?cat.label.toLowerCase():''; if(!searchTerm||d.desc.toLowerCase().includes(searchTerm)||catLabel.includes(searchTerm)||(d.note&&d.note.toLowerCase().includes(searchTerm))){ const noteHtml=d.note?`<div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;font-style:italic;padding-left:2px;border-left:2px solid var(--main);padding-left:6px;">📝 ${d.note}</div>`:''; tbody.innerHTML+=`<tr><td style="color:var(--text-muted);font-size:0.76rem;white-space:nowrap">${d.date}</td><td>${d.desc}${d.recurring?'<span class="recurring-tag">🔄</span>':''}${noteHtml}</td><td><span class="cat-pill">${cat?cat.label:'N/A'}</span></td><td><strong>${parseFloat(d.mt).toFixed(2)}€</strong></td><td><button class="btn-delete" onclick="supprimer(${d.id})">✕</button></td></tr>`; } }); };
+        const renderLog=(tbodyId)=>{ const tbody=document.querySelector('#'+tbodyId+' tbody'); if(!tbody) return; tbody.innerHTML=''; [...db.depenses].reverse().forEach(d=>{ const cat=db.categories.find(c=>c.id===d.ct),catLabel=cat?cat.label.toLowerCase():''; if(!searchTerm||d.desc.toLowerCase().includes(searchTerm)||catLabel.includes(searchTerm)||(d.note&&d.note.toLowerCase().includes(searchTerm))){ const noteHtml=d.note?`<div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;font-style:italic;padding-left:2px;border-left:2px solid var(--main);padding-left:6px;">📝 ${d.note}</div>`:''; tbody.innerHTML+=`<tr style="cursor:pointer;" onclick="ouvrirEditDepense(${d.id})"><td style="color:var(--text-muted);font-size:0.76rem;white-space:nowrap">${d.date}</td><td>${d.desc}${d.recurring?'<span class="recurring-tag">🔄</span>':''}${noteHtml}</td><td><span class="cat-pill">${cat?cat.label:'N/A'}</span></td><td><strong>${parseFloat(d.mt).toFixed(2)}€</strong></td><td><button class="btn-delete" onclick="event.stopPropagation();supprimer(${d.id})">✕</button></td></tr>`; } }); };
         renderLog('log_table'); renderLog('log_table_d'); renderLog('log_table_tableau');
+        renderLogList('log_list_tableau');
 
         db.historiqueEpargne.sort((a,b)=>a.desc.toLowerCase().localeCompare(b.desc.toLowerCase()));
         const renderEp=(tbodyId,totalId)=>{ const tbody=document.querySelector('#'+tbodyId+' tbody'); if(!tbody) return; tbody.innerHTML=''; let total=0; db.historiqueEpargne.forEach(d=>{ tbody.innerHTML+=`<tr><td style="color:var(--text-muted);font-size:0.76rem;white-space:nowrap">${d.date}</td><td>${d.desc}${d.recurring?'<span class="recurring-tag">🔄</span>':''}</td><td><strong>${parseFloat(d.mt).toFixed(2)}€</strong></td><td><button class="btn-delete" onclick="supprimer(${d.id})">✕</button></td></tr>`; total+=d.mt; }); const el=document.getElementById(totalId); if(el) el.innerText=total.toFixed(2); };
         renderEp('epargne_history_table','local_epargne_total');
         renderEp('epargne_history_table_d','local_epargne_total_d');
         renderEp('epargne_history_table_bilan','local_epargne_total_bilan');
+        renderEpList('ep_list_tableau');
 
         const renderBilan=(tbodyId,chartId,oldChart)=>{ const tbody=document.querySelector('#'+tbodyId+' tbody'); if(!tbody) return oldChart; tbody.innerHTML=''; let labels=[],data=[]; db.categories.forEach(cat=>{ const prev=db.previsions[cat.id]||0,reel=totaux[cat.id]||0,pct=prev>0?Math.min((reel/prev)*100,100):0,over=reel>prev,ecart=prev-reel; tbody.innerHTML+=`<tr style="${over?'background:rgba(239,68,68,0.03)':''}"><td style="font-weight:600;white-space:nowrap">${cat.label}</td><td style="color:var(--text-muted);white-space:nowrap">${prev.toFixed(0)} €</td><td style="font-weight:700;white-space:nowrap">${reel.toFixed(2)} €</td><td style="color:${ecart<0?'var(--danger)':'var(--success)'};font-weight:700;white-space:nowrap">${ecart>=0?'+':''}${ecart.toFixed(0)} €</td><td><div class="progress-wrap"><div class="progress-bg"><div class="progress-fill ${over?'over':''}" style="width:${pct}%"></div></div><span class="progress-pct">${pct.toFixed(0)}%</span></div></td><td>${over?'<span class="status-over">⚠ Dépassé</span>':'<span class="status-ok">✓ OK</span>'}</td></tr>`; labels.push(cat.label); data.push(reel); }); if(oldChart){ oldChart.destroy(); oldChart=null; } const isDark=document.documentElement.getAttribute('data-theme')==='dark'; const ctx=document.getElementById(chartId); if(!ctx) return null; return new Chart(ctx,{type:'pie',data:{labels,datasets:[{data,backgroundColor:colors.slice(0,labels.length),borderWidth:3,borderColor:isDark?'#1c1e2b':'#fff',hoverOffset:5}]},options:{responsive:true,maintainAspectRatio:true,aspectRatio:1,plugins:{legend:{position:'bottom',labels:{color:isDark?'#9ca3af':'#6b7280',font:{family:'DM Sans',size:10},padding:8,usePointStyle:true,pointStyleWidth:6}},tooltip:{callbacks:{label:c=>` ${c.label}: ${c.parsed}€`}}},animation:{animateRotate:true,duration:600}}}); };
         chartInstance  = renderBilan('bilan_table',  'budgetChart',   chartInstance);
@@ -858,6 +953,7 @@
         majSuggestions(totaux);
         if (typeof syncSoloBudget === 'function') { clearTimeout(window._soloSyncTimer); window._soloSyncTimer = setTimeout(syncSoloBudget, 800); }
         majProjection(totaux, totalGeneral);
+        if (typeof majPrevisionsCatSelect === 'function') majPrevisionsCatSelect();
     }
 
     function buildArchiveCards(containerId) {
@@ -1263,6 +1359,49 @@
         document.getElementById('session-label').textContent = coupleSession;
         chargerDepensesCouple().then(() => demarrerRealtime());
     }
+    function renderLogList(containerId) {
+        const container=document.getElementById(containerId); if(!container) return;
+        const sm=(document.getElementById('search_input_tableau')||{}).value||'';
+        const term=sm.toLowerCase();
+        const filtered=[...db.depenses].reverse().filter(d=>{
+            const cat=db.categories.find(c=>c.id===d.ct),catLabel=cat?cat.label.toLowerCase():'';
+            return !term||d.desc.toLowerCase().includes(term)||catLabel.includes(term)||(d.note&&d.note.toLowerCase().includes(term));
+        });
+        if(filtered.length===0){container.innerHTML=`<div class="empty-state" style="padding:20px 0;"><div class="empty-icon">💸</div><p>Aucune dépense ce mois-ci.</p></div>`;return;}
+        container.innerHTML=filtered.map((d,i)=>{
+            const cat=db.categories.find(c=>c.id===d.ct);
+            const noteHtml=d.note?`<div style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;font-style:italic;border-left:2px solid var(--main);padding-left:5px;">📝 ${d.note}</div>`:'';
+            const border=i<filtered.length-1?'border-bottom:1px solid var(--bg2);':'';
+            return `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:9px 0;${border}cursor:pointer;" onclick="ouvrirEditDepense(${d.id})">
+                <div style="flex:1;min-width:0;">
+                    <div style="font-size:0.88rem;font-weight:600;color:var(--text);">${d.desc}${d.recurring?'<span class="recurring-tag">🔄</span>':''}</div>
+                    <div style="font-size:0.72rem;color:var(--text-muted);margin-top:1px;">${d.date} · ${cat?cat.label:'N/A'}</div>
+                    ${noteHtml}
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:10px;">
+                    <strong style="font-size:0.9rem;white-space:nowrap;">${parseFloat(d.mt).toFixed(2)} €</strong>
+                    <button class="btn-delete" onclick="event.stopPropagation();supprimer(${d.id})">✕</button>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    function renderEpList(containerId) {
+        const container=document.getElementById(containerId); if(!container) return;
+        if(db.historiqueEpargne.length===0){container.innerHTML=`<div style="text-align:center;padding:10px 0;font-size:0.82rem;color:var(--text-muted);">Aucune épargne ce mois-ci.</div>`;return;}
+        const sorted=[...db.historiqueEpargne].sort((a,b)=>a.desc.toLowerCase().localeCompare(b.desc.toLowerCase()));
+        container.innerHTML=sorted.map((d,i)=>{
+            const border=i<sorted.length-1?'border-bottom:1px solid var(--bg2);':'';
+            return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;${border}">
+                <div style="font-size:0.88rem;color:var(--text);">${d.desc}${d.recurring?'<span class="recurring-tag">🔄</span>':''}</div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <strong style="font-size:0.9rem;color:var(--success);">${parseFloat(d.mt).toFixed(2)} €</strong>
+                    <button class="btn-delete" onclick="supprimer(${d.id})">✕</button>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
     function majSuggestions(totaux) {
         const card = document.getElementById('suggestions-card');
         const list = document.getElementById('suggestions-list');
@@ -1283,103 +1422,38 @@
             const moyenne = nbMois > 0 ? sommeMois / nbMois : 0;
 
             if (prev > 0 && reel > prev) {
-                // Dépassement
                 const depasse = reel - prev;
                 const suggere = Math.ceil((prev + depasse * 0.5) / 5) * 5;
-                suggestions.push({ icon:'⚠️', label:cat.label, msg:`Tu as dépassé de <strong>${depasse.toFixed(2)} €</strong>. Vise <strong>${suggere} €</strong> le mois prochain.`, badge:'suggestion-over', badgeTxt:'Dépassement' });
+                suggestions.push({ label:cat.label, msg:`Dépassement de <strong>${depasse.toFixed(0)} €</strong> — essaie de viser <strong>${suggere} €</strong> le mois prochain.`, cls:'s-over', badgeTxt:'Dépassement' });
             } else if (prev > 0 && reel <= prev * 0.5 && reel > 0) {
-                // Sous-utilisation
                 const suggere = Math.ceil(reel * 1.2 / 5) * 5;
-                suggestions.push({ icon:'✅', label:cat.label, msg:`Seulement <strong>${reel.toFixed(2)} €</strong> utilisés sur ${prev} € prévu. Tu pourrais réduire à <strong>${suggere} €</strong>.`, badge:'suggestion-ok', badgeTxt:'Économie' });
+                suggestions.push({ label:cat.label, msg:`Seulement <strong>${reel.toFixed(0)} €</strong> utilisés sur <strong>${prev} €</strong> prévus — tu pourrais réduire à <strong>${suggere} €</strong>.`, cls:'s-ok', badgeTxt:'Économie possible' });
             } else if (prev === 0 && reel > 0) {
-                // Pas de budget prévu mais dépenses existantes
                 const suggere = Math.ceil((moyenne > 0 ? moyenne : reel) * 1.1 / 5) * 5;
-                suggestions.push({ icon:'📌', label:cat.label, msg:`Aucun budget prévu mais <strong>${reel.toFixed(2)} €</strong> dépensés. Pense à prévoir <strong>${suggere} €</strong>.`, badge:'suggestion-over', badgeTxt:'Sans budget' });
+                suggestions.push({ label:cat.label, msg:`<strong>${reel.toFixed(0)} €</strong> dépensés sans budget planifié — pense à prévoir <strong>${suggere} €</strong> le mois prochain.`, cls:'s-info', badgeTxt:'Sans budget' });
             } else if (prev > 0 && reel === 0) {
-                // Budget prévu mais rien dépensé
-                suggestions.push({ icon:'💤', label:cat.label, msg:`Budget de <strong>${prev} €</strong> prévu mais rien dépensé ce mois-ci.`, badge:'suggestion-ok', badgeTxt:'Inutilisé' });
+                suggestions.push({ label:cat.label, msg:`Budget de <strong>${prev} €</strong> prévu mais aucune dépense ce mois-ci.`, cls:'s-ok', badgeTxt:'Inutilisé' });
             } else if (prev > 0 && reel <= prev) {
-                // Dans les clous
                 const pct = Math.round((reel / prev) * 100);
-                suggestions.push({ icon:'👍', label:cat.label, msg:`<strong>${reel.toFixed(2)} €</strong> sur ${prev} € prévu (${pct}%). Continue comme ça !`, badge:'suggestion-ok', badgeTxt:'OK' });
+                const cls = pct >= 85 ? 's-warn' : 's-ok';
+                const badge = pct >= 85 ? 'Attention' : 'Dans les clous';
+                suggestions.push({ label:cat.label, msg:`<strong>${reel.toFixed(0)} €</strong> sur <strong>${prev} €</strong> prévus — ${pct}% du budget utilisé.`, cls, badgeTxt:badge });
             }
         });
 
         if (suggestions.length === 0) { card.style.display='none'; return; }
         card.style.display = 'block';
         list.innerHTML = suggestions.map(s => `
-            <div class="suggestion-item">
-                <span class="suggestion-icon">${s.icon}</span>
-                <div class="suggestion-text">
-                    <div style="font-weight:600;margin-bottom:3px;">${s.label}</div>
-                    <div>${s.msg}</div>
+            <div class="suggestion-item ${s.cls}">
+                <div class="suggestion-header">
+                    <span class="suggestion-cat">${s.label}</span>
+                    <span class="suggestion-badge">${s.badgeTxt}</span>
                 </div>
-                <span class="suggestion-badge ${s.badge}">${s.badgeTxt}</span>
+                <div class="suggestion-msg">${s.msg}</div>
             </div>`).join('');
     }
 
-    /* ═══════════ PARTAGE LECTURE SEULE ═══════════ */
-    function ouvrirPartage() {
-        const payload = {
-            revenu: db.revenu,
-            caf: db.caf || 0,
-            categories: db.categories,
-            previsions: db.previsions,
-            depenses: db.depenses
-        };
-        const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-        const base = window.location.href.split('#')[0].split('?')[0];
-        const url = base + '#view=' + encoded;
-        document.getElementById('partage-lien').value = url;
-        document.getElementById('modal-partage').style.display = 'flex';
-    }
-    function fermerPartage() { document.getElementById('modal-partage').style.display = 'none'; }
-    function copierLien() {
-        const input = document.getElementById('partage-lien');
-        input.select();
-        navigator.clipboard.writeText(input.value).then(() => {
-            showToast('Lien copié ! 🔗', 'success');
-            fermerPartage();
-        }).catch(() => {
-            document.execCommand('copy');
-            showToast('Lien copié ! 🔗', 'success');
-            fermerPartage();
-        });
-    }
 
-    // Détecte si on est en mode lecture seule (lien partagé)
-    function checkModePartage() {
-        const hash = window.location.hash;
-        if (!hash.startsWith('#view=')) return;
-        const encoded = hash.slice(6);
-        if (!encoded) return;
-        try {
-            const payload = JSON.parse(decodeURIComponent(escape(atob(encoded))));
-            db = { ...db, ...payload };
-            majAffichage();
-            // Bannière lecture seule
-            const banner = document.createElement('div');
-            banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#f59e0b;color:white;text-align:center;padding:10px;font-size:0.85rem;font-weight:700;';
-            banner.innerHTML = '👁️ Mode lecture seule — Budget partagé par quelqu\'un d\'autre';
-            document.body.prepend(banner);
-            // Désactive les boutons visuellement
-            document.querySelectorAll('.btn-primary, .btn-add-cat, .btn-icon-sm, .btn-delete, .mobile-fab, .btn-cloture, .reset-coffre').forEach(el => {
-                el.style.opacity = '0.4';
-                el.style.pointerEvents = 'none';
-            });
-            // Bloque toutes les fonctions d'écriture
-            const noOp = () => { showToast('Mode lecture seule — modification impossible', 'warning'); };
-            window.sauvegarder = noOp;
-            window.ajouterDepense = noOp;
-            window.ajouterDepenseDesktop = noOp;
-            window.supprimer = noOp;
-            window.resetCoffre = noOp;
-            window.confirmerCloture = noOp;
-            window.ajouterNouvelleCategorie = noOp;
-            window.supprimerCategorie = noOp;
-        } catch(e) { console.error('Lien invalide'); }
-    }
-    checkModePartage();
 
     function scrollDepenses() { const el=document.getElementById('expense-scroll'); if(!el) return; const atBottom=el.scrollHeight-el.scrollTop-el.clientHeight<10; el.scrollTo({top:atBottom?0:el.scrollHeight,behavior:'smooth'}); }
     function updateScrollBtn() { const el=document.getElementById('expense-scroll'),btn=document.getElementById('scroll-down-btn'); if(!el||!btn) return; const atBottom=el.scrollHeight-el.scrollTop-el.clientHeight<10; btn.innerText=atBottom?'↑':'↓'; btn.style.opacity=el.scrollHeight>el.clientHeight?'1':'0'; btn.style.pointerEvents=el.scrollHeight>el.clientHeight?'auto':'none'; }
@@ -1402,77 +1476,177 @@
         const budgetRef = totalPrevu > 0 ? totalPrevu : revenuTotal;
         const budgetJourRestant = joursRestants > 0 ? Math.max(0, budgetRef - totalGeneral) / joursRestants : 0;
 
-        // 4 chiffres clés
         const setEl = (id, v) => { const el = document.getElementById(id); if (el) el.innerText = v; };
-        setEl('m_rythme', rythme.toFixed(2));
-        setEl('m_estime', estime.toFixed(2));
+        setEl('m_rythme', rythme.toFixed(0));
+        setEl('m_estime', estime.toFixed(0));
         setEl('m_jours_restants', joursRestants);
-        setEl('m_budget_jour', budgetJourRestant.toFixed(2));
+        setEl('m_budget_jour', budgetJourRestant.toFixed(0));
 
-        // Couleur estimé
-        const estimBox = document.getElementById('proj-estim-box');
-        const budgetJourBox = document.getElementById('proj-budget-jour-box');
-        if (estimBox) {
-            const pct = budgetRef > 0 ? estime / budgetRef : 0;
-            const val = estimBox.querySelector('.stat-value');
-            if (val) val.style.color = pct >= 1 ? 'var(--danger)' : pct >= 0.85 ? 'var(--warning)' : 'var(--success)';
+        if (budgetRef <= 0) return;
+
+        const over = estime > budgetRef;
+        const pctEstime = Math.min(estime / budgetRef, 1);
+        const pctActuel = Math.min(totalGeneral / budgetRef, 1);
+
+        // Couleur estimé fin de mois
+        const estimSpan = document.getElementById('m_estime');
+        if (estimSpan && estimSpan.parentElement) {
+            estimSpan.parentElement.style.color = over ? 'var(--danger)' : pctEstime >= 0.85 ? 'var(--warning)' : 'var(--success)';
         }
-        if (budgetJourBox) {
-            const val = budgetJourBox.querySelector('.stat-value');
-            if (val) val.style.color = budgetJourRestant < rythme ? 'var(--danger)' : 'var(--success)';
+
+        // Couleur budget/jour restant
+        const bjSpan = document.getElementById('m_budget_jour');
+        if (bjSpan && bjSpan.parentElement) {
+            bjSpan.parentElement.style.color = budgetJourRestant < rythme ? 'var(--danger)' : 'var(--success)';
         }
+    }
 
-        // Barre globale
-        const globalCard = document.getElementById('proj-global-card');
-        if (globalCard && budgetRef > 0) {
-            globalCard.style.display = 'block';
-            const pctActuel = Math.min(totalGeneral / budgetRef, 1);
-            const pctEstime = Math.min(estime / budgetRef, 1);
-            const over = estime > budgetRef;
-            const barActual = document.getElementById('proj-bar-actual');
-            const barExtra = document.getElementById('proj-bar-extra');
-            if (barActual) { barActual.style.width = (pctActuel * 100) + '%'; barActual.style.background = over ? 'var(--danger)' : 'var(--main)'; }
-            if (barExtra) { barExtra.style.left = (pctActuel * 100) + '%'; barExtra.style.width = ((pctEstime - pctActuel) * 100) + '%'; barExtra.style.background = over ? 'var(--danger)' : 'var(--warning)'; barExtra.style.display = pctEstime > pctActuel ? 'block' : 'none'; }
-            const subtitle = document.getElementById('proj-subtitle');
-            if (subtitle) subtitle.innerText = `Jour ${jourActuel} / ${joursTotal} — rythme actuel : ${rythme.toFixed(2)} €/jour`;
-            const lbl = document.getElementById('proj-bar-label');
-            if (lbl) { lbl.innerText = `Estimé : ${estime.toFixed(0)} €`; lbl.style.color = over ? 'var(--danger)' : 'var(--warning)'; }
-            const mx = document.getElementById('proj-bar-max');
-            if (mx) mx.innerText = `Budget : ${budgetRef.toFixed(0)} €`;
-        } else if (globalCard) { globalCard.style.display = 'none'; }
+    /* ══════════════════════════════════
+       DÉPENSES PRÉVUES MOIS PROCHAIN
+    ══════════════════════════════════ */
+    let previsionsMoisProchain = JSON.parse(localStorage.getItem('previsions_mois') || '[]');
 
-        // Projection par catégorie
-        const catsCard = document.getElementById('proj-cats-card');
-        const catsList = document.getElementById('proj-cats-list');
-        if (!catsCard || !catsList) return;
-        const catRows = db.categories.filter(c => !c.label.toLowerCase().includes('épargne')).map(c => {
-            const reel = totaux[c.id] || 0;
-            const prevu = db.previsions[c.id] || 0;
-            const rythmeC = jourActuel > 0 ? reel / jourActuel : 0;
-            const estimeC = reel + rythmeC * joursRestants;
-            const over = prevu > 0 && estimeC > prevu;
-            const pctReel = prevu > 0 ? Math.min(reel / prevu, 1) : (reel > 0 ? 1 : 0);
-            const pctEstime = prevu > 0 ? Math.min(estimeC / prevu, 1) : 0;
-            const couleur = estimeC > prevu && prevu > 0 ? 'var(--danger)' : pctEstime >= 0.85 ? 'var(--warning)' : 'var(--main)';
-            const badge = over ? `<span style="font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(239,68,68,0.1);color:var(--danger);">+${(estimeC - prevu).toFixed(0)} €</span>`
-                : pctEstime >= 0.85 ? `<span style="font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(245,158,11,0.1);color:var(--warning);">Attention</span>`
-                : `<span style="font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(16,185,129,0.1);color:var(--success);">OK</span>`;
-            return `<div style="margin-bottom:14px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-                    <span style="font-size:0.85rem;font-weight:600;">${c.label}</span>
-                    <div style="display:flex;align-items:center;gap:8px;">
-                        <span style="font-size:0.75rem;color:var(--text-muted);">${reel.toFixed(0)} € → <strong>${estimeC.toFixed(0)} €</strong> / ${prevu > 0 ? prevu + ' €' : '?'}</span>
-                        ${badge}
-                    </div>
-                </div>
-                <div style="background:var(--bg2);border-radius:4px;height:6px;position:relative;overflow:hidden;">
-                    <div style="position:absolute;left:0;top:0;height:100%;width:${pctReel*100}%;background:${couleur};border-radius:4px;"></div>
-                    <div style="position:absolute;left:${pctReel*100}%;top:0;height:100%;width:${Math.max(0,(pctEstime-pctReel)*100)}%;background:${couleur};opacity:0.35;"></div>
-                </div>
-            </div>`;
+    function majPrevisionsCatSelect() {
+        const sel = document.getElementById('prev_cat_select');
+        if (!sel) return;
+        const cur = sel.value;
+        sel.innerHTML = '<option value="">-- Catégorie (optionnel) --</option>';
+        db.categories.forEach(c => { sel.innerHTML += `<option value="${c.id}">${c.label}</option>`; });
+        if (cur) sel.value = cur;
+    }
+
+    function ajouterPrevision() {
+        const desc = document.getElementById('prev_desc')?.value.trim();
+        const mt = parseFloat(document.getElementById('prev_mt')?.value);
+        const cat = document.getElementById('prev_cat_select')?.value || '';
+        if (!desc) { showToast('Écris le nom de la dépense prévue', 'warning'); return; }
+        if (isNaN(mt) || mt <= 0) { showToast('Indique un montant estimé', 'warning'); return; }
+        previsionsMoisProchain.push({ id: Date.now(), desc, mt, cat });
+        localStorage.setItem('previsions_mois', JSON.stringify(previsionsMoisProchain));
+        document.getElementById('prev_desc').value = '';
+        document.getElementById('prev_mt').value = '';
+        majAffichagePrevisions();
+        showToast(`"${desc}" ajouté aux prévisions`, 'info');
+    }
+
+    function supprimerPrevision(id) {
+        previsionsMoisProchain = previsionsMoisProchain.filter(p => p.id !== id);
+        localStorage.setItem('previsions_mois', JSON.stringify(previsionsMoisProchain));
+        majAffichagePrevisions();
+        showToast('Prévision supprimée', 'danger');
+    }
+
+    function toutTransferer() {
+        if (previsionsMoisProchain.length === 0) return;
+        if (!confirm(`Transférer les ${previsionsMoisProchain.length} dépense${previsionsMoisProchain.length > 1 ? 's' : ''} prévue${previsionsMoisProchain.length > 1 ? 's' : ''} dans le mois en cours ?`)) return;
+        previsionsMoisProchain.forEach(prev => {
+            const expense = { id: Date.now() + Math.random(), date: new Date().toLocaleDateString('fr-FR'), desc: prev.desc, mt: prev.mt, ct: prev.cat || (db.categories[0]?.id || ''), recurring: false, note: '' };
+            db.depenses.push(expense);
+            const catObj = db.categories.find(c => c.id === expense.ct);
+            if (catObj && catObj.label.toLowerCase().includes('épargne')) db.historiqueEpargne.push(expense);
         });
-        if (catRows.length > 0) { catsCard.style.display = 'block'; catsList.innerHTML = catRows.join(''); }
-        else { catsCard.style.display = 'none'; }
+        const nb = previsionsMoisProchain.length;
+        previsionsMoisProchain = [];
+        localStorage.setItem('previsions_mois', JSON.stringify(previsionsMoisProchain));
+        localStorage.setItem('budget_vGestion', JSON.stringify(db));
+        majAffichage();
+        majAffichagePrevisions();
+        showToast(`${nb} dépense${nb > 1 ? 's' : ''} transférée${nb > 1 ? 's' : ''} ✅`, 'success');
+    }
+
+    function validerPrevision(id) {
+        const prev = previsionsMoisProchain.find(p => p.id === id);
+        if (!prev) return;
+        const expense = { id: Date.now(), date: new Date().toLocaleDateString('fr-FR'), desc: prev.desc, mt: prev.mt, ct: prev.cat || (db.categories[0]?.id || ''), recurring: false, note: '' };
+        db.depenses.push(expense);
+        const catObj = db.categories.find(c => c.id === expense.ct);
+        if (catObj && catObj.label.toLowerCase().includes('épargne')) db.historiqueEpargne.push(expense);
+        previsionsMoisProchain = previsionsMoisProchain.filter(p => p.id !== id);
+        localStorage.setItem('previsions_mois', JSON.stringify(previsionsMoisProchain));
+        localStorage.setItem('budget_vGestion', JSON.stringify(db));
+        majAffichage();
+        majAffichagePrevisions();
+        showToast(`"${prev.desc}" ajouté comme dépense réelle ✅`, 'success');
+    }
+
+    function majAffichagePrevisions() {
+        majPrevisionsCatSelect();
+        const list = document.getElementById('previsions-list');
+        const totalBox = document.getElementById('previsions-total');
+        const totalVal = document.getElementById('previsions-total-val');
+        if (!list) return;
+        if (previsionsMoisProchain.length === 0) {
+            list.innerHTML = `<div style="text-align:center;padding:20px 0;color:var(--text-muted);font-size:0.82rem;">Aucune dépense prévue pour le moment.</div>`;
+            if (totalBox) totalBox.style.display = 'none';
+            return;
+        }
+        let total = 0;
+        list.innerHTML = previsionsMoisProchain.map(p => {
+            total += p.mt;
+            const cat = db.categories.find(c => c.id === p.cat);
+            return `<div style="display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--bg2);">
+                <div style="flex:1;min-width:0;">
+                    <div style="font-size:0.88rem;font-weight:600;color:var(--text);">${p.desc}</div>
+                    ${cat ? `<div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">${cat.label}</div>` : ''}
+                </div>
+                <strong style="font-size:0.9rem;white-space:nowrap;">${p.mt.toFixed(0)} €</strong>
+                <button onclick="validerPrevision(${p.id})" title="C'est arrivé — ajouter comme dépense réelle" style="background:rgba(16,185,129,0.1);border:none;color:var(--success);border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">✓</button>
+                <button class="btn-delete" onclick="supprimerPrevision(${p.id})">✕</button>
+            </div>`;
+        }).join('');
+        if (totalBox) totalBox.style.display = 'flex';
+        if (totalVal) totalVal.innerText = total.toFixed(0) + ' €';
+    }
+
+    // Initialisation
+    majAffichagePrevisions();
+
+    /* ══════════════════════════════════
+       MODIFICATION DE DÉPENSE
+    ══════════════════════════════════ */
+    function ouvrirEditDepense(id) {
+        const d = db.depenses.find(dep => dep.id === id);
+        if (!d) return;
+        document.getElementById('edit-id').value = d.id;
+        document.getElementById('edit-desc').value = d.desc;
+        document.getElementById('edit-mt').value = d.mt;
+        document.getElementById('edit-note').value = d.note || '';
+        document.getElementById('edit-recurring').checked = d.recurring || false;
+        const sel = document.getElementById('edit-cat');
+        sel.innerHTML = '';
+        db.categories.forEach(c => { sel.innerHTML += `<option value="${c.id}">${c.label}</option>`; });
+        sel.value = d.ct;
+        document.getElementById('modal-edit-depense').style.display = 'flex';
+        setTimeout(() => document.getElementById('edit-desc').focus(), 100);
+    }
+    function fermerEditDepense() {
+        document.getElementById('modal-edit-depense').style.display = 'none';
+    }
+    document.getElementById('modal-edit-depense').addEventListener('click', e => { if (e.target === e.currentTarget) fermerEditDepense(); });
+    function sauvegarderEditDepense() {
+        const id = parseInt(document.getElementById('edit-id').value);
+        const desc = document.getElementById('edit-desc').value.trim();
+        const mt = parseFloat(document.getElementById('edit-mt').value);
+        const cat = document.getElementById('edit-cat').value;
+        const note = document.getElementById('edit-note').value.trim();
+        const recurring = document.getElementById('edit-recurring').checked;
+        if (!desc || isNaN(mt) || mt <= 0) { showToast('Remplis tous les champs correctement', 'warning'); return; }
+        const idx = db.depenses.findIndex(d => d.id === id);
+        if (idx === -1) return;
+        db.depenses[idx] = { ...db.depenses[idx], desc, mt, ct: cat, note, recurring };
+        // Mise à jour historiqueEpargne si besoin
+        const epIdx = db.historiqueEpargne.findIndex(d => d.id === id);
+        const catObj = db.categories.find(c => c.id === cat);
+        if (catObj && catObj.label.toLowerCase().includes('épargne')) {
+            if (epIdx !== -1) db.historiqueEpargne[epIdx] = { ...db.historiqueEpargne[epIdx], desc, mt, note, recurring };
+            else db.historiqueEpargne.push({ ...db.depenses[idx] });
+        } else {
+            if (epIdx !== -1) db.historiqueEpargne.splice(epIdx, 1);
+        }
+        localStorage.setItem('budget_vGestion', JSON.stringify(db));
+        fermerEditDepense();
+        majAffichage();
+        showToast(`"${desc}" mis à jour ✅`, 'success');
     }
 
     /* ══════════════════════════════════
@@ -1539,6 +1713,124 @@
         }
     }
 
+    /* ══════════════════════════════════
+       NOTIFICATIONS — RAPPEL QUOTIDIEN
+    ══════════════════════════════════ */
+    let notifTimer = null;
+
+    function getNotifHeure() {
+        return localStorage.getItem('notif_heure') || '20:00';
+    }
+
+    function planifierNotification() {
+        if (notifTimer) clearTimeout(notifTimer);
+        if (Notification.permission !== 'granted') return;
+
+        const heure = getNotifHeure();
+        const [h, m] = heure.split(':').map(Number);
+        const now = new Date();
+        const cible = new Date();
+        cible.setHours(h, m, 0, 0);
+        if (cible <= now) cible.setDate(cible.getDate() + 1);
+
+        const delai = cible - now;
+        notifTimer = setTimeout(() => {
+            envoyerNotification();
+            planifierNotification(); // replanifie pour le lendemain
+        }, delai);
+    }
+
+    function envoyerNotification() {
+        if (Notification.permission !== 'granted') return;
+        const heure = getNotifHeure();
+        new Notification('💰 Mon Coach Finance', {
+            body: `Il est ${heure} — pense à renseigner tes dépenses du jour !`,
+            icon: 'https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Money%20bag/3D/money_bag_3d.png',
+            badge: 'https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Money%20bag/3D/money_bag_3d.png',
+            tag: 'rappel-budget',
+            renotify: true
+        });
+    }
+
+    async function demanderPermissionNotif() {
+        if (!('Notification' in window)) {
+            showToast('Les notifications ne sont pas supportées sur ce navigateur', 'warning', 5000);
+            return;
+        }
+        if (Notification.permission === 'granted') {
+            showToast('Notifications déjà activées ✅', 'success');
+            planifierNotification();
+            return;
+        }
+        if (Notification.permission === 'denied') {
+            showToast('Notifications bloquées — autorise-les dans les réglages Safari', 'danger', 6000);
+            return;
+        }
+        const perm = await Notification.requestPermission();
+        if (perm === 'granted') {
+            localStorage.setItem('notif_activees', '1');
+            planifierNotification();
+            showToast(`Rappel activé à ${getNotifHeure()} chaque jour 🔔`, 'success', 4000);
+            majAffichageNotif();
+        } else {
+            showToast('Permission refusée — pas de rappel', 'warning');
+        }
+    }
+
+    function majAffichageNotif() {
+        const heurEl = document.getElementById('notif-heure-input');
+        if (heurEl) heurEl.value = getNotifHeure();
+        const statusEl = document.getElementById('notif-status');
+        if (statusEl) {
+            if (!('Notification' in window)) {
+                statusEl.textContent = 'Non supporté';
+                statusEl.style.color = 'var(--text-muted)';
+            } else if (Notification.permission === 'granted') {
+                statusEl.textContent = `Actif à ${getNotifHeure()}`;
+                statusEl.style.color = 'var(--success)';
+            } else if (Notification.permission === 'denied') {
+                statusEl.textContent = 'Bloqué dans Safari';
+                statusEl.style.color = 'var(--danger)';
+            } else {
+                statusEl.textContent = 'Non activé';
+                statusEl.style.color = 'var(--text-muted)';
+            }
+        }
+    }
+
+    function changerHeureNotif(val) {
+        localStorage.setItem('notif_heure', val);
+        if (Notification.permission === 'granted') {
+            planifierNotification();
+            showToast(`Rappel déplacé à ${val} 🔔`, 'info');
+        }
+        majAffichageNotif();
+    }
+
+    // Initialisation au chargement
+    if (localStorage.getItem('notif_activees') === '1' && Notification.permission === 'granted') {
+        planifierNotification();
+    }
+    majAffichageNotif();
+
 </script>
+
+<!-- MODAL NOTIFICATIONS -->
+<div id="modal-notif" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+        <h3>🔔 Rappel quotidien</h3>
+        <p>Reçois une notification chaque soir pour penser à renseigner tes dépenses. Fonctionne uniquement si l'app est installée depuis Safari → "Sur l'écran d'accueil".</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding:10px 14px;background:var(--bg);border-radius:10px;">
+            <span style="font-size:0.85rem;font-weight:600;">Statut</span>
+            <span id="notif-status" style="font-size:0.85rem;font-weight:700;">—</span>
+        </div>
+        <label>Heure du rappel</label>
+        <input type="time" id="notif-heure-input" value="20:00" onchange="changerHeureNotif(this.value)" style="margin-bottom:16px;">
+        <div class="modal-actions">
+            <button class="btn btn-cancel" onclick="document.getElementById('modal-notif').style.display='none'">Fermer</button>
+            <button class="btn btn-primary" onclick="demanderPermissionNotif()">🔔 Activer</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
