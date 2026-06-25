@@ -459,7 +459,7 @@
         <div class="card" style="margin-bottom:12px;">
             <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:10px;">Dépenses récentes</div>
             <div class="search-wrap"><input type="text" id="search_input_tableau" placeholder="Rechercher..." oninput="majAffichage()" style="margin-bottom:8px;"></div>
-            <div id="log_list_tableau"></div>
+            <div id="log_list_tableau" style="max-height:340px;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
             <table id="log_table_tableau" style="display:none;"><tbody></tbody></table>
         </div>
 
@@ -531,6 +531,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <div id="page-depenses" class="page">
@@ -1499,6 +1500,9 @@
         }
     }
 
+
+
+
     /* ══════════════════════════════════
        DÉPENSES PRÉVUES MOIS PROCHAIN
     ══════════════════════════════════ */
@@ -1666,6 +1670,7 @@
         navigator.clipboard?.writeText(soloDeviceCode).catch(() => {});
         showToast(`Ton code widget : <strong>${soloDeviceCode}</strong> (copié) — colle-le dans MON_CODE du script Scriptable`, 'info', 7000);
     }
+
 
     /* ══════════════════════════════════
        SYNC BUDGET PERSO → SUPABASE (pour le widget iPhone)
