@@ -328,6 +328,84 @@
     </div>
 </div>
 
+<!-- ════════ MODAL PARAMÈTRES ════════ -->
+<div id="modal-settings" class="modal-overlay" style="display:none;">
+    <div class="modal-box" style="max-width:480px;max-height:88vh;overflow-y:auto;padding-bottom:calc(24px + env(safe-area-inset-bottom));">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <h3 style="margin:0;">⚙️ Paramètres</h3>
+            <button onclick="fermerSettings()" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-muted);padding:4px;line-height:1;">✕</button>
+        </div>
+
+        <!-- Profil -->
+        <div style="margin-bottom:20px;">
+            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--main);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--main);">👤 Profil</div>
+            <label>Ton prénom</label>
+            <input type="text" id="set_prenom" placeholder="Ex: Enzo">
+            <label>Ton nom dans l'onglet Couple</label>
+            <input type="text" id="set_nom_moi" placeholder="Moi">
+            <label>Nom de ton·ta partenaire</label>
+            <input type="text" id="set_nom_partner" placeholder="Ma copine" style="margin-bottom:0;">
+        </div>
+
+        <!-- Budget -->
+        <div style="margin-bottom:20px;">
+            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--main);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--main);">💰 Budget</div>
+            <label>Jour de début du cycle budgétaire</label>
+            <select id="set_jour_debut" style="margin-bottom:12px;"></select>
+            <label>Devise</label>
+            <select id="set_devise" style="margin-bottom:0;">
+                <option value="€">€ Euro</option>
+                <option value="$">$ Dollar</option>
+                <option value="£">£ Livre sterling</option>
+                <option value="CHF">CHF Franc suisse</option>
+                <option value="MAD">MAD Dirham marocain</option>
+                <option value="XOF">XOF Franc CFA</option>
+            </select>
+        </div>
+
+        <!-- Apparence -->
+        <div style="margin-bottom:20px;">
+            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--main);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--main);">🎨 Apparence</div>
+            <label style="margin-bottom:8px;">Mode</label>
+            <div style="display:flex;gap:8px;margin-bottom:16px;">
+                <button id="btn_theme_light" onclick="appliquerModeTheme('light')" style="flex:1;padding:11px;border-radius:10px;border:2px solid var(--bg2);background:white;color:#1a1d2e;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;">☀️ Clair</button>
+                <button id="btn_theme_dark" onclick="appliquerModeTheme('dark')" style="flex:1;padding:11px;border-radius:10px;border:2px solid var(--bg2);background:#111218;color:#e8eaf2;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;">🌙 Sombre</button>
+            </div>
+            <label style="margin-bottom:10px;">Couleur principale</label>
+            <div id="theme-swatches" style="display:flex;flex-wrap:wrap;gap:12px;padding:4px 0;margin-bottom:16px;"></div>
+            <label style="margin-bottom:10px;">Fond — Mode clair</label>
+            <div id="bg-swatches-light" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;"></div>
+            <label style="margin-bottom:10px;">Fond — Mode sombre</label>
+            <div id="bg-swatches-dark" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+        </div>
+
+        <!-- Widget -->
+        <div style="margin-bottom:20px;">
+            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--main);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--main);">📱 Widget iPhone</div>
+            <div style="background:var(--bg);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;">
+                <div>
+                    <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:3px;">Ton code widget Scriptable</div>
+                    <div style="font-size:1.2rem;font-weight:700;letter-spacing:0.12em;color:var(--text);" id="set_widget_code">—</div>
+                </div>
+                <button onclick="copierCodeWidget()" style="background:var(--main);color:white;border:none;border-radius:8px;padding:9px 14px;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;white-space:nowrap;">📋 Copier</button>
+            </div>
+        </div>
+
+        <!-- Données -->
+        <div style="margin-bottom:20px;">
+            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--main);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--main);">💾 Données</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+                <button onclick="exporterDonnees()" style="background:var(--bg);border:1px solid var(--bg2);color:var(--text);border-radius:10px;padding:13px 14px;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;text-align:left;">📤 Exporter mes données (JSON)</button>
+                <label style="background:var(--bg);border:1px solid var(--bg2);color:var(--text);border-radius:10px;padding:13px 14px;font-size:0.88rem;font-weight:600;cursor:pointer;display:block;margin:0;">📥 Importer des données (JSON)<input type="file" id="import_file" accept=".json" onchange="importerDonnees(event)" style="display:none;"></label>
+                <button onclick="reinitialiserApp()" style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);color:var(--danger);border-radius:10px;padding:13px 14px;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;text-align:left;">🗑️ Réinitialiser l'application</button>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="sauvegarderSettings()">✅ Enregistrer les paramètres</button>
+    </div>
+</div>
+
+
 <div id="modal-cloture" class="modal-overlay" style="display:none;">
     <div class="modal-box">
         <h3>📁 Clôturer le mois</h3>
@@ -344,6 +422,7 @@
 <div class="mobile-header">
     <span class="mobile-header-title">💰 Mon Coach Finance</span>
     <div class="mobile-header-actions">
+        <button onclick="ouvrirSettings()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;padding:4px;">⚙️</button>
         <button onclick="afficherCodeWidget()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;padding:4px;">📱</button>
         <button class="theme-toggle" onclick="toggleTheme()"></button>
     </div>
@@ -651,8 +730,8 @@
             <select id="couple-cat" style="margin-bottom:12px;"></select>
             <label>Payé par</label>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
-                <button id="btn-moi" class="btn btn-primary" onclick="selectAuteur('moi')" style="min-height:40px;">👤 Moi</button>
-                <button id="btn-elle" class="btn btn-secondary" onclick="selectAuteur('elle')" style="min-height:40px;">👤 Ma copine</button>
+                <button id="btn-moi" class="btn btn-primary" onclick="selectAuteur('moi')" style="min-height:40px;">👤 <span id="label-moi">Moi</span></button>
+                <button id="btn-elle" class="btn btn-secondary" onclick="selectAuteur('elle')" style="min-height:40px;">👤 <span id="label-partner">Ma copine</span></button>
             </div>
             <button class="btn btn-primary" onclick="ajouterDepenseCouple()">+ Ajouter</button>
         </div>
@@ -796,6 +875,7 @@
         const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
         document.documentElement.setAttribute('data-theme', next);
         localStorage.setItem('theme', next);
+        appliquerFond();
         majAffichage(); afficherEvolution();
     }
 
@@ -1186,6 +1266,12 @@
         const pct = totalBudget > 0 ? Math.min((totalDep / totalBudget) * 100, 100) : 0;
         const reste = totalBudget - totalDep;
 
+        // Mise à jour des labels noms
+        var lblMoi = document.getElementById('label-moi');
+        var lblPartner = document.getElementById('label-partner');
+        if (lblMoi) lblMoi.textContent = appSettings.nomMoi || 'Moi';
+        if (lblPartner) lblPartner.textContent = appSettings.nomPartner || 'Ma copine';
+
         document.getElementById('couple-total-dep').textContent = totalDep.toFixed(2) + ' €';
         document.getElementById('couple-total-budget').textContent = totalBudget.toFixed(2) + ' €';
         document.getElementById('couple-pct').textContent = pct.toFixed(0) + '%';
@@ -1239,7 +1325,7 @@
                             <div style="font-size:0.73rem;color:var(--text-muted)">${d.date} · ${COUPLE_CATS.find(c=>c.id===d.categorie)?.label||d.categorie}</div>
                         </div>
                         <div style="display:flex;align-items:center;gap:8px">
-                            <span class="couple-dep-who ${d.auteur==='moi'?'who-moi':'who-elle'}">${d.auteur==='moi'?'Moi':'Elle'}</span>
+                            <span class="couple-dep-who ${d.auteur==='moi'?'who-moi':'who-elle'}">${d.auteur==='moi'?(appSettings.nomMoi||'Moi'):(appSettings.nomPartner||'Elle')}</span>
                             <strong>${parseFloat(d.montant).toFixed(2)} €</strong>
                             <button class="btn-delete" onclick="supprimerDepenseCouple('${d.id}')">✕</button>
                         </div>
@@ -1742,6 +1828,269 @@
             console.warn('Sync widget perso échouée :', e);
         }
     }
+
+
+    const FONDS_CLAIR = [
+        { nom:'Gris ardoise',  id:'slate',  bg:'#f4f6fb', bg2:'#e8ecf5', card:'#ffffff' },
+        { nom:'Blanc pur',     id:'white',  bg:'#f9f9f9', bg2:'#eeeeee', card:'#ffffff' },
+        { nom:'Crème chaud',   id:'cream',  bg:'#faf7f2', bg2:'#ede9e0', card:'#fffdf9' },
+        { nom:'Teinte auto',   id:'tinted', bg:null,      bg2:null,      card:null       },
+    ];
+    const FONDS_SOMBRE = [
+        { nom:'Noir profond',    id:'deep',    bg:'#111218', bg2:'#1c1e2b', card:'#1c1e2b' },
+        { nom:'Gris anthracite', id:'charcoal',bg:'#1a1a1a', bg2:'#2a2a2a', card:'#242424' },
+        { nom:'Teinte auto',     id:'tinted',  bg:null,      bg2:null,      card:null       },
+    ];
+
+    function hexToRgb(hex) {
+        var r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+        return { r:r, g:g, b:b };
+    }
+    function mixColor(hex, light) {
+        var c = hexToRgb(hex);
+        if (light) {
+            return 'rgb(' + Math.round(c.r*0.07+248*0.93) + ',' + Math.round(c.g*0.07+248*0.93) + ',' + Math.round(c.b*0.07+248*0.93) + ')';
+        } else {
+            return 'rgb(' + Math.round(c.r*0.12+15*0.88) + ',' + Math.round(c.g*0.12+15*0.88) + ',' + Math.round(c.b*0.12+15*0.88) + ')';
+        }
+    }
+    function mixColor2(hex, light) {
+        var c = hexToRgb(hex);
+        if (light) {
+            return 'rgb(' + Math.round(c.r*0.12+232*0.88) + ',' + Math.round(c.g*0.12+232*0.88) + ',' + Math.round(c.b*0.12+232*0.88) + ')';
+        } else {
+            return 'rgb(' + Math.round(c.r*0.15+28*0.85) + ',' + Math.round(c.g*0.15+28*0.85) + ',' + Math.round(c.b*0.15+28*0.85) + ')';
+        }
+    }
+    function mixCard(hex, light) {
+        var c = hexToRgb(hex);
+        if (light) return '#ffffff';
+        return 'rgb(' + Math.round(c.r*0.12+28*0.88) + ',' + Math.round(c.g*0.12+28*0.88) + ',' + Math.round(c.b*0.12+28*0.88) + ')';
+    }
+
+    function appliquerFond() {
+        var mode = localStorage.getItem('theme') || 'light';
+        var isLight = mode === 'light';
+        var fonds = isLight ? FONDS_CLAIR : FONDS_SOMBRE;
+        var fondId = isLight ? (appSettings.fondClair || 'slate') : (appSettings.fondSombre || (isLight ? 'slate' : 'deep'));
+        var fond = fonds.find(function(f){ return f.id === fondId; }) || fonds[0];
+        var couleur = appSettings.couleur || '#5b5ef4';
+
+        if (fond.id === 'tinted') {
+            document.documentElement.style.setProperty('--bg', mixColor(couleur, isLight));
+            document.documentElement.style.setProperty('--bg2', mixColor2(couleur, isLight));
+            document.documentElement.style.setProperty('--card', mixCard(couleur, isLight));
+        } else {
+            document.documentElement.style.setProperty('--bg', fond.bg);
+            document.documentElement.style.setProperty('--bg2', fond.bg2);
+            document.documentElement.style.setProperty('--card', fond.card);
+        }
+    }
+
+    function majBgSwatches() {
+        var mode = localStorage.getItem('theme') || 'light';
+        var isLight = mode === 'light';
+        var couleur = appSettings.couleur || '#5b5ef4';
+
+        function renderSwatches(containerId, fonds, settingKey) {
+            var container = document.getElementById(containerId);
+            if (!container) return;
+            var current = appSettings[settingKey] || fonds[0].id;
+            container.innerHTML = '';
+            fonds.forEach(function(f) {
+                var previewBg = f.id === 'tinted' ? mixColor(couleur, isLight) : f.bg;
+                var previewCard = f.id === 'tinted' ? mixCard(couleur, isLight) : f.card;
+                var isSelected = f.id === current;
+                var d = document.createElement('div');
+                d.title = f.nom;
+                d.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;';
+                d.innerHTML = '<div style="width:48px;height:36px;border-radius:8px;background:' + previewBg + ';border:2px solid ' + (isSelected?'var(--main)':'var(--bg2)') + ';display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.1);overflow:hidden;position:relative;"><div style="position:absolute;top:4px;left:4px;right:4px;bottom:4px;background:' + previewCard + ';border-radius:4px;"></div>' + (f.id==='tinted'?'<div style="position:absolute;top:2px;right:2px;font-size:9px;">✨</div>':'') + '</div><div style="font-size:0.65rem;color:var(--text-muted);white-space:nowrap;text-align:center;">' + f.nom + '</div>';
+                d.onclick = function() {
+                    appSettings[settingKey] = f.id;
+                    appliquerFond();
+                    majBgSwatches();
+                };
+                container.appendChild(d);
+            });
+        }
+
+        renderSwatches('bg-swatches-light', FONDS_CLAIR, 'fondClair');
+        renderSwatches('bg-swatches-dark', FONDS_SOMBRE, 'fondSombre');
+    }
+
+    /* ══════════════════════════════════
+       PARAMÈTRES APPLICATION
+    ══════════════════════════════════ */
+    const THEMES_COULEURS = [
+        { nom:'Violet',  main:'#5b5ef4', light:'#818cf8', glow:'rgba(91,94,244,0.18)' },
+        { nom:'Bleu',    main:'#3b82f6', light:'#60a5fa', glow:'rgba(59,130,246,0.18)' },
+        { nom:'Indigo',  main:'#6366f1', light:'#a5b4fc', glow:'rgba(99,102,241,0.18)' },
+        { nom:'Cyan',    main:'#06b6d4', light:'#22d3ee', glow:'rgba(6,182,212,0.18)'  },
+        { nom:'Vert',    main:'#10b981', light:'#34d399', glow:'rgba(16,185,129,0.18)' },
+        { nom:'Rose',    main:'#ec4899', light:'#f472b6', glow:'rgba(236,72,153,0.18)' },
+        { nom:'Orange',  main:'#f97316', light:'#fb923c', glow:'rgba(249,115,22,0.18)' },
+        { nom:'Rouge',   main:'#ef4444', light:'#f87171', glow:'rgba(239,68,68,0.18)'  },
+    ];
+
+    let appSettings = JSON.parse(localStorage.getItem('app_settings') || '{}');
+    let DEVISE = appSettings.devise || '\u20ac';
+
+    function appliquerSettings() {
+        // Couleur principale
+        var couleur = appSettings.couleur || '#5b5ef4';
+        var theme = THEMES_COULEURS.find(function(t){ return t.main === couleur; }) || THEMES_COULEURS[0];
+        document.documentElement.style.setProperty('--main', theme.main);
+        document.documentElement.style.setProperty('--main-light', theme.light);
+        document.documentElement.style.setProperty('--main-glow', theme.glow);
+        // Devise
+        DEVISE = appSettings.devise || '\u20ac';
+        // Fond
+        appliquerFond();
+        // Prenom dans le header
+        var prenom = appSettings.prenom || '';
+        var titleEl = document.querySelector('.mobile-header-title');
+        if (titleEl) titleEl.textContent = prenom ? ('Bonjour ' + prenom + ' \uD83D\uDC4B') : '\uD83D\uDCB0 Mon Coach Finance';
+    }
+
+    function ouvrirSettings() {
+        var el = document.getElementById('modal-settings');
+        if (!el) return;
+        // Peuple les champs
+        document.getElementById('set_prenom').value = appSettings.prenom || '';
+        document.getElementById('set_nom_moi').value = appSettings.nomMoi || '';
+        document.getElementById('set_nom_partner').value = appSettings.nomPartner || '';
+        document.getElementById('set_devise').value = appSettings.devise || '\u20ac';
+        // Jour debut mois
+        var sel = document.getElementById('set_jour_debut');
+        if (sel) {
+            sel.innerHTML = '';
+            for (var i = 1; i <= 28; i++) {
+                var opt = document.createElement('option');
+                opt.value = i; opt.textContent = i;
+                if ((appSettings.jourDebut || 1) === i) opt.selected = true;
+                sel.appendChild(opt);
+            }
+        }
+        // Code widget
+        var wc = document.getElementById('set_widget_code');
+        if (wc && typeof soloDeviceCode !== 'undefined') wc.textContent = soloDeviceCode;
+        // Swatches couleurs
+        majSwatches();
+        majBgSwatches();
+        // Boutons mode
+        var mode = localStorage.getItem('theme') || 'light';
+        document.getElementById('btn_theme_light').style.borderColor = mode === 'light' ? 'var(--main)' : 'var(--bg2)';
+        document.getElementById('btn_theme_dark').style.borderColor  = mode === 'dark'  ? 'var(--main)' : 'var(--bg2)';
+        el.style.display = 'flex';
+    }
+
+    function fermerSettings() {
+        var el = document.getElementById('modal-settings');
+        if (el) el.style.display = 'none';
+    }
+
+    function majSwatches() {
+        var swatches = document.getElementById('theme-swatches');
+        if (!swatches) return;
+        var current = appSettings.couleur || '#5b5ef4';
+        swatches.innerHTML = '';
+        THEMES_COULEURS.forEach(function(t) {
+            var d = document.createElement('div');
+            d.title = t.nom;
+            d.style.cssText = 'width:36px;height:36px;border-radius:50%;background:' + t.main + ';cursor:pointer;border:3px solid ' + (t.main === current ? 'var(--text)' : 'transparent') + ';box-shadow:' + (t.main === current ? '0 0 0 2px var(--card)' : 'none') + ';transition:all 0.2s;flex-shrink:0;';
+            d.onclick = function() { selectionnerCouleur(t.main); };
+            swatches.appendChild(d);
+        });
+    }
+
+    function selectionnerCouleur(couleur) {
+        appSettings.couleur = couleur;
+        appliquerSettings();
+        appliquerFond();
+        majSwatches();
+        majBgSwatches();
+    }
+
+    function appliquerModeTheme(mode) {
+        document.documentElement.setAttribute('data-theme', mode);
+        localStorage.setItem('theme', mode);
+        appliquerFond();
+        majAffichage(); afficherEvolution();
+        if (document.getElementById('btn_theme_light')) document.getElementById('btn_theme_light').style.borderColor = mode === 'light' ? 'var(--main)' : 'var(--bg2)';
+        if (document.getElementById('btn_theme_dark'))  document.getElementById('btn_theme_dark').style.borderColor  = mode === 'dark'  ? 'var(--main)' : 'var(--bg2)';
+        majBgSwatches();
+    }
+
+    function sauvegarderSettings() {
+        appSettings.prenom     = document.getElementById('set_prenom').value.trim();
+        appSettings.nomMoi     = document.getElementById('set_nom_moi').value.trim();
+        appSettings.nomPartner = document.getElementById('set_nom_partner').value.trim();
+        appSettings.devise     = document.getElementById('set_devise').value;
+        appSettings.jourDebut  = parseInt(document.getElementById('set_jour_debut').value) || 1;
+        localStorage.setItem('app_settings', JSON.stringify(appSettings));
+        appliquerSettings();
+        majAffichage();
+        fermerSettings();
+        showToast('Paramètres sauvegardés', 'success');
+    }
+
+    function exporterDonnees() {
+        var data = {
+            db: db,
+            globalSavings: globalSavings,
+            archives: archives,
+            previsions: previsionsMoisProchain,
+            settings: appSettings,
+            exportDate: new Date().toISOString()
+        };
+        var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'coach-finance-' + new Date().toLocaleDateString('fr-FR').replace(/\//g, '-') + '.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('Données exportées', 'success');
+    }
+
+    function importerDonnees(event) {
+        var file = event.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                var data = JSON.parse(e.target.result);
+                if (!confirm('Importer ces données ? Tes données actuelles seront remplacées.')) return;
+                if (data.db) { db = data.db; localStorage.setItem('budget_vGestion', JSON.stringify(db)); }
+                if (data.globalSavings !== undefined) { globalSavings = data.globalSavings; localStorage.setItem('globalSavings', globalSavings); }
+                if (data.archives) { archives = data.archives; localStorage.setItem('budget_archives', JSON.stringify(archives)); }
+                if (data.previsions) { previsionsMoisProchain = data.previsions; localStorage.setItem('previsions_mois', JSON.stringify(previsionsMoisProchain)); }
+                if (data.settings) { appSettings = data.settings; localStorage.setItem('app_settings', JSON.stringify(appSettings)); }
+                appliquerSettings(); majAffichage(); afficherArchives(); afficherEvolution();
+                showToast('Données importées', 'success', 4000);
+                fermerSettings();
+            } catch(err) { showToast('Fichier invalide', 'danger'); }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    }
+
+    function reinitialiserApp() {
+        if (!confirm('Supprimer TOUTES les données ? Cette action est irréversible.')) return;
+        if (!confirm('Dernière confirmation — tout sera effacé définitivement.')) return;
+        ['budget_vGestion','globalSavings','budget_archives','couple_archives','couple_session','couple_budgets','solo_device_code','previsions_mois','app_settings'].forEach(function(k){ localStorage.removeItem(k); });
+        location.reload();
+    }
+
+    function copierCodeWidget() {
+        if (typeof soloDeviceCode !== 'undefined') {
+            navigator.clipboard && navigator.clipboard.writeText(soloDeviceCode).catch(function(){});
+            showToast('Code ' + soloDeviceCode + ' copié !', 'success');
+        }
+    }
+
+    // Applique au chargement
+    appliquerSettings();
 
 </script>
 </body>
