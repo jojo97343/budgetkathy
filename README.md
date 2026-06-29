@@ -344,7 +344,9 @@
             <label>Ton nom dans l'onglet Couple</label>
             <input type="text" id="set_nom_moi" placeholder="Moi">
             <label>Nom de ton·ta partenaire</label>
-            <input type="text" id="set_nom_partner" placeholder="Ma copine" style="margin-bottom:0;">
+            <input type="text" id="set_nom_partner" placeholder="Ma copine" style="margin-bottom:12px;">
+            <label>Code widget de ton·ta partenaire</label>
+            <input type="text" id="set_code_partner" placeholder="Ex: AB3K7P" style="margin-bottom:0;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()">
         </div>
 
         <!-- Budget -->
@@ -453,6 +455,10 @@
         <button class="nav-btn" id="nav-archives" onclick="goTo('archives')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
             <span>Archives</span>
+        </button>
+        <button class="nav-btn" id="nav-partenaire" onclick="goTo('partenaire')" style="display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            <span id="nav-partner-label">Elle</span>
         </button>
     </div>
 </nav>
@@ -780,6 +786,56 @@
         </div>
     </div>
 
+    <div id="page-partenaire" class="page">
+        <div class="card" style="margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);" id="partner-card-title">Budget partenaire</div>
+                <div style="display:flex;align-items:center;gap:6px;">
+                    <span id="partner-sync-dot" style="width:7px;height:7px;border-radius:50%;background:var(--text-hint);display:inline-block;"></span>
+                    <span id="partner-last-sync" style="font-size:0.68rem;color:var(--text-muted);">—</span>
+                </div>
+            </div>
+            <div id="partner-solde-wrap" style="font-size:2.2rem;font-weight:700;line-height:1;margin-bottom:14px;color:var(--success);">— €</div>
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:14px;">
+                <div style="background:var(--bg);border-radius:10px;padding:8px 10px;">
+                    <div style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2px;">Dépensé</div>
+                    <div style="font-size:0.95rem;font-weight:700;color:var(--text);" id="partner-dep">—</div>
+                </div>
+                <div style="background:var(--bg);border-radius:10px;padding:8px 10px;">
+                    <div style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2px;">Épargné</div>
+                    <div style="font-size:0.95rem;font-weight:700;color:var(--success);" id="partner-ep">—</div>
+                </div>
+                <div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-radius:10px;padding:8px 10px;">
+                    <div style="font-size:0.68rem;color:#d97706;margin-bottom:2px;">Coffre</div>
+                    <div style="font-size:0.95rem;font-weight:700;color:#b45309;" id="partner-coffre">—</div>
+                </div>
+            </div>
+            <div style="font-size:0.7rem;color:var(--text-muted);display:flex;justify-content:space-between;margin-bottom:4px;">
+                <span>Budget utilisé</span><span id="partner-bar-label">—</span>
+            </div>
+            <div style="background:var(--bg2);border-radius:999px;height:6px;overflow:hidden;">
+                <div id="partner-bar" style="height:100%;border-radius:999px;background:var(--main);transition:width 0.7s;width:0%;"></div>
+            </div>
+        </div>
+        <div class="card" style="margin-bottom:12px;">
+            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:10px;">Projection fin de mois</div>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;">
+                <div style="background:var(--bg);border-radius:10px;padding:8px 10px;">
+                    <div style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2px;">Rythme / jour</div>
+                    <div style="font-size:1.1rem;font-weight:700;color:var(--text);" id="partner-rythme">—</div>
+                </div>
+                <div style="background:var(--bg);border-radius:10px;padding:8px 10px;">
+                    <div style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2px;">Estimé fin de mois</div>
+                    <div style="font-size:1.1rem;font-weight:700;" id="partner-estime">—</div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:10px;">Par catégorie</div>
+            <div id="partner-cats"></div>
+        </div>
+    </div>
+
     <div class="grid-top" style="margin-top:0;">
         <div class="card desktop-budget">
             <div class="card-title"><span class="badge">1</span> Je prévois mon mois</div>
@@ -844,7 +900,7 @@
 
 <style>
     @media (min-width: 769px) {
-        #page-tableau, #page-budget, #page-depenses, #page-bilan, #page-couple, #page-archives { display: none !important; }
+        #page-tableau, #page-budget, #page-depenses, #page-bilan, #page-couple, #page-archives, #page-partenaire { display: none !important; }
         .desktop-budget, .desktop-depenses, .desktop-bilan, .desktop-epargne, .desktop-archives { display: block !important; }
     }
     @media (max-width: 768px) {
@@ -879,12 +935,13 @@
         majAffichage(); afficherEvolution();
     }
 
-    const PAGES = ['tableau','budget','depenses','bilan','couple','archives'];
+    const PAGES = ['tableau','budget','depenses','bilan','couple','archives','partenaire'];
     function goTo(name) {
         PAGES.forEach(p => { const el=document.getElementById('page-'+p), btn=document.getElementById('nav-'+p); if(el) el.classList.remove('active'); if(btn) btn.classList.remove('active'); });
         const el=document.getElementById('page-'+name), btn=document.getElementById('nav-'+name);
         if(el) el.classList.add('active'); if(btn) btn.classList.add('active');
         window.scrollTo(0,0);
+        if(name==='partenaire') { majAffichagePartenaire(partnerData); chargerBudgetPartenaire(); }
     }
 
     function showToast(msg, type='success', duration=3000) {
@@ -1946,6 +2003,11 @@
         DEVISE = appSettings.devise || '\u20ac';
         // Fond
         appliquerFond();
+        // Bouton partenaire dans la nav
+        var navPartner = document.getElementById('nav-partenaire');
+        var navLabel = document.getElementById('nav-partner-label');
+        if (navPartner) navPartner.style.display = appSettings.codePartner ? 'flex' : 'none';
+        if (navLabel) navLabel.textContent = appSettings.nomPartner || 'Elle';
         // Prenom dans le header
         var prenom = appSettings.prenom || '';
         var titleEl = document.querySelector('.mobile-header-title');
@@ -1959,6 +2021,7 @@
         document.getElementById('set_prenom').value = appSettings.prenom || '';
         document.getElementById('set_nom_moi').value = appSettings.nomMoi || '';
         document.getElementById('set_nom_partner').value = appSettings.nomPartner || '';
+        document.getElementById('set_code_partner').value = appSettings.codePartner || '';
         document.getElementById('set_devise').value = appSettings.devise || '\u20ac';
         // Jour debut mois
         var sel = document.getElementById('set_jour_debut');
@@ -2025,11 +2088,13 @@
         appSettings.prenom     = document.getElementById('set_prenom').value.trim();
         appSettings.nomMoi     = document.getElementById('set_nom_moi').value.trim();
         appSettings.nomPartner = document.getElementById('set_nom_partner').value.trim();
+        appSettings.codePartner = document.getElementById('set_code_partner').value.trim().toUpperCase();
         appSettings.devise     = document.getElementById('set_devise').value;
         appSettings.jourDebut  = parseInt(document.getElementById('set_jour_debut').value) || 1;
         localStorage.setItem('app_settings', JSON.stringify(appSettings));
         appliquerSettings();
         majAffichage();
+        demarrerSyncPartenaire();
         fermerSettings();
         showToast('Paramètres sauvegardés', 'success');
     }
@@ -2091,6 +2156,155 @@
 
     // Applique au chargement
     appliquerSettings();
+
+
+    /* ══════════════════════════════════
+       BUDGET PARTENAIRE — LECTURE SEULE
+    ══════════════════════════════════ */
+    var partnerData = null;
+    var partnerInterval = null;
+
+    function demarrerSyncPartenaire() {
+        arreterSyncPartenaire();
+        var code = appSettings.codePartner || '';
+        if (!code) { majAffichagePartenaire(null); return; }
+        chargerBudgetPartenaire();
+        partnerInterval = setInterval(chargerBudgetPartenaire, 30000);
+    }
+
+    function arreterSyncPartenaire() {
+        if (partnerInterval) { clearInterval(partnerInterval); partnerInterval = null; }
+    }
+
+    async function chargerBudgetPartenaire() {
+        var code = appSettings.codePartner || '';
+        if (!code) { majAffichagePartenaire(null); return; }
+        var dot = document.getElementById('partner-sync-dot');
+        if (dot) dot.style.background = '#9ca3af';
+        try {
+            var rows = await supabaseFetch('solo_budget?code=eq.' + encodeURIComponent(code) + '&limit=1');
+            if (rows && rows.length > 0) {
+                partnerData = rows[0];
+                majAffichagePartenaire(partnerData);
+                if (dot) dot.style.background = '#10b981';
+            } else {
+                majAffichagePartenaire(null);
+                if (dot) dot.style.background = '#f59e0b';
+            }
+        } catch(e) {
+            if (dot) dot.style.background = '#ef4444';
+            console.warn('Chargement budget partenaire échoué :', e);
+        }
+    }
+
+    function majAffichagePartenaire(data) {
+        var code = appSettings.codePartner || '';
+        var nomPartner = appSettings.nomPartner || 'Ton·ta partenaire';
+        var noCodeCard = document.getElementById('partner-no-code-card');
+        var budgetCard = document.getElementById('partner-budget-card');
+
+        if (!code) {
+            if (noCodeCard) noCodeCard.style.display = 'block';
+            if (budgetCard) budgetCard.style.display = 'none';
+            return;
+        }
+        if (noCodeCard) noCodeCard.style.display = 'none';
+        if (budgetCard) budgetCard.style.display = 'block';
+
+        // Titre
+        var title = document.getElementById('partner-card-title');
+        if (title) title.textContent = 'Budget de ' + nomPartner;
+
+        if (!data) {
+            // Code entré mais données pas encore dispo
+            var els = ['partner-dep','partner-ep','partner-coffre','partner-rythme','partner-estime'];
+            els.forEach(function(id){ var el=document.getElementById(id); if(el) el.textContent='—'; });
+            var soldeEl = document.getElementById('partner-solde-wrap');
+            if (soldeEl) { soldeEl.textContent = '— €'; soldeEl.style.color = 'var(--text-muted)'; }
+            var barEl = document.getElementById('partner-bar');
+            if (barEl) barEl.style.width = '0%';
+            var catsEl = document.getElementById('partner-cats');
+            if (catsEl) catsEl.innerHTML = '<div style="font-size:0.82rem;color:var(--text-muted);text-align:center;padding:8px 0;">En attente de données...</div>';
+            var sync = document.getElementById('partner-last-sync');
+            if (sync) sync.textContent = 'Jamais synchronisé';
+            return;
+        }
+
+        var dep = parseFloat(data.depense_totale) || 0;
+        var ep = parseFloat(data.epargne_totale) || 0;
+        var solde = parseFloat(data.solde) || 0;
+        var coffre = parseFloat(data.coffre) || 0;
+        var revenu = parseFloat(data.revenu_total) || 0;
+
+        // Solde
+        var soldeEl = document.getElementById('partner-solde-wrap');
+        if (soldeEl) {
+            soldeEl.textContent = solde.toFixed(2) + ' €';
+            soldeEl.style.color = solde < 0 ? 'var(--danger)' : 'var(--success)';
+        }
+
+        // Stats
+        var depEl = document.getElementById('partner-dep'); if(depEl) depEl.textContent = dep.toFixed(2) + ' €';
+        var epEl = document.getElementById('partner-ep'); if(epEl) epEl.textContent = ep.toFixed(2) + ' €';
+        var coffreEl = document.getElementById('partner-coffre'); if(coffreEl) coffreEl.textContent = coffre.toFixed(2) + ' €';
+
+        // Barre budget
+        var cats = data.par_categorie || [];
+        var totalPrevu = cats.reduce(function(s,c){ return s+(c.prevu||0); }, 0);
+        var budgetRef = totalPrevu > 0 ? totalPrevu : revenu;
+        var pct = budgetRef > 0 ? Math.min(Math.round((dep/budgetRef)*100), 100) : 0;
+        var barEl = document.getElementById('partner-bar');
+        if (barEl) {
+            barEl.style.width = pct + '%';
+            barEl.style.background = pct >= 100 ? 'var(--danger)' : pct >= 85 ? 'var(--warning)' : 'var(--main)';
+        }
+        var barLbl = document.getElementById('partner-bar-label');
+        if (barLbl) barLbl.textContent = dep.toFixed(0) + ' € / ' + budgetRef.toFixed(0) + ' €';
+
+        // Projection
+        var now = new Date();
+        var jourActuel = now.getDate();
+        var joursTotal = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+        var joursRestants = joursTotal - jourActuel;
+        var rythme = jourActuel > 0 ? dep / jourActuel : 0;
+        var estime = dep + rythme * joursRestants;
+        var rythmeEl = document.getElementById('partner-rythme'); if(rythmeEl) rythmeEl.textContent = rythme.toFixed(0) + ' €/j';
+        var estimeEl = document.getElementById('partner-estime');
+        if (estimeEl) {
+            estimeEl.textContent = estime.toFixed(0) + ' €';
+            estimeEl.style.color = estime > budgetRef && budgetRef > 0 ? 'var(--danger)' : estime/budgetRef >= 0.85 && budgetRef > 0 ? 'var(--warning)' : 'var(--success)';
+        }
+
+        // Catégories
+        var catsEl = document.getElementById('partner-cats');
+        if (catsEl && cats.length > 0) {
+            catsEl.innerHTML = cats.filter(function(c){ return c.reel > 0 || c.prevu > 0; }).map(function(c) {
+                var pctCat = c.prevu > 0 ? Math.min(Math.round((c.reel/c.prevu)*100),100) : 0;
+                var over = c.reel > c.prevu && c.prevu > 0;
+                var couleur = over ? 'var(--danger)' : pctCat >= 85 ? 'var(--warning)' : 'var(--main)';
+                return '<div style="margin-bottom:10px;">'
+                    + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">'
+                    + '<span style="font-size:0.82rem;font-weight:600;">' + c.label + '</span>'
+                    + '<span style="font-size:0.75rem;color:var(--text-muted);">' + (c.reel||0).toFixed(0) + ' / ' + (c.prevu||0).toFixed(0) + ' €</span>'
+                    + '</div>'
+                    + '<div style="background:var(--bg2);border-radius:999px;height:5px;overflow:hidden;">'
+                    + '<div style="height:100%;width:' + pctCat + '%;background:' + couleur + ';border-radius:999px;"></div>'
+                    + '</div></div>';
+            }).join('');
+        } else if (catsEl) {
+            catsEl.innerHTML = '<div style="font-size:0.8rem;color:var(--text-muted);">Aucune catégorie disponible.</div>';
+        }
+
+        // Dernière sync
+        var syncEl = document.getElementById('partner-last-sync');
+        if (syncEl && data.updated_at) {
+            var d = new Date(data.updated_at);
+            syncEl.textContent = 'Màj ' + d.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
+        }
+    }
+
+    // Lance le sync partenaire si code déjà configuré
+    if (appSettings.codePartner) demarrerSyncPartenaire();
 
 </script>
 </body>
