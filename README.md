@@ -383,7 +383,20 @@
 
         <!-- Mode Vacances -->
         <div style="margin-bottom:20px;">
-            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--main);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--main);">🌍 Mode Vacances</div>
+            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--main);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--main);">🌍 Onglets optionnels</div>
+            <!-- Couple -->
+            <div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg);border-radius:12px;padding:14px;margin-bottom:8px;">
+                <div>
+                    <div style="font-size:0.88rem;font-weight:600;color:var(--text);">Afficher l'onglet Couple</div>
+                    <div style="font-size:0.75rem;color:var(--text-muted);margin-top:2px;">Budget commun synchronisé en temps réel</div>
+                </div>
+                <label style="position:relative;display:inline-block;width:48px;height:26px;margin:0;flex-shrink:0;">
+                    <input type="checkbox" id="set_mode_couple" style="opacity:0;width:0;height:0;position:absolute;" onchange="previewCoupleToggle(this.checked)">
+                    <span id="couple-toggle-track" style="position:absolute;cursor:pointer;inset:0;border-radius:999px;background:var(--bg2);transition:0.3s;"></span>
+                    <span id="couple-toggle-thumb" style="position:absolute;height:20px;width:20px;left:3px;bottom:3px;background:white;border-radius:50%;transition:0.3s;box-shadow:0 1px 4px rgba(0,0,0,0.2);"></span>
+                </label>
+            </div>
+            <!-- Vacances -->
             <div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg);border-radius:12px;padding:14px;">
                 <div>
                     <div style="font-size:0.88rem;font-weight:600;color:var(--text);">Activer le mode Vacances</div>
@@ -464,7 +477,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
             <span>Bilan</span>
         </button>
-        <button class="nav-btn" id="nav-couple" onclick="goTo('couple')">
+        <button class="nav-btn" id="nav-couple" onclick="goTo('couple')" style="display:none;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             <span>Couple</span>
         </button>
@@ -2107,6 +2120,8 @@
         appliquerFond();
         // Bouton partenaire dans la nav
         majNavVacances();
+        var navCouple = document.getElementById('nav-couple');
+        if (navCouple) navCouple.style.display = (appSettings.modeCouple !== false) ? 'flex' : 'none';
         var navPartner = document.getElementById('nav-partenaire');
         var navLabel = document.getElementById('nav-partner-label');
         if (navPartner) navPartner.style.display = appSettings.codePartner ? 'flex' : 'none';
@@ -2129,6 +2144,11 @@
         if (vacToggle) {
             vacToggle.checked = !!appSettings.modeVacances;
             previewVacancesToggle(!!appSettings.modeVacances);
+        }
+        var coupleToggle = document.getElementById('set_mode_couple');
+        if (coupleToggle) {
+            coupleToggle.checked = appSettings.modeCouple !== false;
+            previewCoupleToggle(appSettings.modeCouple !== false);
         }
         document.getElementById('set_devise').value = appSettings.devise || '\u20ac';
         // Jour debut mois
@@ -2199,6 +2219,8 @@
         appSettings.codePartner = document.getElementById('set_code_partner').value.trim().toUpperCase();
         var vacEl = document.getElementById('set_mode_vacances');
         appSettings.modeVacances = vacEl ? vacEl.checked : false;
+        var coupleEl = document.getElementById('set_mode_couple');
+        appSettings.modeCouple = coupleEl ? coupleEl.checked : true;
         appSettings.devise     = document.getElementById('set_devise').value;
         appSettings.jourDebut  = parseInt(document.getElementById('set_jour_debut').value) || 1;
         localStorage.setItem('app_settings', JSON.stringify(appSettings));
@@ -2257,6 +2279,13 @@
         location.reload();
     }
 
+
+    function previewCoupleToggle(checked) {
+        var track = document.getElementById('couple-toggle-track');
+        var thumb = document.getElementById('couple-toggle-thumb');
+        if (track) track.style.background = checked ? 'var(--main)' : 'var(--bg2)';
+        if (thumb) thumb.style.transform = checked ? 'translateX(22px)' : 'translateX(0)';
+    }
 
     function previewVacancesToggle(checked) {
         var track = document.getElementById('vac-toggle-track');
