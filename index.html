@@ -381,6 +381,22 @@
             <div id="bg-swatches-dark" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
         </div>
 
+        <!-- Mode Vacances -->
+        <div style="margin-bottom:20px;">
+            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--main);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--main);">🌍 Mode Vacances</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg);border-radius:12px;padding:14px;">
+                <div>
+                    <div style="font-size:0.88rem;font-weight:600;color:var(--text);">Activer le mode Vacances</div>
+                    <div style="font-size:0.75rem;color:var(--text-muted);margin-top:2px;">Affiche un onglet dédié avec conversion de devises</div>
+                </div>
+                <label style="position:relative;display:inline-block;width:48px;height:26px;margin:0;flex-shrink:0;">
+                    <input type="checkbox" id="set_mode_vacances" style="opacity:0;width:0;height:0;position:absolute;" onchange="previewVacancesToggle(this.checked)">
+                    <span id="vac-toggle-track" style="position:absolute;cursor:pointer;inset:0;border-radius:999px;background:var(--bg2);transition:0.3s;"></span>
+                    <span id="vac-toggle-thumb" style="position:absolute;height:20px;width:20px;left:3px;bottom:3px;background:white;border-radius:50%;transition:0.3s;box-shadow:0 1px 4px rgba(0,0,0,0.2);"></span>
+                </label>
+            </div>
+        </div>
+
         <!-- Widget -->
         <div style="margin-bottom:20px;">
             <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--main);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--main);">📱 Widget iPhone</div>
@@ -460,6 +476,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
             <span id="nav-partner-label">Elle</span>
         </button>
+        <button class="nav-btn" id="nav-vacances" onclick="goTo('vacances')" style="display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <span id="nav-vacances-label">Vacances</span>
+        </button>
     </div>
 </nav>
 
@@ -534,7 +554,7 @@
                     <div style="font-size:1.1rem;font-weight:700;color:var(--text);"><span id="m_jours_restants">0</span></div>
                 </div>
                 <div id="proj-budget-jour-box" style="background:var(--bg);border-radius:10px;padding:8px 10px;">
-                    <div style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2px;">Budget / jour restant</div>
+                    <div style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2px;">Solde / jour restant</div>
                     <div style="font-size:1.1rem;font-weight:700;"><span id="m_budget_jour">0</span> €</div>
                 </div>
             </div>
@@ -619,6 +639,33 @@
 
     </div>
 
+    <div id="page-bilan" class="page">
+        <div class="card">
+            <div class="card-title"><span class="badge">3</span> Bilan</div>
+            <div class="bilan-layout">
+                <div class="bilan-table-side">
+                    <div class="table-scroll" style="-webkit-overflow-scrolling:touch;">
+                        <table id="bilan_table"><thead><tr><th>Catégorie</th><th>Prévu</th><th>Réel</th><th>Écart</th><th>%</th><th>Statut</th></tr></thead><tbody></tbody></table>
+                    </div>
+                </div>
+                <div class="bilan-chart-side"><canvas id="budgetChart" style="max-width:260px;max-height:260px;"></canvas></div>
+            </div>
+        </div>
+        <div class="card" id="top3-card" style="display:none;">
+            <div class="card-title">🎯 Top 3 catégories à surveiller</div>
+            <div id="top3-list"></div>
+        </div>
+        <div class="card" id="suggestions-card" style="display:none;">
+            <div class="card-title">💡 Suggestions pour le mois prochain</div>
+            <div id="suggestions-list"></div>
+        </div>
+        <div class="card">
+            <div class="card-title">🏦 Espace Épargne</div>
+            <div class="expense-list-scroll" style="max-height:220px;"><table id="epargne_history_table_bilan"><thead><tr><th>Date</th><th>Nom</th><th>Montant</th><th></th></tr></thead><tbody></tbody></table></div>
+            <div class="epargne-total"><span class="label">Total épargné</span><span class="value"><span id="local_epargne_total_bilan">0</span> €</span></div>
+        </div>
+    </div>
+
     <div id="page-depenses" class="page">
         <div class="card">
             <div class="card-title">➕ Ajouter une dépense</div>
@@ -648,32 +695,7 @@
         </div>
     </div>
 
-    <div id="page-bilan" class="page">
-        <div class="card">
-            <div class="card-title"><span class="badge">3</span> Bilan</div>
-            <div class="bilan-layout">
-                <div class="bilan-table-side">
-                    <div class="table-scroll" style="-webkit-overflow-scrolling:touch;">
-                        <table id="bilan_table"><thead><tr><th>Catégorie</th><th>Prévu</th><th>Réel</th><th>Écart</th><th>%</th><th>Statut</th></tr></thead><tbody></tbody></table>
-                    </div>
-                </div>
-                <div class="bilan-chart-side"><canvas id="budgetChart" style="max-width:260px;max-height:260px;"></canvas></div>
-            </div>
-        </div>
-        <div class="card" id="top3-card" style="display:none;">
-            <div class="card-title">🎯 Top 3 catégories à surveiller</div>
-            <div id="top3-list"></div>
-        </div>
-        <div class="card" id="suggestions-card" style="display:none;">
-            <div class="card-title">💡 Suggestions pour le mois prochain</div>
-            <div id="suggestions-list"></div>
-        </div>
-        <div class="card">
-            <div class="card-title">🏦 Espace Épargne</div>
-            <div class="expense-list-scroll" style="max-height:220px;"><table id="epargne_history_table_bilan"><thead><tr><th>Date</th><th>Nom</th><th>Montant</th><th></th></tr></thead><tbody></tbody></table></div>
-            <div class="epargne-total"><span class="label">Total épargné</span><span class="value"><span id="local_epargne_total_bilan">0</span> €</span></div>
-        </div>
-    </div>
+
 
     <!-- ════════ PAGE COUPLE ════════ -->
     <div id="page-couple" class="page">
@@ -786,7 +808,78 @@
         </div>
     </div>
 
-    <div id="page-partenaire" class="page">
+    <div id="page-vacances" class="page">
+        <!-- Configuration -->
+        <div class="card" id="vac-config-card">
+            <div style="text-align:center;padding:10px 0 16px;">
+                <div style="font-size:2rem;margin-bottom:8px;">🌍</div>
+                <div style="font-size:1rem;font-weight:700;color:var(--text);margin-bottom:4px;">Configurer ton séjour</div>
+                <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:16px;">Les dépenses vacances sont séparées de ton budget mensuel</div>
+            </div>
+            <label>Nom du séjour</label>
+            <input type="text" id="vac-nom" placeholder="Ex: Maroc juillet 2026">
+            <label>Budget total du séjour (€)</label>
+            <input type="number" inputmode="decimal" id="vac-budget" placeholder="Ex: 800">
+            <button class="btn btn-primary" onclick="sauvegarderConfigVacances()">🌍 Créer le séjour</button>
+        </div>
+
+        <!-- Résumé -->
+        <div class="card" id="vac-main-card" style="display:none;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);" id="vac-titre">Séjour</div>
+                <button onclick="document.getElementById('vac-config-card').style.display='block';document.getElementById('vac-main-card').style.display='none';" style="background:none;border:none;font-size:0.75rem;color:var(--text-muted);cursor:pointer;">✏️ Modifier</button>
+            </div>
+            <div style="font-size:2rem;font-weight:700;line-height:1;margin-bottom:12px;color:var(--text);" id="vac-total-dep">0.00 €</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+                <div style="background:var(--bg);border-radius:10px;padding:8px 10px;">
+                    <div style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2px;">Budget total</div>
+                    <div style="font-size:0.95rem;font-weight:700;color:var(--main);" id="vac-total-budget">0.00 €</div>
+                </div>
+                <div style="background:var(--bg);border-radius:10px;padding:8px 10px;">
+                    <div style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2px;">Reste</div>
+                    <div style="font-size:0.95rem;font-weight:700;color:var(--success);" id="vac-reste">0.00 €</div>
+                </div>
+            </div>
+            <div style="background:var(--bg2);border-radius:999px;height:6px;overflow:hidden;margin-bottom:4px;">
+                <div id="vac-bar" style="height:100%;border-radius:999px;background:var(--main);transition:width 0.7s;width:0%;"></div>
+            </div>
+            <div style="font-size:0.7rem;color:var(--text-muted);text-align:right;" id="vac-pct">0%</div>
+        </div>
+
+        <!-- Formulaire ajout dépense -->
+        <div class="card" id="vac-form-card" style="display:none;">
+            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:12px;">➕ Ajouter une dépense</div>
+            <label>Objet</label>
+            <input type="text" id="vac-desc" placeholder="Ex: Restaurant La Mamounia">
+            <label>Montant</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+                <input type="number" inputmode="decimal" id="vac-mt" placeholder="0.00" style="margin:0;">
+                <select id="vac-devise" style="margin:0;"></select>
+            </div>
+            <label>Catégorie</label>
+            <select id="vac-cat" style="margin-bottom:14px;"></select>
+            <button class="btn btn-primary" id="vac-btn-ajouter" onclick="ajouterDepenseVacances()">+ Ajouter</button>
+        </div>
+
+        <!-- Répartition par catégorie -->
+        <div class="card" id="vac-hist-card" style="display:none;">
+            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:10px;">📊 Par catégorie</div>
+            <div id="vac-cats-list" style="margin-bottom:16px;"></div>
+            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:10px;">🧾 Historique</div>
+            <div id="vac-hist-list" style="max-height:340px;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;">
+                <button onclick="reinitialiserVacances()" style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);color:var(--danger);border-radius:10px;padding:10px;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;">🗑️ Réinitialiser</button>
+                <button onclick="cloturerVoyage()" style="background:var(--main);border:none;color:white;border-radius:10px;padding:10px;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;">📁 Clôturer le voyage</button>
+            </div>
+            <!-- Archives voyages -->
+            <div id="vac-archives-section" style="display:none;margin-top:20px;">
+                <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:10px;">🗂️ Voyages archivés</div>
+                <div id="vac-archives-list"></div>
+            </div>
+        </div>
+    </div>
+
+        <div id="page-partenaire" class="page">
         <div class="card" style="margin-bottom:12px;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
                 <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);" id="partner-card-title">Budget partenaire</div>
@@ -900,7 +993,7 @@
 
 <style>
     @media (min-width: 769px) {
-        #page-tableau, #page-budget, #page-depenses, #page-bilan, #page-couple, #page-archives, #page-partenaire { display: none !important; }
+        #page-tableau, #page-budget, #page-depenses, #page-bilan, #page-couple, #page-archives, #page-partenaire, #page-vacances { display: none !important; }
         .desktop-budget, .desktop-depenses, .desktop-bilan, .desktop-epargne, .desktop-archives { display: block !important; }
     }
     @media (max-width: 768px) {
@@ -935,13 +1028,14 @@
         majAffichage(); afficherEvolution();
     }
 
-    const PAGES = ['tableau','budget','depenses','bilan','couple','archives','partenaire'];
+    const PAGES = ['tableau','budget','depenses','bilan','couple','archives','partenaire','vacances'];
     function goTo(name) {
         PAGES.forEach(p => { const el=document.getElementById('page-'+p), btn=document.getElementById('nav-'+p); if(el) el.classList.remove('active'); if(btn) btn.classList.remove('active'); });
         const el=document.getElementById('page-'+name), btn=document.getElementById('nav-'+name);
         if(el) el.classList.add('active'); if(btn) btn.classList.add('active');
         window.scrollTo(0,0);
         if(name==='partenaire') { majAffichagePartenaire(partnerData); chargerBudgetPartenaire(); }
+        if(name==='vacances') majAffichageVacances();
     }
 
     function showToast(msg, type='success', duration=3000) {
@@ -1644,31 +1738,39 @@
         const revenuTotal = (db.revenu || 0) + (db.caf || 0);
         const totalPrevu = db.categories.reduce((s, c) => s + (db.previsions[c.id] || 0), 0);
         const budgetRef = totalPrevu > 0 ? totalPrevu : revenuTotal;
-        const budgetJourRestant = joursRestants > 0 ? Math.max(0, budgetRef - totalGeneral) / joursRestants : 0;
+
+        // Solde réel = revenus - dépenses - épargne
+        let totalEp = 0;
+        db.depenses.forEach(d => { const cat = db.categories.find(c => c.id === d.ct); if (cat && cat.label.toLowerCase().includes('épargne')) totalEp += d.mt; });
+        const solde = revenuTotal - totalGeneral - totalEp;
+        const soldeParJour = joursRestants > 0 ? Math.max(0, solde) / joursRestants : 0;
+
+        // Trop tôt dans le mois — projection non fiable
+        const tropTot = jourActuel <= 3;
 
         const setEl = (id, v) => { const el = document.getElementById(id); if (el) el.innerText = v; };
         setEl('m_rythme', rythme.toFixed(0));
-        setEl('m_estime', estime.toFixed(0));
+        setEl('m_estime', tropTot ? '—' : estime.toFixed(0));
         setEl('m_jours_restants', joursRestants);
-        setEl('m_budget_jour', budgetJourRestant.toFixed(0));
+        setEl('m_budget_jour', soldeParJour.toFixed(0));
 
-        if (budgetRef <= 0) return;
+        const estimSpan = document.getElementById('m_estime');
+        const bjSpan = document.getElementById('m_budget_jour');
+
+        // Couleur solde/jour : vert si ok, orange si en dessous du rythme, rouge si solde négatif
+        if (bjSpan && bjSpan.parentElement) {
+            bjSpan.parentElement.style.color = solde <= 0 ? 'var(--danger)' : soldeParJour < rythme ? 'var(--warning)' : 'var(--success)';
+        }
+
+        if (tropTot || budgetRef <= 0) {
+            if (estimSpan && estimSpan.parentElement) estimSpan.parentElement.style.color = 'var(--text-muted)';
+            return;
+        }
 
         const over = estime > budgetRef;
         const pctEstime = Math.min(estime / budgetRef, 1);
-        const pctActuel = Math.min(totalGeneral / budgetRef, 1);
-
-        // Couleur estimé fin de mois
-        const estimSpan = document.getElementById('m_estime');
-        if (estimSpan && estimSpan.parentElement) {
+        if (estimSpan && estimSpan.parentElement)
             estimSpan.parentElement.style.color = over ? 'var(--danger)' : pctEstime >= 0.85 ? 'var(--warning)' : 'var(--success)';
-        }
-
-        // Couleur budget/jour restant
-        const bjSpan = document.getElementById('m_budget_jour');
-        if (bjSpan && bjSpan.parentElement) {
-            bjSpan.parentElement.style.color = budgetJourRestant < rythme ? 'var(--danger)' : 'var(--success)';
-        }
     }
 
 
@@ -2004,6 +2106,7 @@
         // Fond
         appliquerFond();
         // Bouton partenaire dans la nav
+        majNavVacances();
         var navPartner = document.getElementById('nav-partenaire');
         var navLabel = document.getElementById('nav-partner-label');
         if (navPartner) navPartner.style.display = appSettings.codePartner ? 'flex' : 'none';
@@ -2022,6 +2125,11 @@
         document.getElementById('set_nom_moi').value = appSettings.nomMoi || '';
         document.getElementById('set_nom_partner').value = appSettings.nomPartner || '';
         document.getElementById('set_code_partner').value = appSettings.codePartner || '';
+        var vacToggle = document.getElementById('set_mode_vacances');
+        if (vacToggle) {
+            vacToggle.checked = !!appSettings.modeVacances;
+            previewVacancesToggle(!!appSettings.modeVacances);
+        }
         document.getElementById('set_devise').value = appSettings.devise || '\u20ac';
         // Jour debut mois
         var sel = document.getElementById('set_jour_debut');
@@ -2089,6 +2197,8 @@
         appSettings.nomMoi     = document.getElementById('set_nom_moi').value.trim();
         appSettings.nomPartner = document.getElementById('set_nom_partner').value.trim();
         appSettings.codePartner = document.getElementById('set_code_partner').value.trim().toUpperCase();
+        var vacEl = document.getElementById('set_mode_vacances');
+        appSettings.modeVacances = vacEl ? vacEl.checked : false;
         appSettings.devise     = document.getElementById('set_devise').value;
         appSettings.jourDebut  = parseInt(document.getElementById('set_jour_debut').value) || 1;
         localStorage.setItem('app_settings', JSON.stringify(appSettings));
@@ -2145,6 +2255,14 @@
         if (!confirm('Dernière confirmation — tout sera effacé définitivement.')) return;
         ['budget_vGestion','globalSavings','budget_archives','couple_archives','couple_session','couple_budgets','solo_device_code','previsions_mois','app_settings'].forEach(function(k){ localStorage.removeItem(k); });
         location.reload();
+    }
+
+
+    function previewVacancesToggle(checked) {
+        var track = document.getElementById('vac-toggle-track');
+        var thumb = document.getElementById('vac-toggle-thumb');
+        if (track) track.style.background = checked ? 'var(--main)' : 'var(--bg2)';
+        if (thumb) thumb.style.transform = checked ? 'translateX(22px)' : 'translateX(0)';
     }
 
     function copierCodeWidget() {
@@ -2305,6 +2423,314 @@
 
     // Lance le sync partenaire si code déjà configuré
     if (appSettings.codePartner) demarrerSyncPartenaire();
+
+
+    /* ══════════════════════════════════
+       MODE VACANCES
+    ══════════════════════════════════ */
+    var vacancesData = JSON.parse(localStorage.getItem('vacances_data') || '{}');
+
+    var VAC_CATS = [
+        { id:'transport',    label:'✈️ Transport'    },
+        { id:'hebergement',  label:'🏨 Hébergement'  },
+        { id:'resto',        label:'🍽️ Restaurants'  },
+        { id:'activites',    label:'🎡 Activités'    },
+        { id:'shopping',     label:'🛍️ Shopping'     },
+        { id:'sante',        label:'💊 Santé'        },
+        { id:'divers',       label:'💼 Divers'       },
+    ];
+
+    var VAC_DEVISES = [
+        { code:'EUR', sym:'€',   nom:'Euro'          },
+        { code:'USD', sym:'$',   nom:'Dollar US'     },
+        { code:'GBP', sym:'£',   nom:'Livre sterling'},
+        { code:'MAD', sym:'MAD', nom:'Dirham marocain'},
+        { code:'TND', sym:'TND', nom:'Dinar tunisien'},
+        { code:'AED', sym:'AED', nom:'Dirham EAU'    },
+        { code:'JPY', sym:'¥',   nom:'Yen japonais'  },
+        { code:'CHF', sym:'CHF', nom:'Franc suisse'  },
+        { code:'CAD', sym:'CAD', nom:'Dollar canadien'},
+        { code:'XOF', sym:'CFA', nom:'Franc CFA'     },
+        { code:'MXN', sym:'MXN', nom:'Peso mexicain' },
+        { code:'THB', sym:'฿',   nom:'Baht thaïlandais'},
+    ];
+
+    var taux_cache = {};
+
+    async function convertirEnEuro(montant, devise) {
+        if (devise === 'EUR') return montant;
+        if (taux_cache[devise]) return Math.round(montant * taux_cache[devise] * 100) / 100;
+        try {
+            var url = 'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/' + devise.toLowerCase() + '.min.json';
+            var resp = await fetch(url);
+            var data = await resp.json();
+            var taux = data[devise.toLowerCase()]['eur'];
+            taux_cache[devise] = taux;
+            return Math.round(montant * taux * 100) / 100;
+        } catch(e) {
+            return null;
+        }
+    }
+
+    function sauvegarderVacances() {
+        localStorage.setItem('vacances_data', JSON.stringify(vacancesData));
+    }
+
+    function majNavVacances() {
+        var btn = document.getElementById('nav-vacances');
+        if (!btn) return;
+        var vd = (typeof vacancesData !== 'undefined') ? vacancesData : {};
+        var actif = !!appSettings.modeVacances;
+        btn.style.display = actif ? 'flex' : 'none';
+        var lbl = document.getElementById('nav-vacances-label');
+        if (lbl) lbl.textContent = (vd.nom ? vd.nom.split(' ')[0] : 'Vacances');
+    }
+
+    function ouvrirVacances() {
+        majAffichageVacances();
+    }
+
+    function sauvegarderConfigVacances() {
+        var nom = document.getElementById('vac-nom').value.trim();
+        var budget = parseFloat(document.getElementById('vac-budget').value) || 0;
+        if (!nom) { showToast('Donne un nom à ton séjour', 'warning'); return; }
+        vacancesData.nom = nom;
+        vacancesData.budget = budget;
+        if (!vacancesData.depenses) vacancesData.depenses = [];
+        sauvegarderVacances();
+        majNavVacances();
+        majAffichageVacances();
+        showToast('Séjour "' + nom + '" configuré 🌍', 'success');
+    }
+
+    async function ajouterDepenseVacances() {
+        var desc = document.getElementById('vac-desc').value.trim();
+        var mt = parseFloat(document.getElementById('vac-mt').value);
+        var devise = document.getElementById('vac-devise').value;
+        var cat = document.getElementById('vac-cat').value;
+        if (!desc || isNaN(mt) || mt <= 0) { showToast('Remplis tous les champs', 'warning'); return; }
+
+        var btnAjouter = document.getElementById('vac-btn-ajouter');
+        if (btnAjouter) { btnAjouter.disabled = true; btnAjouter.textContent = 'Conversion...'; }
+
+        var mtEur = await convertirEnEuro(mt, devise);
+        var devInfo = VAC_DEVISES.find(function(d){ return d.code === devise; }) || { sym: devise };
+
+        if (btnAjouter) { btnAjouter.disabled = false; btnAjouter.textContent = '+ Ajouter'; }
+
+        if (mtEur === null) {
+            showToast('Conversion échouée — vérifie ta connexion', 'danger');
+            return;
+        }
+
+        if (!vacancesData.depenses) vacancesData.depenses = [];
+        vacancesData.depenses.push({
+            id: Date.now(),
+            date: new Date().toLocaleDateString('fr-FR'),
+            desc: desc,
+            mt: mtEur,
+            mtOriginal: mt,
+            deviseOriginal: devise,
+            devSymbol: devInfo.sym,
+            cat: cat
+        });
+
+        sauvegarderVacances();
+        document.getElementById('vac-desc').value = '';
+        document.getElementById('vac-mt').value = '';
+        majAffichageVacances();
+        showToast(desc + ' — ' + mt + ' ' + devInfo.sym + ' = ' + mtEur.toFixed(2) + ' €', 'success', 4000);
+    }
+
+    function supprimerDepenseVacances(id) {
+        vacancesData.depenses = (vacancesData.depenses || []).filter(function(d){ return d.id !== id; });
+        sauvegarderVacances();
+        majAffichageVacances();
+        showToast('Dépense supprimée', 'danger');
+    }
+
+    function reinitialiserVacances() {
+        if (!confirm('Effacer toutes les dépenses du séjour ?')) return;
+        vacancesData.depenses = [];
+        sauvegarderVacances();
+        majAffichageVacances();
+        showToast('Séjour réinitialisé', 'warning');
+    }
+
+    function cloturerVoyage() {
+        if (!vacancesData.nom) return;
+        var depenses = vacancesData.depenses || [];
+        if (!confirm('Clôturer "' + vacancesData.nom + '" et démarrer un nouveau voyage ?')) return;
+
+        // Archive le voyage actuel
+        var archives = JSON.parse(localStorage.getItem('vacances_archives') || '[]');
+        var total = depenses.reduce(function(s,d){ return s + d.mt; }, 0);
+        archives.push({
+            id: Date.now(),
+            nom: vacancesData.nom,
+            budget: vacancesData.budget || 0,
+            total: total,
+            date: new Date().toLocaleDateString('fr-FR'),
+            depenses: depenses.slice()
+        });
+        localStorage.setItem('vacances_archives', JSON.stringify(archives));
+
+        // Réinitialise le voyage en cours
+        vacancesData = { depenses: [] };
+        sauvegarderVacances();
+        majNavVacances();
+        majAffichageVacances();
+        showToast('"' + archives[archives.length-1].nom + '" archivé 🎉', 'success', 4000);
+    }
+
+    function majArchivesVoyages() {
+        var archives = JSON.parse(localStorage.getItem('vacances_archives') || '[]');
+        var section = document.getElementById('vac-archives-section');
+        var list = document.getElementById('vac-archives-list');
+        if (!section || !list) return;
+        if (archives.length === 0) { section.style.display = 'none'; return; }
+        section.style.display = 'block';
+        list.innerHTML = [...archives].reverse().map(function(arc) {
+            var sc = arc.total > arc.budget && arc.budget > 0 ? 'var(--danger)' : 'var(--success)';
+            var pct = arc.budget > 0 ? Math.min(Math.round((arc.total/arc.budget)*100), 100) : 0;
+            return '<div style="background:var(--bg);border-radius:12px;padding:12px;margin-bottom:8px;border:1px solid var(--bg2);">'
+                + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">'
+                + '<div><div style="font-size:0.88rem;font-weight:700;">' + arc.nom + '</div>'
+                + '<div style="font-size:0.7rem;color:var(--text-muted);">Archivé le ' + arc.date + '</div></div>'
+                + '<button class="btn-delete" onclick="supprimerArchiveVoyage(' + arc.id + ')">✕</button>'
+                + '</div>'
+                + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">'
+                + '<div style="background:var(--card);border-radius:8px;padding:8px;text-align:center;">'
+                + '<div style="font-size:0.65rem;color:var(--text-muted);">Dépensé</div>'
+                + '<div style="font-size:0.95rem;font-weight:700;color:' + sc + ';">' + arc.total.toFixed(2) + ' €</div></div>'
+                + '<div style="background:var(--card);border-radius:8px;padding:8px;text-align:center;">'
+                + '<div style="font-size:0.65rem;color:var(--text-muted);">Budget</div>'
+                + '<div style="font-size:0.95rem;font-weight:700;color:var(--main);">' + (arc.budget||0).toFixed(2) + ' €</div></div>'
+                + '</div>'
+                + (arc.budget > 0 ? '<div style="background:var(--bg2);border-radius:999px;height:5px;overflow:hidden;margin-top:8px;"><div style="height:100%;width:' + pct + '%;background:' + sc + ';border-radius:999px;"></div></div>' : '')
+                + '</div>';
+        }).join('');
+    }
+
+    function supprimerArchiveVoyage(id) {
+        if (!confirm('Supprimer cette archive ?')) return;
+        var archives = JSON.parse(localStorage.getItem('vacances_archives') || '[]');
+        archives = archives.filter(function(a){ return a.id !== id; });
+        localStorage.setItem('vacances_archives', JSON.stringify(archives));
+        majArchivesVoyages();
+        showToast('Archive supprimée', 'warning');
+    }
+
+    function majAffichageVacances() {
+        var configCard = document.getElementById('vac-config-card');
+        var mainCard = document.getElementById('vac-main-card');
+        var formCard = document.getElementById('vac-form-card');
+        var histCard = document.getElementById('vac-hist-card');
+
+        var configured = !!(vacancesData.nom);
+        if (configCard) configCard.style.display = configured ? 'none' : 'block';
+        if (mainCard) mainCard.style.display = configured ? 'block' : 'none';
+        if (formCard) formCard.style.display = configured ? 'block' : 'none';
+        if (histCard) histCard.style.display = configured ? 'block' : 'none';
+
+        if (!configured) return;
+
+        // Titre
+        var titreEl = document.getElementById('vac-titre');
+        if (titreEl) titreEl.textContent = vacancesData.nom || 'Séjour';
+
+        // Remplir le formulaire de config avec les valeurs actuelles
+        var nomEl = document.getElementById('vac-nom');
+        var budgetEl = document.getElementById('vac-budget');
+        if (nomEl) nomEl.value = vacancesData.nom || '';
+        if (budgetEl) budgetEl.value = vacancesData.budget || '';
+
+        // Calcul totaux
+        var depenses = vacancesData.depenses || [];
+        var totalEur = depenses.reduce(function(s, d){ return s + d.mt; }, 0);
+        var budget = vacancesData.budget || 0;
+        var reste = budget - totalEur;
+        var pct = budget > 0 ? Math.min(Math.round((totalEur/budget)*100), 100) : 0;
+
+        var depEl = document.getElementById('vac-total-dep');
+        if (depEl) depEl.textContent = totalEur.toFixed(2) + ' €';
+        var resteEl = document.getElementById('vac-reste');
+        if (resteEl) resteEl.textContent = (reste < 0 ? '⚠️ Dépassé de ' + Math.abs(reste).toFixed(2) : reste.toFixed(2)) + ' €';
+        var budgetEl2 = document.getElementById('vac-total-budget');
+        if (budgetEl2) budgetEl2.textContent = budget.toFixed(2) + ' €';
+        var barEl = document.getElementById('vac-bar');
+        if (barEl) { barEl.style.width = pct + '%'; barEl.style.background = pct >= 100 ? 'var(--danger)' : pct >= 85 ? 'var(--warning)' : 'var(--main)'; }
+        var pctEl = document.getElementById('vac-pct');
+        if (pctEl) pctEl.textContent = pct + '%';
+
+        // Select devise formulaire
+        var devSel = document.getElementById('vac-devise');
+        if (devSel && devSel.children.length === 0) {
+            VAC_DEVISES.forEach(function(d) {
+                devSel.innerHTML += '<option value="' + d.code + '">' + d.sym + ' — ' + d.nom + '</option>';
+            });
+        }
+
+        // Select catégorie formulaire
+        var catSel = document.getElementById('vac-cat');
+        if (catSel && catSel.children.length === 0) {
+            VAC_CATS.forEach(function(c) {
+                catSel.innerHTML += '<option value="' + c.id + '">' + c.label + '</option>';
+            });
+        }
+
+        // Historique
+        var hist = document.getElementById('vac-hist-list');
+        if (hist) {
+            if (depenses.length === 0) {
+                hist.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--text-muted);font-size:0.82rem;">Aucune dépense pour ce séjour.</div>';
+            } else {
+                hist.innerHTML = [...depenses].reverse().map(function(d, i) {
+                    var cat = VAC_CATS.find(function(c){ return c.id === d.cat; });
+                    var border = i < depenses.length - 1 ? 'border-bottom:1px solid var(--bg2);' : '';
+                    var hasConv = d.deviseOriginal && d.deviseOriginal !== 'EUR';
+                    return '<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:9px 0;' + border + '">'
+                        + '<div style="flex:1;min-width:0;">'
+                        + '<div style="font-size:0.88rem;font-weight:600;color:var(--text);">' + d.desc + '</div>'
+                        + '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:1px;">'
+                        + d.date + ' · ' + (cat ? cat.label : d.cat)
+                        + (hasConv ? ' · ' + d.mtOriginal + ' ' + d.devSymbol : '')
+                        + '</div>'
+                        + '</div>'
+                        + '<div style="display:flex;align-items:center;gap:8px;margin-left:10px;flex-shrink:0;">'
+                        + '<strong style="font-size:0.9rem;white-space:nowrap;">' + d.mt.toFixed(2) + ' €</strong>'
+                        + '<button class="btn-delete" onclick="supprimerDepenseVacances(' + d.id + ')">✕</button>'
+                        + '</div>'
+                        + '</div>';
+                }).join('');
+            }
+        }
+
+        // Répartition par catégorie
+        var catList = document.getElementById('vac-cats-list');
+        if (catList) {
+            var parCat = {};
+            VAC_CATS.forEach(function(c){ parCat[c.id] = 0; });
+            depenses.forEach(function(d){ if (parCat[d.cat] !== undefined) parCat[d.cat] += d.mt; });
+            catList.innerHTML = VAC_CATS.filter(function(c){ return parCat[c.id] > 0; }).map(function(c) {
+                var pctCat = budget > 0 ? Math.min(Math.round((parCat[c.id]/budget)*100), 100) : 0;
+                return '<div style="margin-bottom:10px;">'
+                    + '<div style="display:flex;justify-content:space-between;margin-bottom:3px;">'
+                    + '<span style="font-size:0.82rem;">' + c.label + '</span>'
+                    + '<span style="font-size:0.78rem;color:var(--text-muted);">' + parCat[c.id].toFixed(2) + ' €</span>'
+                    + '</div>'
+                    + '<div style="background:var(--bg2);border-radius:999px;height:5px;overflow:hidden;">'
+                    + '<div style="height:100%;width:' + pctCat + '%;background:var(--main);border-radius:999px;"></div>'
+                    + '</div></div>';
+            }).join('') || '<div style="font-size:0.82rem;color:var(--text-muted);">Aucune dépense encore.</div>';
+        }
+
+        majArchivesVoyages();
+    }
+
+    // Init
+    majNavVacances();
+    majArchivesVoyages();
 
 </script>
 </body>
