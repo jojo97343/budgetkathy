@@ -565,6 +565,93 @@
         .bl-amt { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; margin-top: 2px; }
         .bl-amt small { font-size: 14px; font-weight: 700; color: var(--text-muted); letter-spacing: 0; }
 
+        /* Couple & Vacances */
+        .cp-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 4px 4px 14px; }
+        .cp-title { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+        .cp-h { font-size: 22px; font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .cp-session { display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--text); font-size: 13px; font-weight: 700; cursor: pointer; flex-shrink: 0; letter-spacing: 0.02em; }
+        .cp-session svg { color: var(--text-muted); }
+        .cp-join { display: flex; flex-direction: column; gap: 12px; }
+        .cp-join-row { display: flex; gap: 8px; }
+        .cp-join-row input { flex: 1; min-width: 0; margin: 0 !important; background-color: var(--bg); }
+        .cp-join-row .btn { width: auto; margin: 0; padding: 0 18px; min-height: 50px; }
+        .cp-change { display: block; margin: -6px auto 14px; background: none; border: none; color: var(--soft-text); font-size: 13px; font-weight: 700; cursor: pointer; }
+        .cp-hbar { height: 8px; border-radius: 999px; background: rgba(255,255,255,0.22); overflow: hidden; margin: 10px 0 4px; }
+        .cp-hbar > div { height: 100%; border-radius: 999px; background: #fff; transition: width .6s cubic-bezier(.4,0,.2,1); }
+        .cp-hbar > div.over { background: #fecaca; }
+        .cp-payers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
+        .cp-payer { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 14px; background: rgba(255,255,255,0.14); min-width: 0; }
+        .cp-payer > span:last-child { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+        .cp-payer b { font-size: 15px; font-weight: 800; }
+        .cp-av { width: 30px; height: 30px; border-radius: 50%; font-size: 13px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .cp-payer .cp-av.moi { background: #fff; color: var(--main); }
+        .cp-av.elle { background: #be185d; color: #fff; }
+        .cp-av.sm { width: 22px; height: 22px; font-size: 11px; }
+        .st-seg .cp-av.moi { background: var(--soft); color: var(--soft-text); }
+        .st-seg .cp-av.elle { background: color-mix(in srgb, #be185d 14%, var(--card)); color: #be185d; }
+        .cp-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 12px; }
+        .bg-amt input.cp-bud { width: 56px; min-height: 0; height: 36px; margin: 0; padding: 0; border: none !important; background: transparent !important; box-shadow: none !important; text-align: right; font-size: 15px; font-weight: 800; -moz-appearance: textfield; appearance: textfield; }
+        .cp-tile { font: inherit; border-radius: 18px; background: var(--card); border: 2px solid var(--line); padding: 12px; display: flex; align-items: center; gap: 10px; min-width: 0; cursor: pointer; text-align: left; color: var(--text); }
+        .cp-tile.on { background: color-mix(in srgb, var(--c) 10%, var(--card)); border-color: var(--c); }
+        .cp-ring { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .cp-ring > span { width: 32px; height: 32px; border-radius: 50%; background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: var(--c); }
+        .cp-tile.on .cp-ring > span { background: color-mix(in srgb, var(--c) 10%, var(--card)); }
+        .cp-ring > span.emoji { font-size: 15px; }
+        .cp-tile-t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+        .cp-tile-n { font-size: 13px; font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .cp-tile-v { font-size: 12px; color: var(--text-muted); font-weight: 600; white-space: nowrap; }
+        .cp-tile-v strong { color: var(--text); font-weight: 800; }
+        .cp-tile-v strong.over { color: var(--danger); }
+        .cp-edit { padding-top: 4px; margin-top: -2px; }
+        .cp-form { display: flex; flex-direction: column; gap: 12px; }
+        .cp-form input, .cp-form select { margin: 0 !important; min-height: 0; height: 48px; background-color: var(--bg); }
+        .cp-who { display: flex; flex-direction: column; gap: 6px; }
+        .cp-who-l { font-size: 13px; font-weight: 700; }
+        .cp-who .st-seg button { display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .cp-add, .vc-btn { margin: 0; min-height: 50px; font-weight: 800; }
+        .cp-filter { display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px 0 12px; border-radius: 999px; border: none; background: var(--soft); color: var(--soft-text); font-size: 12px; font-weight: 700; cursor: pointer; }
+        .cp-list { padding-top: 4px; padding-bottom: 4px; }
+        .cp-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+        .cp-row:last-child { border-bottom: none; }
+        .cp-ico { position: relative; width: 40px; height: 40px; border-radius: 14px; background: color-mix(in srgb, var(--c) 11%, var(--card)); color: var(--c); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; }
+        .cp-ico.emoji { font-size: 18px; }
+        [data-theme="dark"] .cp-ico { background: color-mix(in srgb, var(--c) 22%, var(--card)); }
+        .cp-who-badge { position: absolute; right: -4px; bottom: -4px; width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--card); font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; color: #fff; background: var(--main); }
+        .cp-who-badge.elle { background: #be185d; }
+        .cp-rm { width: 28px; height: 28px; border-radius: 9px; border: none; background: transparent; color: var(--text-hint); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+        .cp-rm:hover { color: var(--danger); background: var(--track); }
+        .cp-clot { display: flex; align-items: center; gap: 12px; }
+        .cp-clot-btn { height: 40px; padding: 0 16px; border-radius: 12px; border: none; background: var(--soft); color: var(--soft-text); font-size: 13px; font-weight: 800; cursor: pointer; flex-shrink: 0; }
+        .cp-arc-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 10px; }
+        .vc-config { display: flex; flex-direction: column; gap: 14px; }
+        .vc-config-top { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; padding: 6px 0 4px; }
+        .vc-globe { font-size: 34px; }
+        .vc-config input { margin: 0 !important; background-color: var(--bg); }
+        .vc-hero { background: #0e7490; }
+        .vc-amt-row { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 8px; }
+        .vc-amt-row input { height: 56px !important; font-size: 24px !important; font-weight: 800; -moz-appearance: textfield; appearance: textfield; }
+        .vc-amt-row input::-webkit-outer-spin-button, .vc-amt-row input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .vc-amt-row select { height: 56px !important; font-weight: 800; }
+        .vc-conv { display: flex; justify-content: space-between; gap: 8px; padding: 10px 14px; border-radius: 12px; background: color-mix(in srgb, #0e7490 11%, var(--card)); color: #0e7490; font-size: 13px; font-weight: 700; }
+        [data-theme="dark"] .vc-conv { background: color-mix(in srgb, #0e7490 24%, var(--card)); color: #67c6d9; }
+        .vc-conv span:last-child { font-weight: 600; opacity: 0.85; }
+        #vac-form-card .vc-btn { background: #0e7490; }
+        .vc-rep { display: flex; align-items: center; gap: 12px; padding: 10px 0; }
+        .vc-rep-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+        .vc-rep-top { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; font-weight: 700; }
+        .vc-rep-top em { font-style: normal; color: var(--text-muted); font-weight: 600; }
+        .vc-rep-bar { height: 8px; border-radius: 999px; background: color-mix(in srgb, var(--c) 14%, var(--card)); overflow: hidden; }
+        .vc-rep-bar > div { height: 100%; border-radius: 999px; background: var(--c); }
+        .vc-amts { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
+        .vc-orig { font-size: 11px; color: var(--text-muted); font-weight: 600; white-space: nowrap; }
+        .vc-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+        .vc-clot, .vc-reset { height: 50px; border-radius: 14px; font-size: 14px; font-weight: 800; cursor: pointer; }
+        .vc-clot { border: none; background: color-mix(in srgb, #0e7490 12%, var(--card)); color: #0e7490; }
+        [data-theme="dark"] .vc-clot { background: color-mix(in srgb, #0e7490 26%, var(--card)); color: #67c6d9; }
+        .vc-reset { border: 1px solid var(--line); background: var(--card); color: var(--text-muted); font-weight: 700; }
+        .vc-past-ring { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .vc-past-ring > span { width: 34px; height: 34px; border-radius: 50%; background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; }
+
         /* Dépense */
         .edit-del { width: 100%; margin-top: 10px; height: 46px; border-radius: 14px; border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent); background: transparent; color: var(--danger); font-size: 14px; font-weight: 700; cursor: pointer; }
         #log_list_tableau .dp-op:last-child { border-bottom: none; }
@@ -1215,96 +1302,93 @@
 
     <!-- ════════ PAGE COUPLE ════════ -->
     <div id="page-couple" class="page">
-
-        <!-- Session -->
-        <div class="card">
-            <div class="card-title">💑 Budget Couple
-                <span class="couple-session-badge" onclick="copierSessionCouple()" style="margin-left:auto;">
-                    <span class="sync-dot" id="sync-dot"></span>
-                    <span id="session-label">Non connecté</span>
-                </span>
-            </div>
-            <div style="display:flex;gap:8px;margin-bottom:12px;">
-                <input type="text" id="couple-session-input" placeholder="Code session (ex: ENZO-2026)" style="margin:0;flex:1;text-transform:uppercase;">
-                <button class="btn btn-primary" style="width:auto;padding:0 14px;flex-shrink:0;" onclick="rejoindreSession()">Rejoindre</button>
-            </div>
-            <p style="font-size:0.75rem;color:var(--text-muted);">Entrez le même code sur les deux téléphones pour synchroniser le budget en temps réel.</p>
+        <div class="cp-head">
+            <div class="cp-title"><span class="muted-sm">Budget à deux</span><span class="cp-h">Couple</span></div>
+            <button class="cp-session" onclick="copierSessionCouple()" aria-label="Copier le code de session">
+                <span class="sync-dot off" id="sync-dot"></span><span id="session-label">Non connecté</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+            </button>
         </div>
 
+        <!-- Session -->
+        <div class="card cp-join" id="cp-join-card">
+            <div class="sec-title">Rejoindre une session</div>
+            <p class="muted-sm" style="font-weight:500;line-height:1.5;margin:0;">Entre le même code sur les deux téléphones pour partager le budget en temps réel.</p>
+            <div class="cp-join-row">
+                <input type="text" id="couple-session-input" placeholder="Ex : ENZO-2026" style="text-transform:uppercase;">
+                <button class="btn btn-primary" onclick="rejoindreSession()">Rejoindre</button>
+            </div>
+        </div>
+        <button class="cp-change" id="cp-change-btn" style="display:none;" onclick="document.getElementById('cp-join-card').style.display='flex';this.style.display='none';">Changer de code de session</button>
+
         <!-- Budget global -->
-        <div class="card" id="couple-main-card" style="display:none;">
-            <div class="card-title">Budget commun du mois</div>
-            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
-                <span style="font-size:0.84rem;color:var(--text-muted);">Dépensé</span>
-                <span style="font-size:1.1rem;font-weight:700;" id="couple-total-dep">0.00 €</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
-                <span style="font-size:0.84rem;color:var(--text-muted);">Budget total</span>
-                <span style="font-size:1.1rem;font-weight:700;color:var(--main);" id="couple-total-budget">0.00 €</span>
-            </div>
-            <div class="couple-budget-bar"><div class="couple-budget-fill" id="couple-bar" style="width:0%"></div></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.78rem;color:var(--text-muted);">
-                <span id="couple-pct">0%</span>
-                <span id="couple-reste">Reste : 0.00 €</span>
+        <div class="hero" id="couple-main-card" style="display:none;">
+            <span class="hero-label" id="cp-reste-lbl">Reste du budget commun</span>
+            <div class="hero-amount" id="couple-reste">0 €</div>
+            <div class="hero-sub"><span id="couple-total-dep">0 €</span> dépensés sur <span id="couple-total-budget">0 €</span></div>
+            <div class="cp-hbar"><div id="couple-bar" style="width:0%"></div></div>
+            <span id="couple-pct" style="display:none;"></span>
+            <div class="cp-payers">
+                <div class="cp-payer"><span class="cp-av moi" id="cp-av-moi">M</span><span><span class="hs-l" id="cp-lbl-moi">Moi a payé</span><b id="cp-tot-moi">0 €</b></span></div>
+                <div class="cp-payer"><span class="cp-av elle" id="cp-av-elle">E</span><span><span class="hs-l" id="cp-lbl-elle">Elle a payé</span><b id="cp-tot-elle">0 €</b></span></div>
             </div>
         </div>
 
         <!-- Catégories -->
-        <div class="card" id="couple-cats-card" style="display:none;">
-            <div class="card-title">Par catégorie</div>
-            <div class="couple-cat-grid" id="couple-cat-grid"></div>
-            <div style="margin-top:8px;">
-                <label style="font-size:0.78rem;">Modifier les budgets par catégorie</label>
-                <div id="couple-budget-inputs"></div>
-            <div class="add-cat-box" style="margin-top:12px;">
-                <input type="text" id="couple-new-cat" placeholder="Nouvelle catégorie..." style="margin:0;flex:1;">
-                <button class="btn-add-cat" onclick="ajouterCategorieCouple()">+</button>
+        <div id="couple-cats-card" style="display:none;">
+            <div class="sec-head">
+                <span class="sec-title">Catégories communes</span>
+                <button class="link-btn" id="cp-edit-btn" onclick="toggleEditCouple()">Modifier</button>
             </div>
+            <div class="cp-grid" id="couple-cat-grid"></div>
+            <div class="card cp-edit" id="cp-edit-box" style="display:none;">
+                <div id="couple-budget-inputs"></div>
+                <div class="bg-add">
+                    <input type="text" id="couple-new-cat" placeholder="Nouvelle catégorie…" onkeydown="if(event.key==='Enter') ajouterCategorieCouple()">
+                    <button class="bg-plus" aria-label="Ajouter la catégorie" onclick="ajouterCategorieCouple()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+                </div>
             </div>
         </div>
 
         <!-- Ajouter dépense -->
-        <div class="card" id="couple-form-card" style="display:none;">
-            <div class="card-title">Ajouter une dépense commune</div>
-            <label>Objet</label>
-            <input type="text" id="couple-desc" placeholder="Ex: Restaurant La Bonne Table">
-            <label>Montant (€)</label>
-            <input type="number" inputmode="decimal" id="couple-mt" placeholder="0.00">
-            <label>Catégorie</label>
-            <select id="couple-cat" style="margin-bottom:12px;"></select>
-            <label>Payé par</label>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
-                <button id="btn-moi" class="btn btn-primary" onclick="selectAuteur('moi')" style="min-height:40px;">👤 <span id="label-moi">Moi</span></button>
-                <button id="btn-elle" class="btn btn-secondary" onclick="selectAuteur('elle')" style="min-height:40px;">👤 <span id="label-partner">Ma copine</span></button>
+        <div class="card cp-form" id="couple-form-card" style="display:none;">
+            <div class="sec-title">Dépense commune</div>
+            <div class="bg-form-row">
+                <input type="text" id="couple-desc" placeholder="Ex : Courses" aria-label="Objet">
+                <input type="number" inputmode="decimal" id="couple-mt" placeholder="0 €" aria-label="Montant">
             </div>
-            <button class="btn btn-primary" onclick="ajouterDepenseCouple()">+ Ajouter</button>
+            <span class="dp-select"><i id="couple-cat-dot"></i><select id="couple-cat" onchange="majPastilleCouple()" aria-label="Catégorie"></select></span>
+            <div class="cp-who">
+                <span class="cp-who-l">Payé par</span>
+                <div class="st-seg">
+                    <button id="btn-moi" class="on" onclick="selectAuteur('moi')"><span class="cp-av sm moi" id="cp-av2-moi">M</span><span id="label-moi">Moi</span></button>
+                    <button id="btn-elle" onclick="selectAuteur('elle')"><span class="cp-av sm elle" id="cp-av2-elle">E</span><span id="label-partner">Ma copine</span></button>
+                </div>
+            </div>
+            <button class="btn btn-primary cp-add" onclick="ajouterDepenseCouple()">Ajouter</button>
         </div>
 
         <!-- Historique -->
-        <div class="card" id="couple-history-card" style="display:none;">
-            <div class="card-title">Historique commun</div>
-            <!-- Filtre par catégorie -->
-            <div style="margin-bottom:12px;">
-                <select id="couple-filtre-cat" onchange="majAffichageCouple()" style="margin:0;">
-                    <option value="">Toutes les catégories</option>
-                </select>
+        <div id="couple-history-card" style="display:none;">
+            <div class="sec-head">
+                <span class="sec-title">Historique</span>
+                <button class="cp-filter" id="cp-filter-chip" style="display:none;" onclick="filtrerParCat(document.getElementById('couple-filtre-cat').value)"><span id="cp-filter-lbl"></span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
             </div>
-            <div id="couple-history-list"></div>
+            <select id="couple-filtre-cat" onchange="majAffichageCouple()" style="display:none;"><option value="">Toutes les catégories</option></select>
+            <div class="card cp-list" id="couple-history-list"></div>
         </div>
 
         <!-- Clôture mensuelle -->
-        <div class="card" id="couple-cloture-card" style="display:none;">
-            <div class="card-title">Clôture du mois</div>
-            <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px;line-height:1.6;">Archive le budget de ce mois et repart à zéro pour le mois suivant. Les dépenses Supabase seront conservées dans l'historique local.</p>
-            <button class="btn btn-primary" onclick="cloturerMoisCouple()">📁 Clôturer le mois couple</button>
+        <div class="card cp-clot" id="couple-cloture-card" style="display:none;">
+            <div style="flex:1;min-width:0;"><div class="sec-title" style="font-size:14px;">Clôturer le mois à deux</div><div class="muted-sm" id="cp-clot-sub" style="margin-top:2px;">Archive partagée</div></div>
+            <button class="cp-clot-btn" onclick="cloturerMoisCouple()">Clôturer</button>
         </div>
 
         <!-- Archives couple -->
-        <div class="card" id="couple-archives-card" style="display:none;">
-            <div class="card-title">Archives couple</div>
-            <div id="couple-archives-list"></div>
+        <div id="couple-archives-card" style="display:none;">
+            <div class="sec-head"><span class="sec-title">Mois archivés à deux</span></div>
+            <div class="card cp-list" id="couple-archives-list"></div>
         </div>
-
     </div>
 
     <div id="page-archives" class="page">
@@ -1333,71 +1417,59 @@
 
     <div id="page-vacances" class="page">
         <!-- Configuration -->
-        <div class="card" id="vac-config-card">
-            <div style="text-align:center;padding:10px 0 16px;">
-                <div style="font-size:2rem;margin-bottom:8px;">🌍</div>
-                <div style="font-size:1rem;font-weight:700;color:var(--text);margin-bottom:4px;">Configurer ton séjour</div>
-                <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:16px;">Les dépenses vacances sont séparées de ton budget mensuel</div>
-            </div>
-            <label>Nom du séjour</label>
-            <input type="text" id="vac-nom" placeholder="Ex: Maroc juillet 2026">
-            <label>Budget total du séjour (€)</label>
-            <input type="number" inputmode="decimal" id="vac-budget" placeholder="Ex: 800">
-            <button class="btn btn-primary" onclick="sauvegarderConfigVacances()">🌍 Créer le séjour</button>
+        <div class="card vc-config" id="vac-config-card">
+            <div class="vc-config-top"><span class="vc-globe">🌍</span><div class="sec-title" style="font-size:17px;">Configurer ton séjour</div><span class="muted-sm" style="font-weight:500;">Les dépenses du voyage sont séparées de ton budget du mois</span></div>
+            <label class="dp-field"><span>Nom du séjour</span><input type="text" id="vac-nom" placeholder="Ex : Maroc juillet 2026"></label>
+            <label class="dp-field"><span>Budget total (€)</span><input type="number" inputmode="decimal" id="vac-budget" placeholder="Ex : 800"></label>
+            <button class="btn btn-primary vc-btn" onclick="sauvegarderConfigVacances()">Enregistrer le séjour</button>
         </div>
 
-        <!-- Résumé -->
-        <div class="card" id="vac-main-card" style="display:none;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-                <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);" id="vac-titre">Séjour</div>
-                <button onclick="document.getElementById('vac-config-card').style.display='block';document.getElementById('vac-main-card').style.display='none';" style="background:none;border:none;font-size:0.75rem;color:var(--text-muted);cursor:pointer;">✏️ Modifier</button>
+        <div id="vac-main-card" style="display:none;">
+            <div class="cp-head">
+                <div class="cp-title"><span class="muted-sm" id="vac-sub">Séjour en cours</span><span class="cp-h" id="vac-titre">Séjour</span></div>
+                <button class="mh-btn" aria-label="Modifier le séjour" onclick="document.getElementById('vac-config-card').style.display='flex';document.getElementById('vac-main-card').style.display='none';">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+                </button>
             </div>
-            <div style="font-size:2rem;font-weight:700;line-height:1;margin-bottom:12px;color:var(--text);" id="vac-total-dep">0.00 €</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
-                <div style="background:var(--bg);border-radius:10px;padding:8px 10px;">
-                    <div style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2px;">Budget total</div>
-                    <div style="font-size:0.95rem;font-weight:700;color:var(--main);" id="vac-total-budget">0.00 €</div>
+            <div class="hero vc-hero">
+                <span class="hero-label" id="vac-reste-lbl">Reste pour le séjour</span>
+                <div class="hero-amount" id="vac-reste">0 €</div>
+                <div class="hero-sub"><span id="vac-total-dep">0 €</span> dépensés sur <span id="vac-total-budget">0 €</span></div>
+                <div class="cp-hbar"><div id="vac-bar" style="width:0%"></div></div>
+                <span id="vac-pct" style="display:none;"></span>
+                <div class="hero-stats">
+                    <div class="hero-stat"><span class="hs-l">Par jour</span><span class="hs-v" id="vac-jour">—</span></div>
+                    <div class="hero-stat"><span class="hs-l">Dépenses</span><span class="hs-v" id="vac-nb">0</span></div>
+                    <div class="hero-stat"><span class="hs-l">Utilisé</span><span class="hs-v" id="vac-pct2">0 %</span></div>
                 </div>
-                <div style="background:var(--bg);border-radius:10px;padding:8px 10px;">
-                    <div style="font-size:0.68rem;color:var(--text-muted);margin-bottom:2px;">Reste</div>
-                    <div style="font-size:0.95rem;font-weight:700;color:var(--success);" id="vac-reste">0.00 €</div>
-                </div>
             </div>
-            <div style="background:var(--bg2);border-radius:999px;height:6px;overflow:hidden;margin-bottom:4px;">
-                <div id="vac-bar" style="height:100%;border-radius:999px;background:var(--main);transition:width 0.7s;width:0%;"></div>
-            </div>
-            <div style="font-size:0.7rem;color:var(--text-muted);text-align:right;" id="vac-pct">0%</div>
         </div>
 
         <!-- Formulaire ajout dépense -->
-        <div class="card" id="vac-form-card" style="display:none;">
-            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:12px;">➕ Ajouter une dépense</div>
-            <label>Objet</label>
-            <input type="text" id="vac-desc" placeholder="Ex: Restaurant La Mamounia">
-            <label>Montant</label>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
-                <input type="number" inputmode="decimal" id="vac-mt" placeholder="0.00" style="margin:0;">
-                <select id="vac-devise" style="margin:0;"></select>
+        <div class="card cp-form" id="vac-form-card" style="display:none;">
+            <div class="sec-title">Nouvelle dépense</div>
+            <div class="vc-amt-row">
+                <input type="number" inputmode="decimal" id="vac-mt" placeholder="0" aria-label="Montant" oninput="apercuConversion()">
+                <select id="vac-devise" aria-label="Devise" onchange="apercuConversion()"></select>
             </div>
-            <label>Catégorie</label>
-            <select id="vac-cat" style="margin-bottom:14px;"></select>
-            <button class="btn btn-primary" id="vac-btn-ajouter" onclick="ajouterDepenseVacances()">+ Ajouter</button>
+            <div class="vc-conv" id="vac-conv" style="display:none;"><span id="vac-conv-val">≈ 0 €</span><span id="vac-conv-rate"></span></div>
+            <input type="text" id="vac-desc" placeholder="Ex : Dîner à la médina" aria-label="Objet">
+            <select id="vac-cat" aria-label="Catégorie"></select>
+            <button class="btn btn-primary vc-btn" id="vac-btn-ajouter" onclick="ajouterDepenseVacances()">Ajouter</button>
         </div>
 
-        <!-- Répartition par catégorie -->
-        <div class="card" id="vac-hist-card" style="display:none;">
-            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:10px;">📊 Par catégorie</div>
-            <div id="vac-cats-list" style="margin-bottom:16px;"></div>
-            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:10px;">🧾 Historique</div>
-            <div id="vac-hist-list" style="max-height:340px;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;">
-                <button onclick="reinitialiserVacances()" style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);color:var(--danger);border-radius:10px;padding:10px;font-family:'Manrope',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;">🗑️ Réinitialiser</button>
-                <button onclick="cloturerVoyage()" style="background:var(--main);border:none;color:white;border-radius:10px;padding:10px;font-family:'Manrope',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;">📁 Clôturer le voyage</button>
+        <div id="vac-hist-card" style="display:none;">
+            <div class="sec-head"><span class="sec-title">Où part l'argent</span></div>
+            <div class="card cp-list" id="vac-cats-list"></div>
+            <div class="sec-head"><span class="sec-title">Historique du séjour</span></div>
+            <div class="card cp-list" id="vac-hist-list"></div>
+            <div class="vc-actions">
+                <button class="vc-clot" onclick="cloturerVoyage()">Clôturer le voyage</button>
+                <button class="vc-reset" onclick="reinitialiserVacances()">Réinitialiser</button>
             </div>
-            <!-- Archives voyages -->
-            <div id="vac-archives-section" style="display:none;margin-top:20px;">
-                <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:10px;">🗂️ Voyages archivés</div>
-                <div id="vac-archives-list"></div>
+            <div id="vac-archives-section" style="display:none;">
+                <div class="sec-head"><span class="sec-title">Voyages passés</span></div>
+                <div class="card cp-list" id="vac-archives-list"></div>
             </div>
         </div>
     </div>
@@ -1899,9 +1971,9 @@
 
     function selectAuteur(who) {
         coupleAuteur = who;
-        document.getElementById('btn-moi').className  = who === 'moi'  ? 'btn btn-primary' : 'btn btn-secondary';
-        document.getElementById('btn-elle').className = who === 'elle' ? 'btn btn-primary' : 'btn btn-secondary';
-        document.getElementById('btn-elle').style.background = who === 'elle' ? '#db2777' : '';
+        const m = document.getElementById('btn-moi'), e = document.getElementById('btn-elle');
+        if (m) m.classList.toggle('on', who === 'moi');
+        if (e) e.classList.toggle('on', who === 'elle');
     }
 
     async function rejoindreSession() {
@@ -1997,112 +2069,133 @@
         } catch(e) { showToast('Erreur suppression', 'danger'); }
     }
 
+    // Icône (emoji ou initiale) et couleur d'une catégorie
+    function iconeCat(label) {
+        const re = /^(\p{Extended_Pictographic}(?:️|‍\p{Extended_Pictographic})*️?)\s*/u;
+        const m = String(label || '').match(re);
+        const nom = m ? (label.slice(m[0].length).trim() || label) : label;
+        return { emoji: !!m, icon: m ? m[1] : (String(nom).trim().charAt(0) || '?').toUpperCase(), nom: nom };
+    }
+    const PALETTE_COUPLE = ['#d97706', '#be185d', '#0e7490', '#047857', '#4f46e5', '#9333ea', '#64748b', '#c2410c'];
+    function couleurCouple(id) { const i = COUPLE_CATS.findIndex(c => c.id === id); return PALETTE_COUPLE[(i < 0 ? 0 : i) % PALETTE_COUPLE.length]; }
+    function toggleEditCouple() {
+        const box = document.getElementById('cp-edit-box'), btn = document.getElementById('cp-edit-btn');
+        if (!box) return; const open = box.style.display === 'none';
+        box.style.display = open ? 'block' : 'none'; if (btn) btn.innerText = open ? 'Terminé' : 'Modifier';
+    }
+    function majPastilleCouple() {
+        const sel = document.getElementById('couple-cat'), dot = document.getElementById('couple-cat-dot');
+        if (sel && dot) dot.style.background = sel.value ? couleurCouple(sel.value) : 'var(--text-hint)';
+    }
+
     function majAffichageCouple() {
         const hasSession = !!coupleSession;
         ['couple-main-card','couple-cats-card','couple-form-card','couple-history-card','couple-cloture-card'].forEach(id => {
             const el = document.getElementById(id);
-            if (el) el.style.display = hasSession ? 'block' : 'none';
+            if (el) el.style.display = hasSession ? '' : 'none';
         });
-        // Archives toujours visibles si on en a
+        const join = document.getElementById('cp-join-card'); if (join) join.style.display = hasSession ? 'none' : 'flex';
+        const chg = document.getElementById('cp-change-btn'); if (chg) chg.style.display = hasSession ? 'block' : 'none';
         const arcCard = document.getElementById('couple-archives-card');
         const coupleArchives = JSON.parse(localStorage.getItem('couple_archives') || '[]');
-        if (arcCard) arcCard.style.display = coupleArchives.length > 0 ? 'block' : 'none';
+        if (arcCard) arcCard.style.display = coupleArchives.length > 0 ? '' : 'none';
         if (!hasSession) { majArchivesCouple(); return; }
 
-        // Peuple le select catégorie du formulaire
+        const fmt = n => (Math.round(n * 100) / 100).toFixed(n % 1 ? 2 : 0).replace('.', ',') + ' €';
+        const nomMoi = appSettings.nomMoi || 'Moi', nomElle = appSettings.nomPartner || 'Elle';
+
+        // Select catégorie du formulaire
         const sel = document.getElementById('couple-cat');
         if (sel) {
             const curVal = sel.value;
             sel.innerHTML = '';
             COUPLE_CATS.forEach(c => { sel.innerHTML += `<option value="${c.id}">${c.label}</option>`; });
             if (curVal && COUPLE_CATS.find(c => c.id === curVal)) sel.value = curVal;
+            majPastilleCouple();
         }
-
-        // Peuple le filtre catégorie historique
+        // Filtre (caché, piloté par les tuiles)
         const filtSel = document.getElementById('couple-filtre-cat');
         if (filtSel) {
             const curFilt = filtSel.value;
             filtSel.innerHTML = '<option value="">Toutes les catégories</option>';
             COUPLE_CATS.forEach(c => { filtSel.innerHTML += `<option value="${c.id}">${c.label}</option>`; });
-            if (curFilt) filtSel.value = curFilt;
+            if (curFilt && COUPLE_CATS.find(c => c.id === curFilt)) filtSel.value = curFilt;
         }
+        const filtre = (filtSel || {}).value || '';
 
-        // Calcul totaux
-        let totalDep = 0;
-        const parCat = {};
-        COUPLE_CATS.forEach(c => { parCat[c.id] = 0; });
-        coupleDepenses.forEach(d => { totalDep += d.montant; if (parCat[d.categorie] !== undefined) parCat[d.categorie] += d.montant; });
+        // Totaux
+        let totalDep = 0, totMoi = 0, totElle = 0;
+        const parCat = {}; COUPLE_CATS.forEach(c => { parCat[c.id] = 0; });
+        coupleDepenses.forEach(d => { const m = parseFloat(d.montant) || 0; totalDep += m; if (d.auteur === 'moi') totMoi += m; else totElle += m; if (parCat[d.categorie] !== undefined) parCat[d.categorie] += m; });
         const totalBudget = COUPLE_CATS.reduce((s, c) => s + (coupleBudgets[c.id] || 0), 0);
         const pct = totalBudget > 0 ? Math.min((totalDep / totalBudget) * 100, 100) : 0;
         const reste = totalBudget - totalDep;
+        const setT = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+        setT('cp-reste-lbl', reste < 0 ? 'Budget commun dépassé de' : 'Reste du budget commun');
+        setT('couple-reste', fmt(Math.abs(reste)));
+        setT('couple-total-dep', fmt(totalDep));
+        setT('couple-total-budget', fmt(totalBudget));
+        setT('couple-pct', Math.round(pct) + '%');
+        const bar = document.getElementById('couple-bar'); if (bar) { bar.style.width = pct + '%'; bar.className = reste < 0 ? 'over' : ''; }
+        setT('cp-lbl-moi', nomMoi + ' a payé'); setT('cp-lbl-elle', nomElle + ' a payé');
+        setT('cp-tot-moi', fmt(totMoi)); setT('cp-tot-elle', fmt(totElle));
+        ['cp-av-moi', 'cp-av2-moi'].forEach(id => setT(id, nomMoi.charAt(0).toUpperCase()));
+        ['cp-av-elle', 'cp-av2-elle'].forEach(id => setT(id, nomElle.charAt(0).toUpperCase()));
+        setT('label-moi', nomMoi); setT('label-partner', nomElle);
+        setT('cp-clot-sub', 'Archive partagée avec ' + nomElle + (coupleArchives.length ? ' · ' + coupleArchives.length + ' mois archivé' + (coupleArchives.length > 1 ? 's' : '') : ''));
 
-        // Mise à jour des labels noms
-        var lblMoi = document.getElementById('label-moi');
-        var lblPartner = document.getElementById('label-partner');
-        if (lblMoi) lblMoi.textContent = appSettings.nomMoi || 'Moi';
-        if (lblPartner) lblPartner.textContent = appSettings.nomPartner || 'Ma copine';
-
-        document.getElementById('couple-total-dep').textContent = totalDep.toFixed(2) + ' €';
-        document.getElementById('couple-total-budget').textContent = totalBudget.toFixed(2) + ' €';
-        document.getElementById('couple-pct').textContent = pct.toFixed(0) + '%';
-        document.getElementById('couple-reste').textContent = (reste < 0 ? '⚠️ Dépassé de ' + Math.abs(reste).toFixed(2) : 'Reste : ' + reste.toFixed(2)) + ' €';
-        const bar = document.getElementById('couple-bar');
-        if (bar) { bar.style.width = pct + '%'; bar.className = 'couple-budget-fill' + (reste < 0 ? ' over' : ''); }
-
-        // Grille catégories
+        // Tuiles catégories
         const grid = document.getElementById('couple-cat-grid');
         if (grid) {
             grid.innerHTML = COUPLE_CATS.map(c => {
-                const dep = parCat[c.id] || 0, bud = coupleBudgets[c.id] || 0;
-                const p = bud > 0 ? Math.min((dep/bud)*100, 100) : 0;
-                const over = dep > bud && bud > 0;
-                return `<div class="couple-cat-box" onclick="filtrerParCat('${c.id}')" style="cursor:pointer;">
-                    <div class="couple-cat-name">${c.label}</div>
-                    <div class="couple-cat-amounts"><span>${dep.toFixed(2)} €</span><span style="color:var(--text-muted)">${bud} €</span></div>
-                    <div class="couple-cat-bar"><div class="couple-cat-fill${over?' over':''}" style="width:${p}%"></div></div>
-                </div>`;
+                const dep = parCat[c.id] || 0, bud = coupleBudgets[c.id] || 0, col = couleurCouple(c.id);
+                const p = bud > 0 ? Math.min((dep / bud) * 100, 100) : (dep > 0 ? 100 : 0);
+                const over = dep > bud && bud > 0, ic = iconeCat(c.label), rc = over ? 'var(--danger)' : col;
+                return `<button class="cp-tile${filtre === c.id ? ' on' : ''}" style="--c:${col};" onclick="filtrerParCat('${c.id}')">
+                    <span class="cp-ring" style="background:conic-gradient(${rc} 0 ${p}%, color-mix(in srgb, ${col} 18%, var(--card)) ${p}% 100%);"><span class="${ic.emoji ? 'emoji' : ''}">${ic.icon}</span></span>
+                    <span class="cp-tile-t"><span class="cp-tile-n">${ic.nom}</span><span class="cp-tile-v"><strong class="${over ? 'over' : ''}">${fmt(dep)}</strong> / ${fmt(bud)}</span></span>
+                </button>`;
             }).join('');
         }
 
-        // Inputs budgets
+        // Limites modifiables
         const inputs = document.getElementById('couple-budget-inputs');
-        if (inputs && inputs.children.length === 0) {
-            inputs.innerHTML = COUPLE_CATS.map(c => `
-                <div class="budget-row" id="couple-row-${c.id}">
-                    <button class="btn-icon-sm" onclick="supprimerCategorieCouple('${c.id}')">✕</button>
-                    <span class="cat-label">${c.label}</span>
-                    <input type="number" inputmode="decimal" id="couple-bud-${c.id}" value="${coupleBudgets[c.id]||0}" style="width:80px;margin:0;" onchange="miseAJourBudgetCouple('${c.id}', this.value)">
-                </div>`).join('');
-        } else if (inputs) {
-            COUPLE_CATS.forEach(c => {
-                const el = document.getElementById('couple-bud-' + c.id);
-                if (el && document.activeElement !== el) el.value = coupleBudgets[c.id] || 0;
-            });
+        if (inputs) {
+            const actifs = inputs.querySelectorAll('input').length;
+            if (actifs !== COUPLE_CATS.length || !inputs.contains(document.activeElement)) {
+                inputs.innerHTML = COUPLE_CATS.map(c => { const ic = iconeCat(c.label); return `
+                    <div class="bg-row" id="couple-row-${c.id}" style="--c:${couleurCouple(c.id)};">
+                        <div class="bg-ico${ic.emoji ? ' emoji' : ''}">${ic.icon}</div>
+                        <div class="bg-main"><span class="bg-name">${ic.nom}</span></div>
+                        <label class="bg-amt"><input type="number" inputmode="decimal" class="cp-bud" id="couple-bud-${c.id}" value="${coupleBudgets[c.id] || 0}" onchange="miseAJourBudgetCouple('${c.id}', this.value)" aria-label="Budget ${ic.nom}"><b>€</b></label>
+                        <button class="bg-del" aria-label="Supprimer ${ic.nom}" onclick="supprimerCategorieCouple('${c.id}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg></button>
+                    </div>`; }).join('');
+            }
         }
 
-        // Historique avec filtre
-        const filtre = (document.getElementById('couple-filtre-cat') || {}).value || '';
+        // Pastille de filtre
+        const chip = document.getElementById('cp-filter-chip');
+        if (chip) { const fc = COUPLE_CATS.find(c => c.id === filtre); chip.style.display = fc ? 'flex' : 'none'; setT('cp-filter-lbl', fc ? fc.label : ''); }
+
+        // Historique
         const hist = document.getElementById('couple-history-list');
         const depFiltrees = filtre ? coupleDepenses.filter(d => d.categorie === filtre) : coupleDepenses;
         if (hist) {
             if (depFiltrees.length === 0) {
-                hist.innerHTML = `<div class="empty-state" style="padding:20px"><div class="empty-icon">💸</div><p>${filtre ? 'Aucune dépense dans cette catégorie.' : 'Aucune dépense commune pour l\'instant.'}</p></div>`;
+                hist.innerHTML = `<div class="bg-empty">${filtre ? 'Aucune dépense dans cette catégorie.' : 'Aucune dépense commune pour l\'instant.'}</div>`;
             } else {
-                hist.innerHTML = depFiltrees.map(d => `
-                    <div class="couple-dep-row">
-                        <div>
-                            <div style="font-weight:600">${d.nom}</div>
-                            <div style="font-size:0.73rem;color:var(--text-muted)">${d.date} · ${COUPLE_CATS.find(c=>c.id===d.categorie)?.label||d.categorie}</div>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:8px">
-                            <span class="couple-dep-who ${d.auteur==='moi'?'who-moi':'who-elle'}">${d.auteur==='moi'?(appSettings.nomMoi||'Moi'):(appSettings.nomPartner||'Elle')}</span>
-                            <strong>${parseFloat(d.montant).toFixed(2)} €</strong>
-                            <button class="btn-delete" onclick="supprimerDepenseCouple('${d.id}')">✕</button>
-                        </div>
-                    </div>`).join('');
+                hist.innerHTML = depFiltrees.map(d => {
+                    const cat = COUPLE_CATS.find(c => c.id === d.categorie), ic = iconeCat(cat ? cat.label : d.categorie);
+                    const moi = d.auteur === 'moi', qui = moi ? nomMoi : nomElle;
+                    return `<div class="cp-row">
+                        <span class="cp-ico${ic.emoji ? ' emoji' : ''}" style="--c:${couleurCouple(d.categorie)};">${ic.icon}<span class="cp-who-badge${moi ? '' : ' elle'}">${qui.charAt(0).toUpperCase()}</span></span>
+                        <div class="dp-main"><span class="dp-name">${d.nom}</span><span class="dp-meta">${ic.nom} · ${qui} · ${d.date}</span></div>
+                        <span class="dp-amt">−${fmt(parseFloat(d.montant) || 0)}</span>
+                        <button class="cp-rm" aria-label="Supprimer" onclick="supprimerDepenseCouple('${d.id}')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+                    </div>`;
+                }).join('');
             }
         }
-
         majArchivesCouple();
     }
 
@@ -2172,21 +2265,20 @@
         if (!arcCard || !arcList) return;
         const coupleArchives = JSON.parse(localStorage.getItem('couple_archives') || '[]');
         if (coupleArchives.length === 0) { arcCard.style.display = 'none'; return; }
-        arcCard.style.display = 'block';
+        arcCard.style.display = '';
+        const nomMoi = appSettings.nomMoi || 'Moi', nomElle = appSettings.nomPartner || 'Elle';
+        const fmt = n => (Math.round(n * 100) / 100).toFixed(n % 1 ? 2 : 0).replace('.', ',') + ' €';
         arcList.innerHTML = [...coupleArchives].reverse().map(arc => {
-            const sc = arc.totalDep > arc.totalBudget ? 'var(--danger)' : 'var(--success)';
-            return `<div class="couple-arc-card">
-                <div class="couple-arc-header">
-                    <div>
-                        <div class="couple-arc-nom">💑 ${arc.nom}</div>
-                        <div class="couple-arc-date">Archivé le ${arc.date}</div>
-                    </div>
-                    <button class="btn-delete" onclick="supprimerArchiveCouple(${arc.id})">✕</button>
-                </div>
-                <div class="couple-arc-stats">
-                    <div class="couple-arc-stat"><div class="lbl">💸 Dépensé</div><div class="val" style="color:${sc}">${arc.totalDep.toFixed(2)} €</div></div>
-                    <div class="couple-arc-stat"><div class="lbl">👤 Moi</div><div class="val" style="color:var(--main)">${arc.totalMoi.toFixed(2)} €</div></div>
-                    <div class="couple-arc-stat"><div class="lbl">👤 Elle</div><div class="val" style="color:#db2777">${arc.totalElle.toFixed(2)} €</div></div>
+            const bud = arc.totalBudget || 0, over = bud > 0 && arc.totalDep > bud, p = bud > 0 ? Math.min(Math.round(arc.totalDep / bud * 100), 100) : 0;
+            const col = over ? 'var(--danger)' : 'var(--main)';
+            return `<div class="cp-row" style="flex-wrap:wrap;">
+                <span class="vc-past-ring" style="background:conic-gradient(${col} 0 ${p}%, var(--track) ${p}% 100%);"><span style="color:${over ? 'var(--danger)' : 'var(--text)'}">${bud > 0 ? p + '%' : ''}</span></span>
+                <div class="dp-main"><span class="dp-name" style="font-weight:800;">${arc.nom}</span><span class="dp-meta">${fmt(arc.totalDep)} dépensés${bud > 0 ? ' sur ' + fmt(bud) : ''} · archivé le ${arc.date}</span></div>
+                <button class="cp-rm" aria-label="Supprimer l'archive" onclick="supprimerArchiveCouple(${arc.id})"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+                <div class="cp-arc-stats" style="width:100%;">
+                    <div class="am-stat"><span>Total</span><strong>${fmt(arc.totalDep)}</strong></div>
+                    <div class="am-stat"><span>${nomMoi}</span><strong style="color:var(--soft-text)">${fmt(arc.totalMoi || 0)}</strong></div>
+                    <div class="am-stat"><span>${nomElle}</span><strong style="color:#be185d">${fmt(arc.totalElle || 0)}</strong></div>
                 </div>
             </div>`;
         }).join('');
@@ -3112,6 +3204,19 @@
         }
     }
 
+    async function apercuConversion() {
+        const box = document.getElementById('vac-conv'); if (!box) return;
+        const mt = parseFloat((document.getElementById('vac-mt') || {}).value);
+        const dev = (document.getElementById('vac-devise') || {}).value || 'EUR';
+        if (dev === 'EUR' || isNaN(mt) || mt <= 0) { box.style.display = 'none'; return; }
+        const t1 = await convertirEnEuro(1, dev);
+        if (t1 === null) { box.style.display = 'none'; return; }
+        const taux = taux_cache[dev] || t1;
+        const val = mt * taux;
+        document.getElementById('vac-conv-val').textContent = '≈ ' + val.toFixed(2).replace('.', ',') + ' €';
+        document.getElementById('vac-conv-rate').textContent = '1 € = ' + (1 / taux).toFixed(2).replace('.', ',') + ' ' + dev;
+        box.style.display = 'flex';
+    }
     function sauvegarderVacances() {
         localStorage.setItem('vacances_data', JSON.stringify(vacancesData));
     }
@@ -3156,7 +3261,7 @@
         var mtEur = await convertirEnEuro(mt, devise);
         var devInfo = VAC_DEVISES.find(function(d){ return d.code === devise; }) || { sym: devise };
 
-        if (btnAjouter) { btnAjouter.disabled = false; btnAjouter.textContent = '+ Ajouter'; }
+        if (btnAjouter) { btnAjouter.disabled = false; btnAjouter.textContent = 'Ajouter'; }
 
         if (mtEur === null) {
             showToast('Conversion échouée — vérifie ta connexion', 'danger');
@@ -3178,6 +3283,7 @@
         sauvegarderVacances();
         document.getElementById('vac-desc').value = '';
         document.getElementById('vac-mt').value = '';
+        const cv = document.getElementById('vac-conv'); if (cv) cv.style.display = 'none';
         majAffichageVacances();
         showToast(desc + ' — ' + mt + ' ' + devInfo.sym + ' = ' + mtEur.toFixed(2) + ' €', 'success', 4000);
     }
@@ -3230,25 +3336,16 @@
         if (!section || !list) return;
         if (archives.length === 0) { section.style.display = 'none'; return; }
         section.style.display = 'block';
+        const fmt = n => (Math.round(n * 100) / 100).toFixed(n % 1 ? 2 : 0).replace('.', ',') + ' €';
         list.innerHTML = [...archives].reverse().map(function(arc) {
-            var sc = arc.total > arc.budget && arc.budget > 0 ? 'var(--danger)' : 'var(--success)';
-            var pct = arc.budget > 0 ? Math.min(Math.round((arc.total/arc.budget)*100), 100) : 0;
-            return '<div style="background:var(--bg);border-radius:12px;padding:12px;margin-bottom:8px;border:1px solid var(--bg2);">'
-                + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">'
-                + '<div><div style="font-size:0.88rem;font-weight:700;">' + arc.nom + '</div>'
-                + '<div style="font-size:0.7rem;color:var(--text-muted);">Archivé le ' + arc.date + '</div></div>'
-                + '<button class="btn-delete" onclick="supprimerArchiveVoyage(' + arc.id + ')">✕</button>'
-                + '</div>'
-                + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">'
-                + '<div style="background:var(--card);border-radius:8px;padding:8px;text-align:center;">'
-                + '<div style="font-size:0.65rem;color:var(--text-muted);">Dépensé</div>'
-                + '<div style="font-size:0.95rem;font-weight:700;color:' + sc + ';">' + arc.total.toFixed(2) + ' €</div></div>'
-                + '<div style="background:var(--card);border-radius:8px;padding:8px;text-align:center;">'
-                + '<div style="font-size:0.65rem;color:var(--text-muted);">Budget</div>'
-                + '<div style="font-size:0.95rem;font-weight:700;color:var(--main);">' + (arc.budget||0).toFixed(2) + ' €</div></div>'
-                + '</div>'
-                + (arc.budget > 0 ? '<div style="background:var(--bg2);border-radius:999px;height:5px;overflow:hidden;margin-top:8px;"><div style="height:100%;width:' + pct + '%;background:' + sc + ';border-radius:999px;"></div></div>' : '')
-                + '</div>';
+            const over = arc.budget > 0 && arc.total > arc.budget, p = arc.budget > 0 ? Math.min(Math.round(arc.total / arc.budget * 100), 100) : 0;
+            const pReel = arc.budget > 0 ? Math.round(arc.total / arc.budget * 100) : 0;
+            const col = over ? 'var(--danger)' : '#0e7490';
+            return `<div class="cp-row">
+                <span class="vc-past-ring" style="background:conic-gradient(${col} 0 ${p}%, var(--track) ${p}% 100%);"><span style="color:${over ? 'var(--danger)' : 'var(--text)'}">${arc.budget > 0 ? pReel + '%' : ''}</span></span>
+                <div class="dp-main"><span class="dp-name" style="font-weight:800;">${arc.nom}</span><span class="dp-meta">${fmt(arc.total)}${arc.budget > 0 ? ' sur ' + fmt(arc.budget) : ''} · ${arc.date}</span></div>
+                <button class="cp-rm" aria-label="Supprimer l'archive" onclick="supprimerArchiveVoyage(${arc.id})"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+            </div>`;
         }).join('');
     }
 
@@ -3268,104 +3365,73 @@
         var histCard = document.getElementById('vac-hist-card');
 
         var configured = !!(vacancesData.nom);
-        if (configCard) configCard.style.display = configured ? 'none' : 'block';
-        if (mainCard) mainCard.style.display = configured ? 'block' : 'none';
-        if (formCard) formCard.style.display = configured ? 'block' : 'none';
-        if (histCard) histCard.style.display = configured ? 'block' : 'none';
-
+        if (configCard) configCard.style.display = configured ? 'none' : 'flex';
+        if (mainCard) mainCard.style.display = configured ? '' : 'none';
+        if (formCard) formCard.style.display = configured ? '' : 'none';
+        if (histCard) histCard.style.display = configured ? '' : 'none';
+        majArchivesVoyages();
         if (!configured) return;
 
-        // Titre
-        var titreEl = document.getElementById('vac-titre');
-        if (titreEl) titreEl.textContent = vacancesData.nom || 'Séjour';
+        const VCOL = { transport:'#0e7490', hebergement:'#4f46e5', resto:'#d97706', activites:'#047857', shopping:'#be185d', sante:'#c2410c', divers:'#64748b' };
+        const fmt = n => (Math.round(n * 100) / 100).toFixed(n % 1 ? 2 : 0).replace('.', ',') + ' €';
+        const setT = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+        setT('vac-titre', '🌍 ' + (vacancesData.nom || 'Séjour'));
+        const nomEl = document.getElementById('vac-nom'), budgetEl = document.getElementById('vac-budget');
+        if (nomEl && document.activeElement !== nomEl) nomEl.value = vacancesData.nom || '';
+        if (budgetEl && document.activeElement !== budgetEl) budgetEl.value = vacancesData.budget || '';
 
-        // Remplir le formulaire de config avec les valeurs actuelles
-        var nomEl = document.getElementById('vac-nom');
-        var budgetEl = document.getElementById('vac-budget');
-        if (nomEl) nomEl.value = vacancesData.nom || '';
-        if (budgetEl) budgetEl.value = vacancesData.budget || '';
+        const depenses = vacancesData.depenses || [];
+        const totalEur = depenses.reduce((s, d) => s + d.mt, 0);
+        const budget = vacancesData.budget || 0;
+        const reste = budget - totalEur;
+        const pct = budget > 0 ? Math.round((totalEur / budget) * 100) : 0;
+        // jours écoulés depuis la première dépense
+        const parse = s => { const p = String(s || '').split('/'); return p.length === 3 ? new Date(+p[2], +p[1] - 1, +p[0]) : null; };
+        const dates = depenses.map(d => parse(d.date)).filter(Boolean);
+        const jours = dates.length ? Math.max(1, Math.round((new Date().setHours(0,0,0,0) - Math.min.apply(null, dates)) / 86400000) + 1) : 0;
+        setT('vac-sub', jours ? 'Séjour en cours · jour ' + jours : 'Séjour en cours');
+        setT('vac-reste-lbl', reste < 0 ? 'Budget du séjour dépassé de' : 'Reste pour le séjour');
+        setT('vac-reste', fmt(Math.abs(reste)));
+        setT('vac-total-dep', fmt(totalEur));
+        setT('vac-total-budget', fmt(budget));
+        setT('vac-pct', pct + '%'); setT('vac-pct2', budget > 0 ? pct + ' %' : '—');
+        setT('vac-nb', String(depenses.length));
+        setT('vac-jour', jours ? fmt(Math.round(totalEur / jours)) : '—');
+        const barEl = document.getElementById('vac-bar'); if (barEl) { barEl.style.width = Math.min(pct, 100) + '%'; barEl.className = reste < 0 ? 'over' : ''; }
 
-        // Calcul totaux
-        var depenses = vacancesData.depenses || [];
-        var totalEur = depenses.reduce(function(s, d){ return s + d.mt; }, 0);
-        var budget = vacancesData.budget || 0;
-        var reste = budget - totalEur;
-        var pct = budget > 0 ? Math.min(Math.round((totalEur/budget)*100), 100) : 0;
-
-        var depEl = document.getElementById('vac-total-dep');
-        if (depEl) depEl.textContent = totalEur.toFixed(2) + ' €';
-        var resteEl = document.getElementById('vac-reste');
-        if (resteEl) resteEl.textContent = (reste < 0 ? '⚠️ Dépassé de ' + Math.abs(reste).toFixed(2) : reste.toFixed(2)) + ' €';
-        var budgetEl2 = document.getElementById('vac-total-budget');
-        if (budgetEl2) budgetEl2.textContent = budget.toFixed(2) + ' €';
-        var barEl = document.getElementById('vac-bar');
-        if (barEl) { barEl.style.width = pct + '%'; barEl.style.background = pct >= 100 ? 'var(--danger)' : pct >= 85 ? 'var(--warning)' : 'var(--main)'; }
-        var pctEl = document.getElementById('vac-pct');
-        if (pctEl) pctEl.textContent = pct + '%';
-
-        // Select devise formulaire
-        var devSel = document.getElementById('vac-devise');
-        if (devSel && devSel.children.length === 0) {
-            VAC_DEVISES.forEach(function(d) {
-                devSel.innerHTML += '<option value="' + d.code + '">' + d.sym + ' — ' + d.nom + '</option>';
-            });
-        }
-
-        // Select catégorie formulaire
-        var catSel = document.getElementById('vac-cat');
-        if (catSel && catSel.children.length === 0) {
-            VAC_CATS.forEach(function(c) {
-                catSel.innerHTML += '<option value="' + c.id + '">' + c.label + '</option>';
-            });
-        }
+        const devSel = document.getElementById('vac-devise');
+        if (devSel && devSel.children.length === 0) VAC_DEVISES.forEach(d => { devSel.innerHTML += '<option value="' + d.code + '" title="' + d.nom + '">' + d.code + (d.sym !== d.code ? ' (' + d.sym + ')' : '') + '</option>'; });
+        const catSel = document.getElementById('vac-cat');
+        if (catSel && catSel.children.length === 0) VAC_CATS.forEach(c => { catSel.innerHTML += '<option value="' + c.id + '">' + c.label + '</option>'; });
 
         // Historique
-        var hist = document.getElementById('vac-hist-list');
+        const hist = document.getElementById('vac-hist-list');
         if (hist) {
-            if (depenses.length === 0) {
-                hist.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--text-muted);font-size:0.82rem;">Aucune dépense pour ce séjour.</div>';
-            } else {
-                hist.innerHTML = [...depenses].reverse().map(function(d, i) {
-                    var cat = VAC_CATS.find(function(c){ return c.id === d.cat; });
-                    var border = i < depenses.length - 1 ? 'border-bottom:1px solid var(--bg2);' : '';
-                    var hasConv = d.deviseOriginal && d.deviseOriginal !== 'EUR';
-                    return '<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:9px 0;' + border + '">'
-                        + '<div style="flex:1;min-width:0;">'
-                        + '<div style="font-size:0.88rem;font-weight:600;color:var(--text);">' + d.desc + '</div>'
-                        + '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:1px;">'
-                        + d.date + ' · ' + (cat ? cat.label : d.cat)
-                        + (hasConv ? ' · ' + d.mtOriginal + ' ' + d.devSymbol : '')
-                        + '</div>'
-                        + '</div>'
-                        + '<div style="display:flex;align-items:center;gap:8px;margin-left:10px;flex-shrink:0;">'
-                        + '<strong style="font-size:0.9rem;white-space:nowrap;">' + d.mt.toFixed(2) + ' €</strong>'
-                        + '<button class="btn-delete" onclick="supprimerDepenseVacances(' + d.id + ')">✕</button>'
-                        + '</div>'
-                        + '</div>';
-                }).join('');
-            }
+            hist.innerHTML = depenses.length === 0 ? '<div class="bg-empty">Aucune dépense pour ce séjour.</div>' : [...depenses].reverse().map(d => {
+                const cat = VAC_CATS.find(c => c.id === d.cat), ic = iconeCat(cat ? cat.label : d.cat);
+                const conv = d.deviseOriginal && d.deviseOriginal !== 'EUR';
+                return `<div class="cp-row">
+                    <span class="cp-ico${ic.emoji ? ' emoji' : ''}" style="--c:${VCOL[d.cat] || '#64748b'};">${ic.icon}</span>
+                    <div class="dp-main"><span class="dp-name">${d.desc}</span><span class="dp-meta">${ic.nom} · ${d.date}</span></div>
+                    <div class="vc-amts"><span class="dp-amt">−${fmt(d.mt)}</span>${conv ? `<span class="vc-orig">${d.mtOriginal} ${d.devSymbol}</span>` : ''}</div>
+                    <button class="cp-rm" aria-label="Supprimer" onclick="supprimerDepenseVacances(${d.id})"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+                </div>`;
+            }).join('');
         }
 
         // Répartition par catégorie
-        var catList = document.getElementById('vac-cats-list');
+        const catList = document.getElementById('vac-cats-list');
         if (catList) {
-            var parCat = {};
-            VAC_CATS.forEach(function(c){ parCat[c.id] = 0; });
-            depenses.forEach(function(d){ if (parCat[d.cat] !== undefined) parCat[d.cat] += d.mt; });
-            catList.innerHTML = VAC_CATS.filter(function(c){ return parCat[c.id] > 0; }).map(function(c) {
-                var pctCat = budget > 0 ? Math.min(Math.round((parCat[c.id]/budget)*100), 100) : 0;
-                return '<div style="margin-bottom:10px;">'
-                    + '<div style="display:flex;justify-content:space-between;margin-bottom:3px;">'
-                    + '<span style="font-size:0.82rem;">' + c.label + '</span>'
-                    + '<span style="font-size:0.78rem;color:var(--text-muted);">' + parCat[c.id].toFixed(2) + ' €</span>'
-                    + '</div>'
-                    + '<div style="background:var(--bg2);border-radius:999px;height:5px;overflow:hidden;">'
-                    + '<div style="height:100%;width:' + pctCat + '%;background:var(--main);border-radius:999px;"></div>'
-                    + '</div></div>';
-            }).join('') || '<div style="font-size:0.82rem;color:var(--text-muted);">Aucune dépense encore.</div>';
+            const parCat = {}; VAC_CATS.forEach(c => { parCat[c.id] = 0; });
+            depenses.forEach(d => { if (parCat[d.cat] !== undefined) parCat[d.cat] += d.mt; });
+            const lignes = VAC_CATS.filter(c => parCat[c.id] > 0).sort((a, b) => parCat[b.id] - parCat[a.id]);
+            const max = lignes.length ? parCat[lignes[0].id] : 1;
+            catList.innerHTML = lignes.map(c => { const ic = iconeCat(c.label); return `<div class="vc-rep" style="--c:${VCOL[c.id] || '#64748b'};">
+                <span class="cp-ico emoji" style="--c:${VCOL[c.id] || '#64748b'};width:36px;height:36px;border-radius:12px;font-size:17px;">${ic.icon}</span>
+                <div class="vc-rep-main"><div class="vc-rep-top"><span>${ic.nom}</span><span>${fmt(parCat[c.id])} <em>· ${Math.round(parCat[c.id] / (totalEur || 1) * 100)} %</em></span></div>
+                <div class="vc-rep-bar"><div style="width:${(parCat[c.id] / max * 100).toFixed(1)}%;"></div></div></div>
+            </div>`; }).join('') || '<div class="bg-empty">Aucune dépense encore.</div>';
         }
-
-        majArchivesVoyages();
     }
 
     // Init
