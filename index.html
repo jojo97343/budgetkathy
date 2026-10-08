@@ -810,6 +810,17 @@
         .bm-reste.over { color: var(--danger); } .bm-reste.done { color: var(--text-muted); }
         .bc-pill.done { background: var(--track); color: var(--text-muted); }
 
+        /* Bilan : détail des dépenses d'une catégorie */
+        .bm-row { cursor: pointer; }
+        .bm-chev { color: var(--text-hint); flex-shrink: 0; transition: transform .2s; }
+        .bm-row.open .bm-chev { transform: rotate(180deg); color: var(--c); }
+        .bm-row.open { border-bottom-color: transparent; }
+        .bm-detail { margin: -4px 0 6px 68px; padding: 4px 12px; border-radius: 14px; background: var(--bg); border-left: 3px solid var(--line); animation: sheetIn .2s ease; }
+        .bm-detail-h { display: flex; justify-content: space-between; padding: 8px 0 4px; font-size: 12px; font-weight: 700; color: var(--text-muted); }
+        .bm-dep { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid var(--line); cursor: pointer; }
+        .bm-dep-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .bm-dep .dp-name { font-size: 13px; }
+
         /* Bilan mobile : une carte par catégorie */
         #page-bilan #bilan-card-m { padding: 16px; }
         #page-bilan #bilan-card-m .card-title { padding: 0; }
@@ -3628,6 +3639,26 @@
         }
     }
 
+    /* Bilan : toucher une catégorie affiche ses dépenses */
+    function basculerDetailBilan(id) {
+        window._bilanOuvert = window._bilanOuvert === id ? null : id;
+        majAffichage();
+    }
+    function detailDepensesCategorie(id, col) {
+        const fmt = n => n.toFixed(2).replace('.', ',') + ' €';
+        const deps = db.depenses.filter(d => d.ct === id).slice().reverse();
+        if (!deps.length) return `<div class="bm-detail"><div class="bg-empty" style="padding:10px 0;">Aucune dépense dans cette catégorie ce mois-ci.</div></div>`;
+        const tot = deps.reduce((s, d) => s + d.mt, 0);
+        return `<div class="bm-detail" style="border-left-color:${col};">
+            <div class="bm-detail-h"><span>${deps.length} dépense${deps.length > 1 ? 's' : ''}</span><span>${fmt(tot)}</span></div>
+            ${deps.map(d => `<div class="bm-dep" onclick="event.stopPropagation();ouvrirEditDepense(${d.id})">
+                <span class="bm-dep-dot" style="background:${col};"></span>
+                <div class="dp-main"><span class="dp-name">${d.desc}${d.recurring ? ' 🔄' : ''}</span><span class="dp-meta">${d.date}${d.note ? ' · ' + d.note : ''}</span></div>
+                <span class="dp-amt">${fmt(d.mt)}</span>
+            </div>`).join('')}
+        </div>`;
+    }
+
     /* Bilan mobile : cartes par catégorie, dépassements en premier */
     function renderBilanCartes(totaux) {
         const box = document.getElementById('bilan_cards'); if (!box) return;
@@ -3642,7 +3673,7 @@
             const pct = prev > 0 ? Math.min(reel / prev * 100, 100) : (reel > 0 ? 100 : 0);
             const warn = !over && !done && prev > 0 && pct >= 85;
             return {
-                name, icon: m ? m[1] : (name.trim().charAt(0) || '?').toUpperCase(), emoji: !!m,
+                id: cat.id, name, icon: m ? m[1] : (name.trim().charAt(0) || '?').toUpperCase(), emoji: !!m,
                 prev, reel, over, done, warn, pct,
                 ratio: prev > 0 ? reel / prev : (reel > 0 ? Infinity : 0),
                 col: cat.color || PALETTE[i % PALETTE.length],
@@ -3737,14 +3768,16 @@
             const cls = r.over ? 'over' : r.done ? 'done' : r.warn ? 'warn' : 'ok';
             const status = r.over ? (r.prev > 0 ? 'Dépassé' : 'Sans budget') : r.done ? 'Atteint' : r.warn ? 'Attention' : Math.round(r.pct) + ' %';
             const resteTxt = r.over ? 'Dépassé de ' + fmt(r.reel - r.prev) : r.done ? 'Budget atteint' : 'Reste ' + fmt(r.prev - r.reel);
-            return `<div class="bm-row" style="--c:${r.col};">
+            const ouvert = window._bilanOuvert === r.id;
+            return `<div class="bm-row${ouvert ? ' open' : ''}" style="--c:${r.col};" role="button" tabindex="0" aria-expanded="${ouvert}" onclick="basculerDetailBilan('${r.id}')">
                 <div class="bm-ring" style="background:conic-gradient(${col} 0 ${r.pct}%, color-mix(in srgb, ${r.col} 18%, var(--card)) ${r.pct}% 100%);"><div class="bm-ico${r.emoji ? ' emoji' : ''}">${r.icon}</div></div>
                 <div class="bm-main">
                     <div class="bm-top"><span class="bm-name">${r.name}</span><span class="bc-pill ${cls}">${status}</span></div>
                     <div class="bm-bar"><div class="bm-fill" style="width:${r.pct}%;background:${col};"></div></div>
                     <div class="bm-bot"><span><strong>${fmt(r.reel)}</strong> sur ${fmt(r.prev)}</span><span class="bm-reste ${r.over ? 'over' : r.done ? 'done' : ''}">${resteTxt}</span></div>
                 </div>
-            </div>`;
+                <svg class="bm-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </div>${ouvert ? detailDepensesCategorie(r.id, r.col) : ''}`;
         }).join('');
     }
     /* ══════════════════════════════════
