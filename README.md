@@ -652,6 +652,33 @@
         .vc-past-ring { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .vc-past-ring > span { width: 34px; height: 34px; border-radius: 50%; background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; }
 
+        /* Choix du jour (panneau) */
+        .ds-sheet { display: flex; flex-direction: column; gap: 16px; padding: 10px 18px calc(24px + env(safe-area-inset-bottom)); z-index: 2; }
+        #day-sheet { z-index: 260; }
+        .ds-head { display: flex; flex-direction: column; gap: 4px; }
+        .ds-titre { font-size: 18px; font-weight: 800; }
+        .ds-texte { font-size: 13px; color: var(--text-muted); line-height: 1.45; }
+        .ds-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+        .ds-day { aspect-ratio: 1; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--text); font-size: 15px; font-weight: 600; cursor: pointer; padding: 0; }
+        .ds-day.on, .ds-opt.on { background: var(--main); border-color: var(--main); color: #fff; font-weight: 800; }
+        .ds-extra { display: flex; gap: 8px; }
+        .ds-extra:empty { display: none; }
+        .ds-opt { flex: 1; height: 46px; border-radius: 14px; border: 1px solid var(--line); background: var(--card); color: var(--text); font-size: 14px; font-weight: 700; cursor: pointer; }
+        .ds-resume { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; background: var(--soft); }
+        .ds-ico { width: 36px; height: 36px; border-radius: 10px; background: var(--card); color: var(--soft-text); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .ds-resume > span:last-child { display: flex; flex-direction: column; gap: 1px; }
+        .ds-resume strong { font-size: 14px; font-weight: 800; color: var(--soft-text); }
+        .ds-resume small { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+        .ds-ok { margin: 0; min-height: 52px; font-weight: 800; }
+        .dp-daybtn { display: flex; align-items: center; gap: 10px; width: 100%; height: 50px; padding: 0 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font-size: 15px; font-weight: 600; cursor: pointer; text-align: left; }
+        .dp-daybtn svg { color: var(--soft-text); flex-shrink: 0; }
+        #edit-jour-box .dp-daybtn { background: var(--card); }
+
+        /* Prélèvements à venir */
+        .dp-help { font-size: 12px; color: var(--text-muted); font-weight: 500; line-height: 1.45; }
+        .dp-amt.avenir { color: var(--text-muted); font-weight: 700; }
+        .dp-day.avenir { color: var(--soft-text); }
+
         /* Dépense */
         .edit-del { width: 100%; margin-top: 10px; height: 46px; border-radius: 14px; border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent); background: transparent; color: var(--danger); font-size: 14px; font-weight: 700; cursor: pointer; }
         #log_list_tableau .dp-op:last-child { border-bottom: none; }
@@ -865,14 +892,31 @@
         <label style="margin-top:4px;">Note <span style="font-weight:400;color:var(--text-hint);">(optionnel)</span></label>
         <input type="text" id="edit-note" placeholder="Ex: remboursement prévu...">
         <div class="recurring-row" style="margin-top:4px;">
-            <input type="checkbox" id="edit-recurring">
+            <input type="checkbox" id="edit-recurring" onchange="document.getElementById('edit-jour-box').style.display=this.checked?'block':'none'">
             <label for="edit-recurring" style="margin:0;cursor:pointer;">Dépense récurrente</label>
+        </div>
+        <div id="edit-jour-box" style="display:none;margin-top:10px;">
+            <label>Jour du prélèvement</label>
+            <button type="button" class="dp-daybtn" onclick="choisirJourPrelev('edit-jour')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span id="edit-jour_lbl">Déjà prélevée</span></button>
+            <input type="hidden" id="edit-jour" value="">
         </div>
         <div class="modal-actions">
             <button class="btn btn-cancel" onclick="fermerEditDepense()">Annuler</button>
             <button class="btn btn-primary" onclick="sauvegarderEditDepense()">💾 Enregistrer</button>
         </div>
         <button class="edit-del" onclick="supprimerDepuisEdit()">Supprimer cette dépense</button>
+    </div>
+</div>
+
+<!-- ════════ CHOIX DU JOUR ════════ -->
+<div id="day-sheet" class="sheet-overlay" style="display:none;" onclick="if(event.target===this) fermerChoixJour()">
+    <div class="sheet ds-sheet" role="dialog" aria-labelledby="ds-titre">
+        <div class="sheet-handle"></div>
+        <div class="ds-head"><span class="ds-titre" id="ds-titre">Choisir un jour</span><span class="ds-texte" id="ds-texte"></span></div>
+        <div class="ds-grid" id="ds-grid"></div>
+        <div class="ds-extra" id="ds-extra"></div>
+        <div class="ds-resume"><span class="ds-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M18 2v4M8 2v4M3 10h18"/></svg></span><span><strong id="ds-resume"></strong><small id="ds-note"></small></span></div>
+        <button class="btn btn-primary ds-ok" onclick="validerChoixJour()">Valider</button>
     </div>
 </div>
 
@@ -922,11 +966,13 @@
 
         <div class="st-sec">BUDGET</div>
         <div class="st-group">
-            <label class="st-row" for="set_jour_debut">
+            <button type="button" class="st-row" onclick="choisirJourDebut()">
                 <span class="st-ico green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>
-                <span class="st-lbl">Début du cycle</span>
-                <select class="st-val" id="set_jour_debut" onchange="autoSaveSettings()"></select>
-            </label>
+                <span class="st-lbl">Début du mois budgétaire<small>Ex : jour de ta paie · clôture proposée ce jour-là</small></span>
+                <span class="st-txt" id="set_jour_debut_lbl">Le 1er du mois</span>
+                <svg class="st-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                <input type="hidden" id="set_jour_debut" value="1">
+            </button>
             <label class="st-row" for="set_devise">
                 <span class="st-ico green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 7a7 7 0 1 0 0 10"/><path d="M4 10h9M4 14h9"/></svg></span>
                 <span class="st-lbl">Devise</span>
@@ -1013,12 +1059,12 @@
 
 <div id="modal-cloture" class="modal-overlay" style="display:none;">
     <div class="modal-box">
-        <h3>📁 Clôturer le mois</h3>
-        <p>Donne un nom à ce mois pour l'archiver avec son graphique. Tu pourras le télécharger en PDF et comparer les mois.</p>
+        <h3 id="modal-clot-titre">📁 Clôturer le mois</h3>
+        <p id="modal-clot-texte">Donne un nom à ce mois pour l'archiver avec son graphique. Tu pourras le télécharger en PDF et comparer les mois.</p>
         <label>Nom du mois</label>
         <input type="text" id="modal-mois-nom" placeholder="Ex : Janvier 2025...">
         <div class="modal-actions">
-            <button class="btn btn-cancel" onclick="fermerModal()">Annuler</button>
+            <button class="btn btn-cancel" id="modal-clot-annuler" onclick="fermerModal()">Annuler</button>
             <button class="btn btn-primary" onclick="confirmerCloture()">✅ Archiver</button>
         </div>
     </div>
@@ -1286,7 +1332,12 @@
             <label class="dp-field"><span>Note <em>(optionnel)</em></span><input type="text" id="add_note" placeholder="Ex : remboursement prévu"></label>
             <label class="dp-rec" for="add_recurring">
                 <span class="dp-rec-txt"><strong>🔄 Dépense récurrente</strong><small>Reportée automatiquement le mois suivant</small></span>
-                <span class="st-switch"><input type="checkbox" id="add_recurring"><span class="st-track"></span><span class="st-thumb"></span></span>
+                <span class="st-switch"><input type="checkbox" id="add_recurring" onchange="document.getElementById('add_jour_box').style.display=this.checked?'flex':'none'"><span class="st-track"></span><span class="st-thumb"></span></span>
+            </label>
+            <label class="dp-field" id="add_jour_box" style="display:none;"><span>Jour du prélèvement</span>
+                <button type="button" class="dp-daybtn" onclick="choisirJourPrelev('add_jour')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span id="add_jour_lbl">Choisir le jour</span></button>
+                <input type="hidden" id="add_jour" value="">
+                <small class="dp-help">Tant que le jour n'est pas passé, la dépense est « à venir » et n'est pas encore déduite de ton solde.</small>
             </label>
             <button class="btn btn-primary dp-submit" onclick="ajouterDepense()">Ajouter la dépense</button>
         </div>
@@ -1672,13 +1723,43 @@
         setTimeout(()=>{ t.style.animation='toastOut 0.3s ease both'; setTimeout(()=>t.remove(),300); },duration);
     }
 
-    function ouvrirModal() {
-        const now=new Date(); const mois=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-        document.getElementById('modal-mois-nom').value=`${mois[now.getMonth()]} ${now.getFullYear()}`;
+    const MOIS_NOMS=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+    function ouvrirModal(auto) {
+        // Le mois porte le nom du mois qui contient la plus grande partie du cycle (ex : cycle du 28/09 au 27/10 = octobre)
+        const debut = new Date(auto ? new Date(auto) : debutCycle(new Date())); debut.setDate(debut.getDate() + 15);
+        document.getElementById('modal-mois-nom').value=`${MOIS_NOMS[debut.getMonth()]} ${debut.getFullYear()}`;
+        document.getElementById('modal-clot-titre').textContent = auto ? '📅 Le mois de ' + MOIS_NOMS[debut.getMonth()].toLowerCase() + ' est terminé' : '📁 Clôturer le mois';
+        document.getElementById('modal-clot-texte').textContent = auto
+            ? "Ton nouveau mois budgétaire a commencé. Ajoute d'abord tes dernières dépenses si besoin, puis archive le mois : l'épargne part au coffre et tes récurrentes sont reportées."
+            : "Donne un nom à ce mois pour l'archiver avec son graphique. Tu pourras le télécharger en PDF et comparer les mois.";
+        document.getElementById('modal-clot-annuler').textContent = auto ? 'Plus tard' : 'Annuler';
         document.getElementById('modal-cloture').style.display='flex';
         setTimeout(()=>document.getElementById('modal-mois-nom').focus(),100);
     }
     function fermerModal() { document.getElementById('modal-cloture').style.display='none'; }
+
+    /* Clôture automatique (avec confirmation) au début de chaque mois budgétaire */
+    // Jour j du mois (y, m) ; si le mois est plus court, son dernier jour
+    function jourDansMois(y, m, j) {
+        const d0 = new Date(y, m, 1); y = d0.getFullYear(); m = d0.getMonth();
+        return new Date(y, m, Math.min(j, new Date(y, m + 1, 0).getDate()));
+    }
+    function jourDebutReglage() { let jd = 1; try { jd = parseInt(appSettings.jourDebut) || 1; } catch (x) {} return Math.min(Math.max(jd, 1), 31); }
+    function debutCycle(ref) {
+        const jd = jourDebutReglage();
+        const r = new Date(ref); r.setHours(0, 0, 0, 0);
+        let s = jourDansMois(r.getFullYear(), r.getMonth(), jd);
+        if (r < s) s = jourDansMois(r.getFullYear(), r.getMonth() - 1, jd);
+        return s;
+    }
+    function marquerCycleOuvert(ref) { localStorage.setItem('cycle_ouvert', debutCycle(ref).toISOString()); }
+    function verifierClotureAuto() {
+        const cur = debutCycle(new Date());
+        const stocke = localStorage.getItem('cycle_ouvert');
+        if (!stocke) { marquerCycleOuvert(new Date()); return; }   // première utilisation : rien à clôturer
+        const ouvert = new Date(stocke);
+        if (ouvert < cur && document.getElementById('modal-cloture').style.display !== 'flex') ouvrirModal(ouvert.toISOString());
+    }
     document.getElementById('modal-cloture').addEventListener('click', e=>{ if(e.target===e.currentTarget) fermerModal(); });
     document.getElementById('modal-mois-nom').addEventListener('keydown', e=>{ if(e.key==='Enter') confirmerCloture(); if(e.key==='Escape') fermerModal(); });
 
@@ -1687,12 +1768,13 @@
         fermerModal();
         let totaux={}; db.categories.forEach(c=>{ totaux[c.id]=0; });
         let totalDep=0, totalEp=0;
-        db.depenses.forEach(d=>{ if(d.ct in totaux) totaux[d.ct]+=d.mt; const cat=db.categories.find(c=>c.id===d.ct); if(cat&&cat.label.toLowerCase().includes("épargne")) totalEp+=d.mt; else totalDep+=d.mt; });
+        depensesEffectives().forEach(d=>{ if(d.ct in totaux) totaux[d.ct]+=d.mt; const cat=db.categories.find(c=>c.id===d.ct); if(cat&&cat.label.toLowerCase().includes("épargne")) totalEp+=d.mt; else totalDep+=d.mt; });
         const archive={ id:Date.now(), nom, date:new Date().toLocaleDateString('fr-FR'), revenu:(db.revenu||0)+(db.caf||0), totalDep, totalEp, solde:((db.revenu||0)+(db.caf||0))-totalDep-totalEp, labels:db.categories.map(c=>c.label), data:db.categories.map(c=>totaux[c.id]||0), previsions:{...db.previsions}, catIds:db.categories.map(c=>c.id), depenses:db.depenses.map(d=>{ const cat=db.categories.find(c=>c.id===d.ct); return{...d,catLabel:cat?cat.label:'N/A'}; }) };
         archives.push(archive); localStorage.setItem('budget_archives',JSON.stringify(archives));
-        let em=0; db.depenses.forEach(d=>{ const cat=db.categories.find(c=>c.id===d.ct); if(cat&&cat.label.toLowerCase().includes("épargne")) em+=d.mt; });
+        let em=0; depensesEffectives().forEach(d=>{ const cat=db.categories.find(c=>c.id===d.ct); if(cat&&cat.label.toLowerCase().includes("épargne")) em+=d.mt; });
         globalSavings+=em; localStorage.setItem('globalSavings',globalSavings);
-        db.depenses=db.depenses.filter(d=>d.recurring===true);
+        const refNouveau=new Date(); refNouveau.setDate(refNouveau.getDate()+15); db.depenses=db.depenses.filter(d=>d.recurring===true).map(d=>{ const n={...d}; if(n.jourPrelev) n.date=dateEcheanceTxt(n, refNouveau); return n; });
+        const refCycle=new Date(); refCycle.setDate(refCycle.getDate()+15); marquerCycleOuvert(debutCycle(new Date())>debutCycle(new Date(localStorage.getItem('cycle_ouvert')||0))?new Date():refCycle);
         sauvegarder(); afficherArchives(); afficherEvolution();
         const nbPrev = previsionsMoisProchain.length;
         const prevMsg = nbPrev > 0 ? ` · ${nbPrev} prévision${nbPrev > 1 ? 's' : ''} conservée${nbPrev > 1 ? 's' : ''} 📋` : '';
@@ -1721,13 +1803,14 @@
         const desc=descEl.value.trim(),mt=parseFloat(mtEl.value),ctId=catEl.value,isRec=recurEl?recurEl.checked:false,note=noteEl?noteEl.value.trim():'';
         if(!desc||isNaN(mt)||mt<=0){ showToast('Remplis tous les champs correctement','warning'); return; }
         if(!ctId){ showToast('Sélectionne une catégorie','warning'); return; }
-        const expense={id:Date.now(),date:new Date().toLocaleDateString('fr-FR'),desc,mt,ct:ctId,recurring:isRec,note:note||''};
+        const jourEl=document.getElementById(recurId==='add_recurring'?'add_jour':'__none'); const jourPrelev=isRec&&jourEl&&jourEl.value?parseInt(jourEl.value):null;
+        const expense={id:Date.now(),date:new Date().toLocaleDateString('fr-FR'),desc,mt,ct:ctId,recurring:isRec,note:note||''}; if(jourPrelev){ expense.jourPrelev=jourPrelev; expense.date=dateEcheanceTxt(expense); }
         db.depenses.push(expense);
         const catObj=db.categories.find(c=>c.id===ctId);
         if(catObj&&catObj.label.toLowerCase().includes("épargne")) db.historiqueEpargne.push(expense);
-        descEl.value=''; mtEl.value=''; if(recurEl) recurEl.checked=false; if(noteEl) noteEl.value='';
+        descEl.value=''; mtEl.value=''; if(recurEl) recurEl.checked=false; if(noteEl) noteEl.value=''; if(jourEl){ jourEl.value=''; const jl=document.getElementById('add_jour_lbl'); if(jl) jl.textContent='Choisir le jour'; const jb=document.getElementById('add_jour_box'); if(jb) jb.style.display='none'; }
         localStorage.setItem('budget_vGestion',JSON.stringify(db)); majAffichage();
-        showToast(`${desc} — ${mt}€ ajouté${isRec?' 🔄':''}`,'success');
+        showToast(jourPrelev&&estAVenir(expense)?`${desc} — prélèvement prévu le ${expense.date.slice(0,5)} 🔄`:`${desc} — ${mt}€ ajouté${isRec?' 🔄':''}`,'success');
     }
     function ajouterDepense()        { _ajouter('add_desc','add_mt','add_cat','add_recurring','add_note'); }
     function ajouterDepenseDesktop() { _ajouter('add_desc_d','add_mt_d','add_cat_d','add_recurring_d','add_note_d'); }
@@ -1753,7 +1836,7 @@
         assurerCouleursCategories();
         let totaux={}; db.categories.forEach(c=>{ totaux[c.id]=0; });
         let totalGeneral=0, totalEpargne=0;
-        db.depenses.forEach(d=>{ if(d.ct in totaux) totaux[d.ct]+=d.mt; const cat=db.categories.find(c=>c.id===d.ct); if(cat&&cat.label.toLowerCase().includes("épargne")) totalEpargne+=d.mt; else totalGeneral+=d.mt; });
+        depensesEffectives().forEach(d=>{ if(d.ct in totaux) totaux[d.ct]+=d.mt; const cat=db.categories.find(c=>c.id===d.ct); if(cat&&cat.label.toLowerCase().includes("épargne")) totalEpargne+=d.mt; else totalGeneral+=d.mt; });
         const revenuTotal = (db.revenu||0) + (db.caf||0);
         const solde=revenuTotal-totalGeneral-totalEpargne;
         const setN=(id,v)=>{ const el=document.getElementById(id); if(el) el.innerText=parseFloat(v).toFixed(2); };
@@ -1762,7 +1845,7 @@
         const sc=solde<0?'var(--danger)':'var(--success)';
         const vsw=document.getElementById('view_solde_wrapper'); if(vsw) vsw.style.color=sc;
         const heroNeg=document.getElementById('hero-neg'); if(heroNeg) heroNeg.style.display=solde<0?'inline-block':'none';
-        const revTxt=document.getElementById('m_revenu_txt'); if(revTxt) revTxt.innerText='sur '+revenuTotal.toFixed(2)+' € de revenus';
+        const revTxt=document.getElementById('m_revenu_txt'); if(revTxt){ const av=totalAVenir(); revTxt.innerText='sur '+revenuTotal.toFixed(2)+' € de revenus'+(av>0?' · '+av.toFixed(2)+' € à venir':''); }
 
         // Barre de budget
         const totalPrevBudget=db.categories.reduce((s,c)=>s+(db.previsions[c.id]||0),0);
@@ -2439,7 +2522,7 @@
         const estEpargne = cat => cat && cat.label.toLowerCase().includes('épargne');
         const estFixe = (d, cat) => d.recurring === true || d.ct === 'Fixe' || (cat && /loyer|charge|abonnement/i.test(cat.label));
         let totalEp = 0, fixes = 0, variables = 0;
-        db.depenses.forEach(d => {
+        depensesEffectives().forEach(d => {
             const cat = db.categories.find(c => c.id === d.ct);
             if (estEpargne(cat)) totalEp += d.mt;
             else if (estFixe(d, cat)) fixes += d.mt;
@@ -2452,7 +2535,7 @@
         const totalPrevu = db.categories.filter(c => !estEpargne(c)).reduce((s, c) => s + (db.previsions[c.id] || 0), 0);
         const budgetRef = totalPrevu > 0 ? totalPrevu : revenuTotal;
 
-        const solde = revenuTotal - totalGeneral - totalEp;
+        const solde = revenuTotal - totalGeneral - totalEp - totalAVenir();
         const soldeParJour = joursRestants > 0 ? Math.max(0, solde) / joursRestants : Math.max(0, solde);
 
         // Trop tôt dans le cycle — projection non fiable
@@ -2589,6 +2672,9 @@
         document.getElementById('edit-mt').value = d.mt;
         document.getElementById('edit-note').value = d.note || '';
         document.getElementById('edit-recurring').checked = d.recurring || false;
+        document.getElementById('edit-jour').value = d.jourPrelev ? String(d.jourPrelev) : '';
+        document.getElementById('edit-jour_lbl').textContent = d.jourPrelev ? libelleJour(d.jourPrelev) : 'Déjà prélevée';
+        document.getElementById('edit-jour-box').style.display = d.recurring ? 'block' : 'none';
         const sel = document.getElementById('edit-cat');
         sel.innerHTML = '';
         db.categories.forEach(c => { sel.innerHTML += `<option value="${c.id}">${c.label}</option>`; });
@@ -2616,7 +2702,9 @@
         if (!desc || isNaN(mt) || mt <= 0) { showToast('Remplis tous les champs correctement', 'warning'); return; }
         const idx = db.depenses.findIndex(d => d.id === id);
         if (idx === -1) return;
-        db.depenses[idx] = { ...db.depenses[idx], desc, mt, ct: cat, note, recurring };
+        const jv = document.getElementById('edit-jour').value;
+        db.depenses[idx] = { ...db.depenses[idx], desc, mt, ct: cat, note, recurring, jourPrelev: recurring && jv ? parseInt(jv) : null };
+        if (db.depenses[idx].jourPrelev) db.depenses[idx].date = dateEcheanceTxt(db.depenses[idx]);
         // Mise à jour historiqueEpargne si besoin
         const epIdx = db.historiqueEpargne.findIndex(d => d.id === id);
         const catObj = db.categories.find(c => c.id === cat);
@@ -2661,7 +2749,7 @@
             let totaux = {};
             db.categories.forEach(c => { totaux[c.id] = 0; });
             let totalDep = 0, totalEp = 0;
-            db.depenses.forEach(d => {
+            depensesEffectives().forEach(d => {
                 if (d.ct in totaux) totaux[d.ct] += d.mt;
                 const cat = db.categories.find(c => c.id === d.ct);
                 if (cat && cat.label.toLowerCase().includes("épargne")) totalEp += d.mt;
@@ -2863,16 +2951,8 @@
         }
         document.getElementById('set_devise').value = appSettings.devise || '\u20ac';
         // Jour debut mois
-        var sel = document.getElementById('set_jour_debut');
-        if (sel) {
-            sel.innerHTML = '';
-            for (var i = 1; i <= 28; i++) {
-                var opt = document.createElement('option');
-                opt.value = i; opt.textContent = i === 1 ? 'Le 1er du mois' : 'Le ' + i + ' du mois';
-                if ((appSettings.jourDebut || 1) === i) opt.selected = true;
-                sel.appendChild(opt);
-            }
-        }
+        var jdIn = document.getElementById('set_jour_debut');
+        if (jdIn) { jdIn.value = jourDebutReglage(); var jdL = document.getElementById('set_jour_debut_lbl'); if (jdL) jdL.textContent = libelleJour(jourDebutReglage(), true); }
         // Code widget
         var wc = document.getElementById('set_widget_code');
         if (wc && typeof soloDeviceCode !== 'undefined') wc.textContent = soloDeviceCode;
@@ -3571,37 +3651,40 @@
         const auj = new Date(); auj.setHours(0, 0, 0, 0);
         const hier = new Date(auj); hier.setDate(hier.getDate() - 1);
         const libelleJour = s => { const d = parse(s); if (!d) return s; if (d.getTime() === auj.getTime()) return "Aujourd'hui"; if (d.getTime() === hier.getTime()) return 'Hier'; const t = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }); return t.charAt(0).toUpperCase() + t.slice(1); };
-        const filtres = [...db.depenses].reverse().filter(d => {
+        const aVenir = d => estAVenir(d);
+        const filtres = [...db.depenses].reverse().sort((a, b) => aVenir(b) - aVenir(a)).filter(d => {
             if (!searchTerm) return true;
             const cat = db.categories.find(c => c.id === d.ct);
             return d.desc.toLowerCase().includes(searchTerm) || (cat && cat.label.toLowerCase().includes(searchTerm)) || (d.note && d.note.toLowerCase().includes(searchTerm));
         });
         // compteur
         let totDep = 0;
-        db.depenses.forEach(d => { const c = db.categories.find(x => x.id === d.ct); if (!(c && c.label.toLowerCase().includes('épargne'))) totDep += d.mt; });
+        depensesEffectives().forEach(d => { const c = db.categories.find(x => x.id === d.ct); if (!(c && c.label.toLowerCase().includes('épargne'))) totDep += d.mt; });
         const cnt = compteurs ? document.getElementById('dp_count') : null;
         if (cnt) cnt.innerText = db.depenses.length ? db.depenses.length + ' opération' + (db.depenses.length > 1 ? 's' : '') + ' · ' + Math.round(totDep).toLocaleString('fr-FR') + ' € dépensés' : '';
         const hint = compteurs ? document.getElementById('dp_hint') : null; if (hint) hint.style.display = filtres.length ? 'block' : 'none';
         if (!filtres.length) { box.innerHTML = `<div class="bg-empty">${searchTerm ? 'Aucun résultat pour cette recherche.' : 'Aucune dépense ce mois-ci.'}</div>`; return; }
         // regroupement par date (ordre d'affichage conservé)
         const groupes = [];
-        filtres.forEach(d => { let g = groupes.find(x => x.date === d.date); if (!g) { g = { date: d.date, ops: [] }; groupes.push(g); } g.ops.push(d); });
+        filtres.forEach(d => { const k = aVenir(d) ? '__avenir' : d.date; let g = groupes.find(x => x.date === k); if (!g) { g = { date: k, ops: [] }; groupes.push(g); } g.ops.push(d); });
         box.innerHTML = groupes.map(g => {
             let totJour = 0;
             const lignes = g.ops.map(d => {
                 const cat = db.categories.find(c => c.id === d.ct);
                 const lbl = cat ? cat.label : 'Sans catégorie';
                 const ep = lbl.toLowerCase().includes('épargne');
-                if (!ep) totJour += d.mt;
+                const av = aVenir(d);
+                if (!ep && !av) totJour += d.mt;
                 const m = lbl.match(reEmoji);
                 const nom = m ? (lbl.slice(m[0].length).trim() || lbl) : lbl;
                 const icon = m ? m[1] : (nom.trim().charAt(0) || '?').toUpperCase();
                 return `<div class="dp-op" onclick="ouvrirEditDepense(${d.id})">
                     <span class="dp-ico${m ? ' emoji' : ''}" style="--c:${(cat && cat.color) || '#64748b'};">${icon}</span>
-                    <div class="dp-main"><span class="dp-name">${d.desc}${d.recurring ? ' 🔄' : ''}</span><span class="dp-meta">${nom}${d.note ? ' · ' + d.note : ''}</span></div>
-                    <span class="dp-amt${ep ? ' pos' : ''}">${ep ? '+' : '−'}${fmt(d.mt)}</span>
+                    <div class="dp-main"><span class="dp-name">${d.desc}${d.recurring ? ' 🔄' : ''}</span><span class="dp-meta">${infoPrelev(d)}${nom}${d.note ? ' · ' + d.note : ''}</span></div>
+                    <span class="dp-amt${ep ? ' pos' : ''}${av ? ' avenir' : ''}">${ep ? '+' : '−'}${fmt(d.mt)}</span>
                 </div>`;
             }).join('');
+            if (g.date === '__avenir') { const t = g.ops.reduce((s, d) => s + d.mt, 0); return `<div class="dp-day avenir"><span>À venir ce mois-ci</span><span>${fmt(t)}</span></div>${lignes}`; }
             return `<div class="dp-day"><span>${libelleJour(g.date)}</span><span>${totJour ? '−' + fmt(totJour) : ''}</span></div>${lignes}`;
         }).join('');
     }
@@ -3639,6 +3722,97 @@
         }
     }
 
+    /* Panneau de choix du jour (début du mois budgétaire, jour de prélèvement) */
+    function libelleJour(j, debut) {
+        if (j === '' || j === null || j === undefined) return 'Déjà prélevée';
+        j = parseInt(j);
+        if (debut && j === 31) return 'Dernier jour du mois';
+        return j === 1 ? 'Le 1er du mois' : 'Le ' + j + ' du mois';
+    }
+    let _ds = null;
+    function ouvrirChoixJour(cfg) {
+        _ds = Object.assign({}, cfg);
+        document.getElementById('ds-titre').textContent = cfg.titre;
+        document.getElementById('ds-texte').textContent = cfg.texte;
+        majChoixJour();
+        document.getElementById('day-sheet').style.display = 'flex';
+    }
+    function majChoixJour() {
+        const v = _ds.valeur;
+        let html = '';
+        for (let n = 1; n <= 31; n++) {
+            const on = String(v) === String(n) && !(_ds.dernier && n === 31);
+            html += `<button type="button" class="ds-day${on ? ' on' : ''}" aria-label="Le ${n}" onclick="_ds.valeur=${n};majChoixJour()">${n}</button>`;
+        }
+        document.getElementById('ds-grid').innerHTML = html;
+        document.getElementById('ds-extra').innerHTML =
+            (_ds.dernier ? `<button type="button" class="ds-opt${String(v) === '31' ? ' on' : ''}" onclick="_ds.valeur=31;majChoixJour()">Dernier jour du mois</button>` : '')
+            + (_ds.deja ? `<button type="button" class="ds-opt${v === '' ? ' on' : ''}" onclick="_ds.valeur='';majChoixJour()">Déjà prélevée</button>` : '');
+        const r = _ds.resume(v);
+        document.getElementById('ds-resume').textContent = r[0];
+        document.getElementById('ds-note').textContent = r[1];
+    }
+    function fermerChoixJour() { document.getElementById('day-sheet').style.display = 'none'; _ds = null; }
+    function validerChoixJour() { if (_ds) { const cb = _ds.ok, v = _ds.valeur; fermerChoixJour(); cb(v); } }
+
+    function choisirJourDebut() {
+        const M = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+        ouvrirChoixJour({
+            titre: 'Début du mois budgétaire', dernier: true,
+            texte: 'Choisis le jour où tu reçois ta paie. La clôture du mois te sera proposée ce jour-là.',
+            valeur: jourDebutReglage(),
+            resume: v => {
+                v = parseInt(v);
+                if (v === 1) return ['Du 1er au dernier jour du mois', 'Ex : octobre = du 1er au 31 octobre'];
+                if (v === 31) return ["Du dernier jour du mois à l'avant-dernier", 'Ex : novembre = du 31 octobre au 29 novembre'];
+                const tard = v > 15, a = tard ? 'septembre' : 'octobre', b = tard ? 'octobre' : 'novembre';
+                return ['Du ' + v + ' au ' + (v - 1) + ' du mois suivant', v > 28 ? 'Les mois plus courts, le dernier jour du mois est utilisé' : 'Ex : ' + (tard ? 'octobre' : 'octobre') + ' = du ' + v + ' ' + a + ' au ' + (v - 1) + ' ' + b];
+            },
+            ok: v => {
+                document.getElementById('set_jour_debut').value = v;
+                document.getElementById('set_jour_debut_lbl').textContent = libelleJour(v, true);
+                autoSaveSettings();
+            }
+        });
+    }
+    function choisirJourPrelev(inputId) {
+        const inp = document.getElementById(inputId);
+        ouvrirChoixJour({
+            titre: 'Jour du prélèvement', deja: true,
+            texte: "Tant que ce jour n'est pas passé, la dépense reste « à venir » et n'est pas déduite de ton solde.",
+            valeur: inp.value,
+            resume: v => v === '' ? ['Déjà prélevée ce mois-ci', 'Déduite tout de suite, puis reportée chaque mois'] : ['Prélevée chaque mois le ' + (parseInt(v) === 1 ? '1er' : v), parseInt(v) > 28 ? 'Les mois plus courts, le dernier jour du mois est utilisé' : 'Déduite automatiquement ce jour-là'],
+            ok: v => { inp.value = v; document.getElementById(inputId + '_lbl').textContent = libelleJour(v); }
+        });
+    }
+
+    /* Prélèvements récurrents : date d'échéance dans le cycle en cours */
+    // Échéance = le jour choisi dans le cycle budgétaire qui contient la date de référence
+    function echeancePrelev(d, ref) {
+        if (!d || !d.recurring || !d.jourPrelev) return null;
+        const start = debutCycle(ref ? new Date(ref) : new Date());
+        const j = parseInt(d.jourPrelev);
+        const dans = (y, m) => new Date(y, m, Math.min(j, new Date(y, m + 1, 0).getDate()));
+        let ech = dans(start.getFullYear(), start.getMonth());
+        if (ech < start) ech = dans(start.getFullYear(), start.getMonth() + 1);
+        return ech;
+    }
+    function estAVenir(d) {
+        if (!d || !d.recurring || !d.jourPrelev) return false;
+        const p = String(d.date || '').split('/'); if (p.length !== 3) return false;
+        const ech = new Date(+p[2], +p[1] - 1, +p[0]);
+        const auj = new Date(); auj.setHours(0, 0, 0, 0);
+        return ech > auj;
+    }
+    // Texte « Prélevé le 05/10 » / « Sera prélevé le 13/10 » pour les dépenses avec un jour de prélèvement
+    function infoPrelev(d) {
+        if (!d || !d.recurring || !d.jourPrelev) return '';
+        return (estAVenir(d) ? 'Sera prélevé le ' : 'Prélevé le ') + String(d.date).slice(0, 5) + ' · ';
+    }
+    function depensesEffectives() { return db.depenses.filter(d => !estAVenir(d)); }
+    function totalAVenir() { return db.depenses.filter(estAVenir).reduce((s, d) => s + d.mt, 0); }
+    function dateEcheanceTxt(d, ref) { const e = echeancePrelev(d, ref); return e ? e.toLocaleDateString('fr-FR') : d.date; }
+
     /* Bilan : toucher une catégorie affiche ses dépenses */
     function basculerDetailBilan(id) {
         window._bilanOuvert = window._bilanOuvert === id ? null : id;
@@ -3647,13 +3821,14 @@
     function detailDepensesCategorie(id, col) {
         const fmt = n => n.toFixed(2).replace('.', ',') + ' €';
         const deps = db.depenses.filter(d => d.ct === id).slice().reverse();
+        const tot0 = deps.filter(d => !estAVenir(d)).reduce((s, d) => s + d.mt, 0);
         if (!deps.length) return `<div class="bm-detail"><div class="bg-empty" style="padding:10px 0;">Aucune dépense dans cette catégorie ce mois-ci.</div></div>`;
-        const tot = deps.reduce((s, d) => s + d.mt, 0);
+        const tot = tot0;
         return `<div class="bm-detail" style="border-left-color:${col};">
             <div class="bm-detail-h"><span>${deps.length} dépense${deps.length > 1 ? 's' : ''}</span><span>${fmt(tot)}</span></div>
             ${deps.map(d => `<div class="bm-dep" onclick="event.stopPropagation();ouvrirEditDepense(${d.id})">
                 <span class="bm-dep-dot" style="background:${col};"></span>
-                <div class="dp-main"><span class="dp-name">${d.desc}${d.recurring ? ' 🔄' : ''}</span><span class="dp-meta">${d.date}${d.note ? ' · ' + d.note : ''}</span></div>
+                <div class="dp-main"><span class="dp-name">${d.desc}${d.recurring ? ' 🔄' : ''}</span><span class="dp-meta">${d.jourPrelev ? infoPrelev(d).replace(/ · $/, '') : d.date}${d.note ? ' · ' + d.note : ''}</span></div>
                 <span class="dp-amt">${fmt(d.mt)}</span>
             </div>`).join('')}
         </div>`;
@@ -3795,14 +3970,10 @@
 
     // Cycle budgétaire : du « jour de début » choisi dans les paramètres jusqu'à la veille du même jour le mois suivant
     function getCycle() {
-        var jd = 1;
-        try { jd = parseInt(appSettings.jourDebut) || 1; } catch (e) { jd = 1; }
-        jd = Math.min(Math.max(jd, 1), 28);
         var now = new Date();
         var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        var start = new Date(now.getFullYear(), now.getMonth(), jd);
-        if (today < start) start = new Date(now.getFullYear(), now.getMonth() - 1, jd);
-        var next = new Date(start.getFullYear(), start.getMonth() + 1, jd);
+        var start = debutCycle(today);
+        var next = jourDansMois(start.getFullYear(), start.getMonth() + 1, jourDebutReglage());
         var jour = 86400000;
         var total = Math.round((next - start) / jour);
         var ecoules = Math.round((today - start) / jour) + 1;
@@ -3841,6 +4012,8 @@
     function observerDevise() { deviseObserver.observe(document.body, { childList: true, subtree: true, characterData: true }); }
 
     // Init refonte
+    setTimeout(verifierClotureAuto, 600);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) verifierClotureAuto(); });
     majAffichage();
     appliquerDeviseDOM(document.body);
     observerDevise();
