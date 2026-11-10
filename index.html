@@ -2014,13 +2014,116 @@
     function supprimerArchive(id) { if(!confirm("Supprimer cette archive ?")) return; archives=archives.filter(a=>a.id!==id); localStorage.setItem('budget_archives',JSON.stringify(archives)); afficherArchives(); afficherEvolution(); showToast('Archive supprimée','warning'); }
 
     function telechargerPDF(id) {
-        const arc=archives.find(a=>a.id===id); if(!arc) return;
-        const canvasIds=[`arc-chart-${arc.id}-archives-container`,`arc-chart-${arc.id}-archives-container-d`];
-        let chartImg=''; for(const cid of canvasIds){ const c=document.getElementById(cid); if(c){ chartImg=c.toDataURL('image/png'); break; } }
-        const sc=arc.solde<0?'#ef4444':'#10b981';
-        const compRows=arc.labels.map((label,i)=>{ const catId=arc.catIds?arc.catIds[i]:null,prev=(arc.previsions&&catId)?(arc.previsions[catId]||0):0,reel=arc.data[i]||0,pct=prev>0?Math.min(Math.round((reel/prev)*100),100):0,over=prev>0&&reel>prev,barColor=over?'#ef4444':pct>=80?'#f59e0b':'#5b5ef4',ecart=prev-reel; return`<tr><td style="padding:10px 12px;font-weight:600;font-size:0.85rem;">${label}</td><td style="padding:10px 12px;color:#6b7280;font-size:0.85rem;">${parseFloat(prev).toFixed(2)} €</td><td style="padding:10px 12px;font-weight:700;font-size:0.85rem;">${parseFloat(reel).toFixed(2)} €</td><td style="padding:10px 12px;color:${ecart<0?'#ef4444':'#10b981'};font-weight:700;font-size:0.85rem;">${ecart>=0?'+':''}${parseFloat(ecart).toFixed(2)} €</td><td style="padding:10px 12px;min-width:120px;"><div style="background:#f3f4f6;height:8px;border-radius:4px;overflow:hidden;margin-bottom:3px;"><div style="height:100%;width:${pct}%;background:${barColor};border-radius:4px;"></div></div><span style="font-size:0.72rem;color:#6b7280;">${prev>0?pct+'%':'—'}</span></td></tr>`; }).join('');
-        const html=`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Bilan ${arc.nom}</title><style>@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap');*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Manrope',Arial,sans-serif;background:white;color:#1a1d2e;padding:40px 36px;max-width:700px;margin:auto;}.header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #5b5ef4;padding-bottom:16px;margin-bottom:28px;}.title{font-family:'Manrope',serif;font-size:1.8rem;color:#5b5ef4;}.sub{color:#6b7280;font-size:0.82rem;margin-top:4px;}.header-right{text-align:right;font-size:0.8rem;color:#6b7280;}.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px;}.stat{background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:12px;text-align:center;}.stat .lbl{font-size:0.66rem;color:#6b7280;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:5px;}.stat .val{font-size:1.3rem;font-weight:700;}.section-title{font-size:0.72rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #e5e7eb;}.chart-row{display:flex;gap:24px;align-items:center;margin-bottom:28px;}.chart-row img{width:140px;height:140px;flex-shrink:0;}.legend{flex:1;}.leg-item{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:0.83rem;}.leg-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}table{width:100%;border-collapse:collapse;margin-bottom:28px;}thead th{background:#f9fafb;padding:9px 12px;text-align:left;font-size:0.7rem;color:#6b7280;text-transform:uppercase;letter-spacing:0.06em;border-bottom:2px solid #e5e7eb;}tbody tr:nth-child(even){background:#fafafa;}tbody tr{border-bottom:1px solid #f3f4f6;}.footer{margin-top:24px;font-size:0.7rem;color:#9ca3af;text-align:center;border-top:1px solid #e5e7eb;padding-top:14px;}@media print{body{padding:20px;}}</style></head><body><div class="header"><div><div class="title">📊 ${arc.nom}</div><div class="sub">Archivé le ${arc.date} · Mon Coach Finance</div></div><div class="header-right">Revenus : <strong>${parseFloat(arc.revenu).toFixed(2)} €</strong></div></div><div class="stats-grid"><div class="stat"><div class="lbl">💸 Dépensé</div><div class="val">${parseFloat(arc.totalDep).toFixed(2)} €</div></div><div class="stat"><div class="lbl">🌱 Épargné</div><div class="val" style="color:#10b981">${parseFloat(arc.totalEp).toFixed(2)} €</div></div><div class="stat"><div class="lbl">⚖️ Solde</div><div class="val" style="color:${sc}">${parseFloat(arc.solde).toFixed(2)} €</div></div><div class="stat"><div class="lbl">📥 Revenus</div><div class="val">${parseFloat(arc.revenu).toFixed(2)} €</div></div></div><div class="section-title">Répartition des dépenses</div><div class="chart-row">${chartImg?`<img src="${chartImg}">`:''}<div class="legend">${arc.labels.map((l,i)=>`<div class="leg-item"><span class="leg-dot" style="background:${colors[i%colors.length]}"></span><span style="flex:1">${l}</span><strong>${parseFloat(arc.data[i]).toFixed(2)} €</strong></div>`).join('')}</div></div><div class="section-title">Prévu vs Réel par catégorie</div><table><thead><tr><th>Catégorie</th><th>Prévu</th><th>Réel</th><th>Écart</th><th>Progression</th></tr></thead><tbody>${compRows}</tbody></table><div class="footer">Généré par Mon Coach Finance · ${new Date().toLocaleDateString('fr-FR')}</div></body></html>`;
-        const blob=new Blob([html],{type:'text/html'}); const url=URL.createObjectURL(blob); const win=window.open(url,'_blank'); if(win) win.addEventListener('load',()=>setTimeout(()=>win.print(),600)); showToast('PDF amélioré prêt 🎉','info',4000);
+        const arc = archives.find(a => a.id === id); if (!arc) return;
+        const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+        const eur = (v, dec) => { v = parseFloat(v) || 0; const d = dec !== undefined ? dec : (Math.abs(v % 1) > 0.004 ? 2 : 0); return v.toLocaleString('fr-FR', { minimumFractionDigits: d, maximumFractionDigits: d }) + ' €'; };
+        const estEp = l => (l || '').toLowerCase().includes('épargne');
+        let accent = '#4f46e5';
+        try { const m = getComputedStyle(document.documentElement).getPropertyValue('--main').trim(); if (/^#[0-9a-f]{6}$/i.test(m)) accent = m; } catch (x) {}
+        const POS = '#0b7a53', NEG = '#c2410c', MUT = '#5d6270';
+
+        const revenu = parseFloat(arc.revenu) || 0, dep = parseFloat(arc.totalDep) || 0, ep = parseFloat(arc.totalEp) || 0, solde = parseFloat(arc.solde) || 0;
+        const budget = budgetArchive(arc);
+        const pctBudget = budget > 0 ? Math.round(dep / budget * 100) : 0;
+        const reste = budget - dep;
+
+        // Catégories (hors épargne)
+        const cats = arc.labels.map((label, i) => {
+            const cid = arc.catIds ? arc.catIds[i] : null;
+            const prev = (arc.previsions && cid) ? (parseFloat(arc.previsions[cid]) || 0) : 0;
+            const reel = parseFloat(arc.data[i]) || 0;
+            return { label, prev, reel, col: couleurCatArchive(arc, i) };
+        }).filter(c => !estEp(c.label) && (c.prev > 0 || c.reel > 0));
+        const rows = cats.map(c => {
+            const p = c.prev > 0 ? Math.round(c.reel / c.prev * 100) : 0, over = c.prev > 0 && c.reel > c.prev, e = c.prev - c.reel;
+            return `<tr><td class="cn"><i style="background:${c.col}"></i>${esc(c.label)}</td><td class="r mu">${eur(c.prev)}</td><td class="r b">${eur(c.reel)}</td><td class="r b" style="color:${e < 0 ? NEG : POS}">${e >= 0 ? '+' : '−'}${eur(Math.abs(e))}</td><td class="ut"><div class="uw"><div class="bar"><div style="width:${Math.min(p, 100)}%;background:${over ? NEG : c.col}"></div></div><span style="color:${over ? NEG : MUT}">${c.prev > 0 ? p + ' %' : '—'}</span></div></td></tr>`;
+        }).join('');
+        const totPrev = cats.reduce((s, c) => s + c.prev, 0), totReel = cats.reduce((s, c) => s + c.reel, 0), totE = totPrev - totReel;
+
+        // Plus grosses dépenses (hors épargne)
+        const deps = (arc.depenses || []).filter(d => !estEp(d.catLabel));
+        const nbOps = deps.length;
+        const top = deps.slice().sort((a, b) => (b.mt || 0) - (a.mt || 0)).slice(0, 5);
+        const topHtml = top.length ? top.map(d => {
+            const i = arc.catIds ? arc.catIds.indexOf(d.ct) : -1;
+            const col = i >= 0 ? couleurCatArchive(arc, i) : '#64748b';
+            const dt = String(d.date || '').slice(0, 5);
+            return `<div class="op"><i style="background:${col}"></i><span class="ol">${esc(d.desc)}</span><span class="od">${esc(dt)}</span><span class="om">${eur(d.mt, 2)}</span></div>`;
+        }).join('') : `<div class="op"><span class="ol" style="color:${MUT}">Aucune dépense enregistrée</span></div>`;
+
+        // À retenir
+        const idx = archives.indexOf(arc), prevArc = idx > 0 ? archives[idx - 1] : null;
+        let comp;
+        if (prevArc) {
+            const diff = dep - (parseFloat(prevArc.totalDep) || 0);
+            comp = Math.abs(diff) < 0.5 ? ['Autant dépensé', '#11131a'] : [eur(Math.abs(diff), 0) + (diff < 0 ? ' de moins dépensés' : ' de plus dépensés'), diff < 0 ? POS : NEG];
+        }
+        const tauxEp = revenu > 0 ? Math.round(ep / revenu * 100) : 0;
+        const pire = cats.filter(c => c.prev > 0 && c.reel > c.prev).sort((a, b) => (b.reel - b.prev) - (a.reel - a.prev))[0];
+
+        const C = 2 * Math.PI * 56, ringLen = C * Math.min(pctBudget, 100) / 100;
+        const pill = budget <= 0 ? 'Aucun budget défini' : (reste >= 0 ? 'Dans le budget · reste ' + eur(reste, 0) : 'Budget dépassé de ' + eur(-reste, 0));
+        const prenom = (typeof appSettings !== 'undefined' && appSettings.prenom) ? ' · ' + esc(appSettings.prenom) : '';
+        const kpi = (l, v, c, s) => `<div class="kpi"><span class="kl">${l}</span><span class="kv" style="color:${c}">${v}</span><span class="ks">${s}</span></div>`;
+
+        const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Bilan ${esc(arc.nom)}</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+@page{size:A4;margin:0}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html,body{background:#fff}
+body{font-family:'Manrope',system-ui,sans-serif;color:#11131a;font-variant-numeric:tabular-nums}
+.page{width:794px;min-height:1123px;margin:0 auto;padding:44px 48px 40px;display:flex;flex-direction:column;gap:22px}
+.hero{border-radius:24px;background:${accent};color:#fff;padding:26px 30px;display:flex;justify-content:space-between;align-items:center;gap:24px}
+.hero .t{display:flex;flex-direction:column;gap:8px}
+.ey{font-size:12px;font-weight:700;letter-spacing:.06em;opacity:.9}
+h1{font-size:46px;line-height:1;font-weight:800;letter-spacing:-.02em}
+.sub{font-size:14px;font-weight:600;opacity:.9}
+.pill{align-self:flex-start;margin-top:6px;font-size:12px;font-weight:800;padding:6px 12px;border-radius:999px;background:#fff;color:${reste < 0 && budget > 0 ? NEG : accent}}
+.ring{position:relative;width:140px;height:140px;flex-shrink:0}
+.ring div{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring b{font-size:30px;font-weight:800}.ring span{font-size:12px;font-weight:700;opacity:.9}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.kpi{border:1px solid #e3e5ea;border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.kl,.ks{font-size:12px;font-weight:700;color:${MUT}}.ks{font-weight:600}
+.kv{font-size:22px;font-weight:800;letter-spacing:-.01em;white-space:nowrap}
+.box{border:1px solid #e3e5ea;border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.h{font-size:16px;font-weight:800}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:8px 0;font-size:12px;font-weight:700;color:${MUT}}
+thead tr{border-bottom:1.5px solid #11131a}
+tbody tr{border-bottom:1px solid #e3e5ea;page-break-inside:avoid}
+td{padding:11px 0}
+.r{text-align:right}.b{font-weight:800}.mu{color:${MUT};font-weight:600}
+.cn{font-weight:700}.cn i,.op i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;flex-shrink:0}
+th.ut{padding-left:24px;width:190px}
+td.ut{padding-left:24px}.uw{display:flex;align-items:center;gap:8px}
+.bar{flex:1;height:6px;border-radius:999px;background:#eef0f4;overflow:hidden}.bar div{height:100%;border-radius:999px}
+.uw span{width:40px;text-align:right;font-size:12px;font-weight:700}
+tfoot td{padding:12px 0 2px;font-weight:800}
+.duo{display:grid;grid-template-columns:1.25fr 1fr;gap:12px;page-break-inside:avoid}
+.op{display:flex;align-items:center;gap:10px;font-size:13px;padding-bottom:8px;border-bottom:1px solid #e3e5ea}
+.op:last-child{border-bottom:none}
+.ol{flex:1;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.od{font-weight:600;color:${MUT}}.om{width:84px;text-align:right;font-weight:800}
+.rt{display:flex;flex-direction:column;gap:2px}.rt span{font-size:12px;font-weight:700;color:${MUT}}.rt b{font-size:18px;font-weight:800}
+.foot{margin-top:auto;display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid #e3e5ea;font-size:12px;font-weight:600;color:${MUT}}
+@media screen{body{background:#eef0f4;padding:24px 0}.page{background:#fff;box-shadow:0 2px 24px rgba(0,0,0,.08)}}
+</style></head><body><div class="page">
+<div class="hero"><div class="t"><span class="ey">MON COACH FINANCE · BILAN DU MOIS</span><h1>${esc(arc.nom)}</h1><span class="sub">Archivé le ${esc(arc.date)}${prenom}</span><span class="pill">${pill}</span></div>
+<div class="ring"><svg width="140" height="140" viewBox="0 0 140 140"><circle cx="70" cy="70" r="56" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="14"/>${ringLen > 0 ? `<circle cx="70" cy="70" r="56" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-dasharray="${ringLen.toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 70 70)"/>` : ''}</svg><div><b>${pctBudget} %</b><span>du budget</span></div></div></div>
+<div class="kpis">${kpi('Revenus', eur(revenu, 0), '#11131a', 'ce mois-ci')}${kpi('Dépensé', eur(dep, 0), '#11131a', nbOps + ' opération' + (nbOps > 1 ? 's' : ''))}${kpi('Épargné', eur(ep, 0), POS, tauxEp + ' % des revenus')}${kpi('Solde', (solde >= 0 ? '+' : '−') + eur(Math.abs(solde), 0), solde >= 0 ? POS : NEG, 'reste à la fin')}</div>
+<div class="box"><span class="h">Prévu et réel par catégorie</span><table><thead><tr><th>Catégorie</th><th class="r">Prévu</th><th class="r">Réel</th><th class="r">Écart</th><th class="ut">Utilisé</th></tr></thead><tbody>${rows || `<tr><td colspan="5" class="mu">Aucune catégorie</td></tr>`}</tbody>
+<tfoot><tr><td>Total</td><td class="r mu">${eur(totPrev)}</td><td class="r">${eur(totReel)}</td><td class="r" style="color:${totE < 0 ? NEG : POS}">${totE >= 0 ? '+' : '−'}${eur(Math.abs(totE))}</td><td class="r" style="font-size:12px;color:${MUT}">${totPrev > 0 ? Math.round(totReel / totPrev * 100) + ' %' : '—'}</td></tr></tfoot></table></div>
+<div class="duo"><div class="box"><span class="h">Plus grosses dépenses</span>${topHtml}</div>
+<div class="box" style="gap:14px"><span class="h">À retenir</span>
+<div class="rt"><span>${prevArc ? 'Par rapport à ' + esc(prevArc.nom) : 'Comparaison'}</span><b style="color:${prevArc ? comp[1] : '#11131a'}">${prevArc ? comp[0] : 'Premier mois archivé'}</b></div>
+<div class="rt"><span>Taux d'épargne</span><b>${tauxEp} % des revenus</b></div>
+<div class="rt"><span>À surveiller</span><b style="color:${pire ? NEG : POS}">${pire ? esc(pire.label) + ' +' + eur(pire.reel - pire.prev, 0) : 'Aucun dépassement'}</b></div></div></div>
+<div class="foot"><span>Généré par Mon Coach Finance le ${new Date().toLocaleDateString('fr-FR')}</span><span>Archivé le ${esc(arc.date)}</span></div>
+</div></body></html>`;
+        const blob = new Blob([html], { type: 'text/html' }); const url = URL.createObjectURL(blob); const win = window.open(url, '_blank');
+        if (win) win.addEventListener('load', () => setTimeout(() => win.print(), 700));
+        showToast('PDF prêt à imprimer', 'info', 4000);
     }
 
     majAffichage(); afficherArchives(); afficherEvolution();
