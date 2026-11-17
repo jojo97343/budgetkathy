@@ -442,6 +442,80 @@
 
         /* Accueil : actions rapides */
         .qa-row { display: flex; gap: 8px; margin-bottom: 18px; }
+
+        /* ── Comptes bancaires ── */
+        .cpt-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
+        .cpt-card { text-align: left; border-radius: 18px; background: var(--card); border: 1px solid var(--line); padding: 14px; display: flex; flex-direction: column; gap: 8px; color: var(--text); font-family: inherit; cursor: pointer; min-width: 0; }
+        .cpt-head { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--text-muted); min-width: 0; }
+        .cpt-head span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .cpt-ico { width: 28px; height: 28px; border-radius: 9px; flex-shrink: 0; background: color-mix(in srgb, var(--c) 13%, var(--card)); color: var(--c); display: flex; align-items: center; justify-content: center; }
+        .cpt-ico svg { width: 15px; height: 15px; }
+        .cpt-solde { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap; }
+        .cpt-solde.neg { color: var(--danger); }
+        .cpt-st { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; }
+        .cpt-st::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+        .cpt-st.ok { color: var(--success); } .cpt-st.warn { color: var(--warning); }
+        .cpt-tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 999px; margin-right: 6px; background: color-mix(in srgb, var(--c) 13%, var(--card)); color: var(--c); font-style: normal; }
+        [data-theme="dark"] .cpt-tag, [data-theme="dark"] .cpt-ico { color: color-mix(in srgb, var(--c) 55%, #fff); }
+        .qa-row { overflow-x: auto; scrollbar-width: none; } .qa-row::-webkit-scrollbar { display: none; }
+        .qa-row .qa { flex: 1 0 58px; }
+        .cpt-pick { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+        .cpt-opt { position: relative; text-align: left; min-height: 64px; border-radius: 14px; border: 1px solid var(--line); background: var(--bg); padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; font-family: inherit; color: var(--text); cursor: pointer; min-width: 0; }
+        .cpt-opt.on { border: 2px solid var(--main); background: var(--soft); padding: 9px 11px; }
+        .cpt-opt b { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 800; padding-right: 24px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .cpt-opt b i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); flex-shrink: 0; }
+        .cpt-opt small { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+        .cpt-opt.on::after { content: '✓'; position: absolute; top: 8px; right: 8px; width: 18px; height: 18px; border-radius: 50%; background: var(--main); color: #fff; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+        .cpt-ov { z-index: 270 !important; }
+        .cpt-sheet { display: flex; flex-direction: column; gap: 14px; padding: 10px 18px calc(24px + env(safe-area-inset-bottom)); max-height: 92vh; overflow-y: auto; }
+        .cpt-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .cpt-top h3 { margin: 0; font-size: 19px; font-weight: 800; }
+        .cpt-top small { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+        .cpt-x { width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--bg); color: var(--text-muted); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+        .vir-box { position: relative; display: flex; flex-direction: column; gap: 4px; }
+        .vir-row { border-radius: 18px; background: var(--bg); padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+        .vir-row:first-child { border-radius: 18px 18px 6px 6px; } .vir-row:last-child { border-radius: 6px 6px 18px 18px; }
+        .vir-row > span:first-child { font-size: 12px; font-weight: 700; color: var(--text-muted); width: 32px; flex-shrink: 0; }
+        .vir-row select { flex: 1; min-width: 0; margin: 0 !important; border: none !important; background-color: transparent !important; box-shadow: none !important; font-size: 15px; font-weight: 800; padding-left: 0; }
+        .vir-swap { position: absolute; right: 52px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: 4px solid var(--card); background: var(--main); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .cpt-box { border-radius: 16px; border: 1px solid var(--line); padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+        .cpt-box .r { display: flex; justify-content: space-between; gap: 10px; font-size: 14px; font-weight: 700; }
+        .cpt-box .l { font-size: 12px; font-weight: 700; color: var(--text-muted); }
+        .cpt-info { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 14px; background: var(--bg); font-size: 13px; font-weight: 600; color: var(--text-muted); line-height: 1.45; }
+        .cpt-info strong { color: var(--text); }
+        .pt-ecart { border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px; }
+        .pt-ecart.warn { background: color-mix(in srgb, var(--warning) 13%, var(--card)); }
+        .pt-ecart.ok { background: color-mix(in srgb, var(--success) 12%, var(--card)); }
+        .pt-ecart span { font-size: 13px; font-weight: 700; }
+        .pt-ecart b { font-size: 26px; font-weight: 800; letter-spacing: -0.01em; }
+        .pt-ecart.warn span, .pt-ecart.warn b { color: var(--warning); } .pt-ecart.ok span, .pt-ecart.ok b { color: var(--success); }
+        .pt-ecart p { margin: 0; font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.45; }
+        .pt-input { display: flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 16px; border-radius: 14px; border: 2px solid var(--main); background: var(--soft); }
+        .pt-input input { flex: 1; min-width: 0; margin: 0 !important; border: none !important; background: transparent !important; box-shadow: none !important; font-size: 22px; font-weight: 800; padding: 0; height: 52px; }
+        .pt-input b { font-size: 20px; font-weight: 800; color: var(--soft-text); }
+        .btn-2 { min-height: 54px; border-radius: 16px; border: 1px solid var(--line); background: var(--card); color: var(--text); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; padding: 8px; width: 100%; }
+        .btn-2 small { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+        .pt-op { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-top: 1px solid var(--line); cursor: pointer; margin: 0; }
+        .pt-op input { width: 22px; height: 22px; min-height: 0; margin: 0; accent-color: var(--main); flex-shrink: 0; }
+        .pt-op span { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; font-size: 14px; font-weight: 700; }
+        .pt-op small { font-size: 12px; font-weight: 500; color: var(--text-muted); }
+        .pt-op b { font-size: 14px; font-weight: 800; white-space: nowrap; }
+        .cl-row { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); cursor: pointer; background: none; border-left: none; border-right: none; border-top: none; width: 100%; font-family: inherit; color: var(--text); text-align: left; }
+        .cl-row:last-child { border-bottom: none; }
+        .cl-row .cpt-ico { width: 40px; height: 40px; border-radius: 13px; } .cl-row .cpt-ico svg { width: 18px; height: 18px; }
+        .cl-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+        .cl-main b { font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 8px; white-space: nowrap; overflow: hidden; }
+        .cl-main b em { white-space: nowrap; flex-shrink: 0; }
+        .cl-main b em { font-style: normal; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: var(--soft); color: var(--soft-text); }
+        .cl-main small { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+        .cl-solde { font-size: 15px; font-weight: 800; white-space: nowrap; }
+        .cl-add { height: 52px; border-radius: 16px; border: 1.5px dashed color-mix(in srgb, var(--main) 50%, var(--card)); background: transparent; color: var(--soft-text); font-family: inherit; font-size: 15px; font-weight: 800; cursor: pointer; width: 100%; }
+        .cl-sw { display: flex; gap: 10px; flex-wrap: wrap; }
+        .cl-sw button { width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer; }
+        .cl-sw button.on { box-shadow: 0 0 0 3px var(--card), 0 0 0 5px var(--sw); }
+        .cl-form { display: flex; flex-direction: column; gap: 12px; border-radius: 20px; border: 1px solid var(--line); padding: 16px; }
+        .cl-del { background: none; border: none; color: var(--danger); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; padding: 8px; }
+
         .qa { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; background: none; border: none; color: var(--text); font-size: 12px; font-weight: 700; cursor: pointer; padding: 0; min-width: 0; }
         .qa-ico { width: 54px; height: 54px; border-radius: 18px; background: var(--card); border: 1px solid var(--line); color: var(--soft-text); display: flex; align-items: center; justify-content: center; }
         .qa-ico svg { width: 22px; height: 22px; }
@@ -889,6 +963,7 @@
         <input type="number" inputmode="decimal" id="edit-mt" placeholder="0.00">
         <label>Catégorie</label>
         <select id="edit-cat"></select>
+        <div id="edit-compte-box" style="display:none;"><label>Payé avec</label><select id="edit-compte"></select></div>
         <label style="margin-top:4px;">Note <span style="font-weight:400;color:var(--text-hint);">(optionnel)</span></label>
         <input type="text" id="edit-note" placeholder="Ex: remboursement prévu...">
         <div class="recurring-row" style="margin-top:4px;">
@@ -905,6 +980,67 @@
             <button class="btn btn-primary" onclick="sauvegarderEditDepense()">💾 Enregistrer</button>
         </div>
         <button class="edit-del" onclick="supprimerDepuisEdit()">Supprimer cette dépense</button>
+    </div>
+</div>
+
+
+<!-- ════════ COMPTES BANCAIRES ════════ -->
+<div id="sheet-virement" class="sheet-overlay cpt-ov" style="display:none;" onclick="if(event.target===this) fermerSheetCpt('sheet-virement')">
+    <div class="sheet cpt-sheet" role="dialog" aria-labelledby="vir-titre">
+        <div class="sheet-handle"></div>
+        <div class="cpt-top"><h3 id="vir-titre">Virement entre comptes</h3><button class="cpt-x" aria-label="Fermer" onclick="fermerSheetCpt('sheet-virement')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+        <div class="vir-box">
+            <label class="vir-row"><span>De</span><select id="vir_de" onchange="majVirement('de')" aria-label="Compte de départ"></select></label>
+            <label class="vir-row"><span>Vers</span><select id="vir_vers" onchange="majVirement('vers')" aria-label="Compte d'arrivée"></select></label>
+            <button class="vir-swap" aria-label="Inverser les comptes" onclick="inverserVirement()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3"/></svg></button>
+        </div>
+        <label class="dp-amount" for="vir_mt">
+            <span class="dp-amount-l">Montant</span>
+            <span class="dp-amount-row"><input type="number" inputmode="decimal" step="0.01" id="vir_mt" placeholder="0,00" oninput="majVirement()" aria-label="Montant du virement"><b>€</b></span>
+        </label>
+        <div class="cpt-box"><span class="l">Après le virement</span><div class="r"><span id="vir_n1"></span><span id="vir_s1"></span></div><div class="r"><span id="vir_n2"></span><span id="vir_s2" style="color:var(--success)"></span></div></div>
+        <div class="cpt-info"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;color:var(--soft-text)"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>Un virement entre tes comptes <strong>ne compte pas dans tes dépenses</strong> : ton budget ne bouge pas.</span></div>
+        <button class="btn btn-primary" style="height:54px;border-radius:16px;font-weight:800;" onclick="validerVirement()">Valider le virement</button>
+    </div>
+</div>
+
+<div id="sheet-pointage" class="sheet-overlay cpt-ov" style="display:none;" onclick="if(event.target===this) fermerSheetCpt('sheet-pointage')">
+    <div class="sheet cpt-sheet" role="dialog" aria-labelledby="pt-titre">
+        <div class="sheet-handle"></div>
+        <div class="cpt-top"><div><small>Pointer un compte</small><h3 id="pt-titre">Compte</h3></div><button class="cpt-x" aria-label="Fermer" onclick="fermerSheetCpt('sheet-pointage')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+        <div class="dp-field" id="pt_choix_box"><div class="cpt-pick" id="pt_choix"></div></div>
+        <div class="cpt-box"><div class="r"><span class="l" style="font-size:13px;">Solde calculé par l'appli</span><span id="pt_calc" style="font-size:17px;font-weight:800;"></span></div></div>
+        <label class="dp-field"><span>Solde affiché par ta banque</span>
+            <span class="pt-input"><input type="text" inputmode="decimal" id="pt_banque" placeholder="0,00" oninput="majPointage()" aria-label="Solde affiché par ta banque"><b>€</b></span>
+        </label>
+        <div id="pt_ecart" class="pt-ecart" style="display:none;"><span id="pt_ecart_l">Écart</span><b id="pt_ecart_v"></b><p id="pt_ecart_t"></p></div>
+        <div id="pt_actions" style="display:flex;flex-direction:column;gap:8px;"></div>
+        <div class="card" style="margin:0;padding:12px 16px 4px;">
+            <div class="row-between" style="padding-bottom:6px;"><span style="font-size:14px;font-weight:800;">Opérations à vérifier</span><span class="muted-sm" id="pt_depuis"></span></div>
+            <div id="pt_ops"></div>
+        </div>
+    </div>
+</div>
+
+<div id="sheet-comptes" class="sheet-overlay cpt-ov" style="display:none;" onclick="if(event.target===this) fermerSheetCpt('sheet-comptes')">
+    <div class="sheet cpt-sheet" role="dialog" aria-labelledby="cl-titre">
+        <div class="sheet-handle"></div>
+        <div class="cpt-top"><h3 id="cl-titre">Mes comptes</h3><button class="cpt-x" aria-label="Fermer" onclick="fermerSheetCpt('sheet-comptes')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+        <div id="cl-vide" class="cpt-info" style="display:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;color:var(--soft-text)"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>Ajoute tes comptes bancaires (compte courant, compte en ligne…) pour suivre le solde de chacun, faire des virements entre eux et les <strong>pointer</strong> avec ta banque. Ton budget, lui, reste commun.</span></div>
+        <div class="card" id="cl-liste-card" style="margin:0;padding:2px 16px;"><div id="cl-liste"></div></div>
+        <button class="cl-add" id="cl-add" onclick="editerCompte(null)">+ Ajouter un compte</button>
+        <div class="cl-form" id="cl-form" style="display:none;">
+            <span style="font-size:15px;font-weight:800;" id="cl-form-titre">Nouveau compte</span>
+            <label class="dp-field"><span>Nom</span><input type="text" id="cl_nom" placeholder="Ex : Compte courant" maxlength="30"></label>
+            <div class="dp-field"><span>Couleur</span><div class="cl-sw" id="cl_sw"></div><input type="hidden" id="cl_couleur"></div>
+            <label class="dp-field"><span id="cl_solde_l">Solde actuel à ta banque</span><input type="text" inputmode="decimal" id="cl_solde" placeholder="0,00 €"><small class="dp-help" id="cl_solde_h">Le solde affiché par ta banque aujourd'hui. Les opérations que tu ajoutes ensuite seront déduites de ce compte.</small></label>
+            <label class="dp-rec" for="cl_defaut">
+                <span class="dp-rec-txt"><strong>Compte par défaut</strong><small>Présélectionné pour les dépenses · reçoit tes revenus</small></span>
+                <span class="st-switch"><input type="checkbox" id="cl_defaut"><span class="st-track"></span><span class="st-thumb"></span></span>
+            </label>
+            <button class="btn btn-primary" style="height:52px;border-radius:16px;font-weight:800;" onclick="enregistrerCompte()">Enregistrer</button>
+            <button class="cl-del" id="cl_del" onclick="supprimerCompte()">Supprimer ce compte</button>
+        </div>
     </div>
 </div>
 
@@ -972,6 +1108,12 @@
                 <span class="st-txt" id="set_jour_debut_lbl">Le 1er du mois</span>
                 <svg class="st-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
                 <input type="hidden" id="set_jour_debut" value="1">
+            </button>
+            <button type="button" class="st-row" onclick="ouvrirComptes()">
+                <span class="st-ico green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg></span>
+                <span class="st-lbl">Mes comptes<small>Plusieurs comptes bancaires, virements, pointage</small></span>
+                <span class="st-txt" id="set_comptes_lbl">Aucun</span>
+                <svg class="st-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
             </button>
             <label class="st-row" for="set_devise">
                 <span class="st-ico green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 7a7 7 0 1 0 0 10"/><path d="M4 10h9M4 14h9"/></svg></span>
@@ -1139,7 +1281,7 @@
         <!-- ── SOLDE (carte principale) ── -->
         <div class="hero" id="hero-card">
             <div class="hero-top">
-                <span class="hero-label">Solde du mois</span>
+                <span class="hero-label" id="hero-label">Solde du mois</span>
                 <span class="hero-badge" id="hero-neg" style="display:none;">Solde négatif</span>
             </div>
             <div class="hero-amount" id="m_solde_wrap"><span id="m_solde">0</span> €</div>
@@ -1151,8 +1293,25 @@
             </div>
         </div>
 
+        <!-- ── MES COMPTES ── -->
+        <div id="cpt-home" style="display:none;">
+            <div class="sec-head" style="margin-top:4px;">
+                <span class="sec-title">Mes comptes</span>
+                <button class="link-btn" onclick="ouvrirComptes()">Gérer</button>
+            </div>
+            <div class="cpt-grid" id="cpt-grid"></div>
+        </div>
+
         <!-- ── ACTIONS RAPIDES ── -->
         <div class="qa-row">
+            <button class="qa" id="qa-virement" onclick="ouvrirVirement()" style="display:none;">
+                <span class="qa-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3"/></svg></span>
+                <span>Virement</span>
+            </button>
+            <button class="qa" id="qa-pointer" onclick="ouvrirPointage()" style="display:none;">
+                <span class="qa-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12l3 3 5-6"/></svg></span>
+                <span>Pointer</span>
+            </button>
             <button class="qa" onclick="allerPrevisions()">
                 <span class="qa-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>
                 <span>Prévoir</span>
@@ -1329,6 +1488,10 @@
             <label class="dp-field"><span>Catégorie</span>
                 <span class="dp-select"><i id="add_cat_dot"></i><select id="add_cat" onchange="majPastilleCat()"></select></span>
             </label>
+            <div class="dp-field" id="add_compte_box" style="display:none;"><span>Payé avec</span>
+                <div class="cpt-pick" id="add_compte_pick"></div>
+                <input type="hidden" id="add_compte" value="">
+            </div>
             <label class="dp-field"><span>Note <em>(optionnel)</em></span><input type="text" id="add_note" placeholder="Ex : remboursement prévu"></label>
             <label class="dp-rec" for="add_recurring">
                 <span class="dp-rec-txt"><strong>🔄 Dépense récurrente</strong><small>Reportée automatiquement le mois suivant</small></span>
@@ -1337,6 +1500,7 @@
             <label class="dp-field" id="add_jour_box" style="display:none;"><span>Jour du prélèvement</span>
                 <button type="button" class="dp-daybtn" onclick="choisirJourPrelev('add_jour')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span id="add_jour_lbl">Choisir le jour</span></button>
                 <input type="hidden" id="add_jour" value="">
+                <small class="dp-help" id="add_cpt_note" style="display:none;"></small>
                 <small class="dp-help">Tant que le jour n'est pas passé, la dépense est « à venir » et n'est pas encore déduite de ton solde.</small>
             </label>
             <button class="btn btn-primary dp-submit" onclick="ajouterDepense()">Ajouter la dépense</button>
@@ -1773,7 +1937,7 @@
         archives.push(archive); localStorage.setItem('budget_archives',JSON.stringify(archives));
         let em=0; depensesEffectives().forEach(d=>{ const cat=db.categories.find(c=>c.id===d.ct); if(cat&&cat.label.toLowerCase().includes("épargne")) em+=d.mt; });
         globalSavings+=em; localStorage.setItem('globalSavings',globalSavings);
-        const refNouveau=new Date(); refNouveau.setDate(refNouveau.getDate()+15); db.depenses=db.depenses.filter(d=>d.recurring===true).map(d=>{ const n={...d}; if(n.jourPrelev) n.date=dateEcheanceTxt(n, refNouveau); return n; });
+        const tsFige=figerComptes(); const refNouveau=new Date(); refNouveau.setDate(refNouveau.getDate()+15); db.depenses=db.depenses.filter(d=>d.recurring===true).map(d=>{ const n={...d, pointe:false}; if(tsFige) n.ts=tsFige+1; if(n.jourPrelev) n.date=dateEcheanceTxt(n, refNouveau); return n; });
         const refCycle=new Date(); refCycle.setDate(refCycle.getDate()+15); marquerCycleOuvert(debutCycle(new Date())>debutCycle(new Date(localStorage.getItem('cycle_ouvert')||0))?new Date():refCycle);
         sauvegarder(); afficherArchives(); afficherEvolution();
         const nbPrev = previsionsMoisProchain.length;
@@ -1804,7 +1968,7 @@
         if(!desc||isNaN(mt)||mt<=0){ showToast('Remplis tous les champs correctement','warning'); return; }
         if(!ctId){ showToast('Sélectionne une catégorie','warning'); return; }
         const jourEl=document.getElementById(recurId==='add_recurring'?'add_jour':'__none'); const jourPrelev=isRec&&jourEl&&jourEl.value?parseInt(jourEl.value):null;
-        const expense={id:Date.now(),date:new Date().toLocaleDateString('fr-FR'),desc,mt,ct:ctId,recurring:isRec,note:note||''}; if(jourPrelev){ expense.jourPrelev=jourPrelev; expense.date=dateEcheanceTxt(expense); }
+        const expense={id:Date.now(),date:new Date().toLocaleDateString('fr-FR'),desc,mt,ct:ctId,recurring:isRec,note:note||''}; const cptId=compteFormulaire(recurId==='add_recurring'); if(cptId) expense.compte=cptId; if(jourPrelev){ expense.jourPrelev=jourPrelev; expense.date=dateEcheanceTxt(expense); }
         db.depenses.push(expense);
         const catObj=db.categories.find(c=>c.id===ctId);
         if(catObj&&catObj.label.toLowerCase().includes("épargne")) db.historiqueEpargne.push(expense);
@@ -1898,6 +2062,7 @@
         const top3Card=document.getElementById('top3-card'), top3List=document.getElementById('top3-list');
         if(top3Card&&top3List){ const scored=db.categories.map(cat=>{ const prev=db.previsions[cat.id]||0,reel=totaux[cat.id]||0,pct=prev>0?(reel/prev)*100:(reel>0?999:0); return{label:cat.label,prev,reel,pct}; }).filter(c=>c.reel>0).sort((a,b)=>b.pct-a.pct).slice(0,3); if(scored.length>0){ top3Card.style.display='block'; const rankClass=['r1','r2','r3'],rankEmoji=['','',''],conseils=(c)=>{ if(c.pct>=100) return`Dépassement de ${Math.round(c.reel-c.prev)}€ — à réduire le mois prochain`; if(c.pct>=80) return`${Math.round(c.pct)}% du budget utilisé — attention`; return`${Math.round(c.pct)}% utilisé — surveille cette catégorie`; }; top3List.innerHTML=scored.map((c,i)=>`<div class="top3-item"><div class="top3-rank ${rankClass[i]}">${i+1}</div><div class="top3-info"><div class="top3-name">${rankEmoji[i]} ${c.label}</div><div class="top3-detail">${conseils(c)}</div></div><div class="top3-bar-wrap"><div class="top3-bar-bg"><div class="top3-bar-fill" style="width:${Math.min(c.pct,100)}%;background:${c.pct>=100?'#ef4444':c.pct>=80?'#f59e0b':'#5b5ef4'}"></div></div><div class="top3-pct">${c.prev>0?Math.round(c.pct)+'%':c.reel+'€'}</div></div></div>`).join(''); } else { top3Card.style.display='none'; } }
         majSuggestions(totaux);
+        try { majComptes(solde, totalGeneral, budgetBarRef); } catch (e) { console.warn('comptes', e); }
         if (typeof syncSoloBudget === 'function') { clearTimeout(window._soloSyncTimer); window._soloSyncTimer = setTimeout(syncSoloBudget, 800); }
         majProjection(totaux, totalGeneral);
         if (typeof majPrevisionsCatSelect === 'function') majPrevisionsCatSelect();
@@ -2782,6 +2947,7 @@ tfoot td{padding:12px 0 2px;font-weight:800}
         sel.innerHTML = '';
         db.categories.forEach(c => { sel.innerHTML += `<option value="${c.id}">${c.label}</option>`; });
         sel.value = d.ct;
+        remplirEditCompte(d);
         document.getElementById('modal-edit-depense').style.display = 'flex';
         setTimeout(() => document.getElementById('edit-desc').focus(), 100);
     }
@@ -2807,6 +2973,7 @@ tfoot td{padding:12px 0 2px;font-weight:800}
         if (idx === -1) return;
         const jv = document.getElementById('edit-jour').value;
         db.depenses[idx] = { ...db.depenses[idx], desc, mt, ct: cat, note, recurring, jourPrelev: recurring && jv ? parseInt(jv) : null };
+        const ecSel = document.getElementById('edit-compte'); if (comptes().length >= 2 && ecSel && ecSel.value) db.depenses[idx].compte = ecSel.value;
         if (db.depenses[idx].jourPrelev) db.depenses[idx].date = dateEcheanceTxt(db.depenses[idx]);
         // Mise à jour historiqueEpargne si besoin
         const epIdx = db.historiqueEpargne.findIndex(d => d.id === id);
@@ -3745,6 +3912,345 @@ tfoot td{padding:12px 0 2px;font-weight:800}
         dot.style.background = cat && cat.color ? cat.color : 'var(--text-hint)';
     }
     /* Dépense : historique regroupé par jour */
+    /* ════════ Comptes bancaires (plusieurs comptes, un seul budget) ════════
+       db.comptes    : [{ id, nom, color, base, baseAt, defaut, pointeAt }]
+                       base = solde réel du compte à l'instant baseAt (création, correction ou clôture du mois)
+       db.mouvements : [{ id, type: 'virement'|'ajustement', de, vers, compte, mt, date }]  — hors budget
+       Une dépense porte d.compte (sinon : compte par défaut). */
+    const CPT_COULEURS = [['#4f46e5', 'Indigo'], ['#0e7490', 'Bleu canard'], ['#047857', 'Vert'], ['#d97706', 'Orange'], ['#be185d', 'Framboise'], ['#64748b', 'Ardoise']];
+    const CPT_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg>';
+    function comptes() { if (!Array.isArray(db.comptes)) db.comptes = []; return db.comptes; }
+    function mouvements() { if (!Array.isArray(db.mouvements)) db.mouvements = []; return db.mouvements; }
+    function compteDefaut() { const l = comptes(); return l.find(c => c.defaut) || l[0] || null; }
+    function compteParId(id) { return comptes().find(c => c.id === id) || null; }
+    function compteDe(d) {
+        if (!comptes().length) return null;
+        if (!d.compte) { const c = compteDefaut(); return c ? c.id : null; }
+        return compteParId(d.compte) ? d.compte : null;
+    }
+    function escH(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+    function fmtCpt(v) { const n = Math.round((v || 0) * 100) / 100; return (n < 0 ? '−' : '') + Math.abs(n).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'; }
+    function lireMontant(s) { const v = parseFloat(String(s || '').replace(/\s/g, '').replace('€', '').replace(',', '.')); return isNaN(v) ? NaN : Math.round(v * 100) / 100; }
+    function tsDateTxt(s) { const p = String(s || '').split('/'); return p.length === 3 ? new Date(+p[2], +p[1] - 1, +p[0]).getTime() : 0; }
+    function tsEffet(d) { const base = d.ts || d.id || 0; return d.jourPrelev ? Math.max(base, tsDateTxt(d.date)) : base; }
+    // Nombre de débuts de mois budgétaire (jours de paie) passés depuis baseAt
+    function nbRevenusDepuis(baseAt) {
+        let n = 0, s = debutCycle(new Date()), garde = 0;
+        while (s.getTime() > baseAt && garde < 240) { n++; const p = new Date(s); p.setDate(p.getDate() - 1); s = debutCycle(p); garde++; }
+        return n;
+    }
+    function soldeCompte(c) {
+        const at = c.baseAt || 0; let s = +c.base || 0;
+        const def = compteDefaut();
+        if (def && def.id === c.id) s += nbRevenusDepuis(at) * ((db.revenu || 0) + (db.caf || 0));
+        db.depenses.forEach(d => { if (compteDe(d) !== c.id || estAVenir(d) || tsEffet(d) <= at) return; s -= d.mt; });
+        mouvements().forEach(m => {
+            if ((m.id || 0) <= at) return;
+            if (m.type === 'virement') { if (m.de === c.id) s -= m.mt; if (m.vers === c.id) s += m.mt; }
+            else if (m.compte === c.id) s += m.mt;
+        });
+        return Math.round(s * 100) / 100;
+    }
+    // À la clôture : on fige le solde de chaque compte, puis on repart de là
+    function figerComptes() {
+        if (!comptes().length) return 0;
+        const now = Date.now();
+        comptes().forEach(c => { c.base = soldeCompte(c); c.baseAt = now; });
+        db.mouvements = [];
+        return now;
+    }
+    function statutPointage(c) {
+        if (!c.pointeAt) return { txt: 'Jamais pointé', cls: 'warn' };
+        const j = Math.floor((Date.now() - c.pointeAt) / 864e5);
+        if (j <= 7) return { txt: j === 0 ? "Pointé aujourd'hui" : 'Pointé il y a ' + j + ' j', cls: 'ok' };
+        return { txt: 'À pointer · ' + j + ' j', cls: 'warn' };
+    }
+    function cptSave() { localStorage.setItem('budget_vGestion', JSON.stringify(db)); majAffichage(); }
+    function fermerSheetCpt(id) { const el = document.getElementById(id); if (el) el.style.display = 'none'; }
+    function nomCourt(c) { return c ? c.nom : '—'; }
+
+    /* Affichage (appelé à chaque majAffichage) */
+    function majComptes(soldeMois) {
+        const liste = comptes(), n = liste.length;
+        const lbl = document.getElementById('set_comptes_lbl'); if (lbl) lbl.textContent = n ? n + ' compte' + (n > 1 ? 's' : '') : 'Aucun';
+        const home = document.getElementById('cpt-home');
+        const show = (id, v) => { const el = document.getElementById(id); if (el) el.style.display = v ? '' : 'none'; };
+        show('qa-virement', n >= 2); show('qa-pointer', n >= 1);
+        const heroLbl = document.getElementById('hero-label');
+        if (!n) {
+            if (home) home.style.display = 'none';
+            if (heroLbl) heroLbl.textContent = 'Solde du mois';
+            show('add_compte_box', false); show('add_cpt_note', false); show('edit-compte-box', false);
+            return;
+        }
+        // Héros : solde total des comptes, le solde du mois passe dessous
+        const total = liste.reduce((s, c) => s + soldeCompte(c), 0);
+        if (heroLbl) heroLbl.textContent = 'Solde total · ' + n + ' compte' + (n > 1 ? 's' : '');
+        const ms = document.getElementById('m_solde'); if (ms) ms.innerText = total.toFixed(2);
+        const neg = document.getElementById('hero-neg'); if (neg) neg.style.display = total < 0 ? 'inline-block' : 'none';
+        const rt = document.getElementById('m_revenu_txt');
+        if (rt) { const av = totalAVenir(); rt.innerText = 'Solde du mois : ' + (soldeMois >= 0 ? '+' : '') + soldeMois.toFixed(2) + ' €' + (av > 0 ? ' · ' + av.toFixed(2) + ' € à venir' : ''); }
+        // Cartes
+        if (home) home.style.display = '';
+        const grid = document.getElementById('cpt-grid');
+        if (grid) grid.innerHTML = liste.map(c => {
+            const s = soldeCompte(c), st = statutPointage(c);
+            return `<button class="cpt-card" style="--c:${c.color};" onclick="ouvrirPointage('${c.id}')" aria-label="Pointer ${escH(c.nom)}">
+                <span class="cpt-head"><span class="cpt-ico">${CPT_SVG}</span><span>${escH(c.nom)}</span></span>
+                <span class="cpt-solde${s < 0 ? ' neg' : ''}">${fmtCpt(s)}</span>
+                <span class="cpt-st ${st.cls}">${st.txt}</span></button>`;
+        }).join('');
+        // Formulaire « Payé avec »
+        const inp = document.getElementById('add_compte');
+        if (inp && !compteParId(inp.value)) inp.value = compteDefaut().id;
+        show('add_compte_box', n >= 2);
+        renderChoixCompte();
+        show('edit-compte-box', n >= 2);
+    }
+    function renderChoixCompte() {
+        const box = document.getElementById('add_compte_pick'), inp = document.getElementById('add_compte'); if (!box || !inp) return;
+        box.innerHTML = comptes().map(c => `<button type="button" class="cpt-opt${c.id === inp.value ? ' on' : ''}" style="--c:${c.color};" onclick="choisirComptePaiement('${c.id}')" aria-pressed="${c.id === inp.value}"><b><i></i>${escH(c.nom)}</b><small>${fmtCpt(soldeCompte(c))}</small></button>`).join('');
+        const note = document.getElementById('add_cpt_note'), c = compteParId(inp.value);
+        if (note) { note.style.display = comptes().length >= 2 && c ? '' : 'none'; if (c) note.innerHTML = 'Prélevée chaque mois sur le compte <strong>' + escH(c.nom) + '</strong>.'; }
+    }
+    function choisirComptePaiement(id) { const inp = document.getElementById('add_compte'); if (inp) inp.value = id; renderChoixCompte(); }
+    function compteFormulaire(formMobile) {
+        if (!comptes().length) return null;
+        const inp = document.getElementById('add_compte');
+        const id = formMobile && inp && compteParId(inp.value) ? inp.value : compteDefaut().id;
+        if (inp) inp.value = compteDefaut().id;   // repasse sur le compte par défaut pour la prochaine dépense
+        return id;
+    }
+    function remplirEditCompte(d) {
+        const sel = document.getElementById('edit-compte'); if (!sel) return;
+        sel.innerHTML = comptes().map(c => `<option value="${c.id}">${escH(c.nom)}</option>`).join('');
+        const cur = compteDe(d); if (cur) sel.value = cur;
+        const box = document.getElementById('edit-compte-box'); if (box) box.style.display = comptes().length >= 2 ? '' : 'none';
+    }
+    function tagCompte(d) {
+        if (comptes().length < 2) return '';
+        const c = compteParId(compteDe(d)); if (!c) return '';
+        return `<em class="cpt-tag" style="--c:${c.color};">${escH(c.nom)}</em>`;
+    }
+    // Virements / ajustements dans l'historique (hors budget)
+    function insererMouvements(liste, term, aVenir) {
+        if (!comptes().length) return;
+        const mv = mouvements().map(m => ({ ...m, _mv: true, _nom: libelleMouvement(m) }))
+            .filter(m => !term || m._nom.toLowerCase().includes(term) || 'virement ajustement'.includes(term))
+            .sort((a, b) => a.id - b.id);
+        mv.forEach(m => {
+            const i = liste.findIndex(d => !aVenir(d) && !d._mv && (d.ts || d.id) < m.id);
+            if (i === -1) liste.push(m); else liste.splice(i, 0, m);
+        });
+    }
+    function libelleMouvement(m) {
+        if (m.type === 'virement') return 'Virement · ' + nomCourt(compteParId(m.de)) + ' → ' + nomCourt(compteParId(m.vers));
+        return 'Ajustement · ' + nomCourt(compteParId(m.compte));
+    }
+    function ligneMouvement(m, fmt) {
+        const vir = m.type === 'virement';
+        const amt = vir ? fmt(m.mt) : (m.mt >= 0 ? '+' : '−') + fmt(Math.abs(m.mt));
+        return `<div class="dp-op" onclick="supprimerMouvement(${m.id})">
+            <span class="dp-ico" style="--c:#64748b;">⇄</span>
+            <div class="dp-main"><span class="dp-name">${escH(m._nom)}</span><span class="dp-meta">${vir ? 'Entre tes comptes' : 'Rapprochement bancaire'} · hors budget</span></div>
+            <span class="dp-amt" style="color:var(--text-muted);">${amt}</span></div>`;
+    }
+    function supprimerMouvement(id) {
+        const m = mouvements().find(x => x.id === id); if (!m) return;
+        if (!confirm('Supprimer « ' + libelleMouvement(m) + ' » ?')) return;
+        db.mouvements = mouvements().filter(x => x.id !== id); cptSave(); showToast('Opération supprimée', 'warning');
+    }
+
+    /* Virement */
+    function ouvrirVirement() {
+        if (comptes().length < 2) { showToast('Ajoute au moins deux comptes pour faire un virement', 'info'); ouvrirComptes(); return; }
+        const opts = comptes().map(c => `<option value="${c.id}">${escH(c.nom)} · ${fmtCpt(soldeCompte(c))}</option>`).join('');
+        const de = document.getElementById('vir_de'), vers = document.getElementById('vir_vers');
+        de.innerHTML = opts; vers.innerHTML = opts;
+        de.value = compteDefaut().id; vers.value = comptes().find(c => c.id !== de.value).id;
+        document.getElementById('vir_mt').value = '';
+        majVirement();
+        document.getElementById('sheet-virement').style.display = 'flex';
+        setTimeout(() => document.getElementById('vir_mt').focus(), 150);
+    }
+    function majVirement(change) {
+        const de = document.getElementById('vir_de'), vers = document.getElementById('vir_vers');
+        if (de.value === vers.value) { const autre = comptes().find(c => c.id !== (change === 'vers' ? vers.value : de.value)); if (change === 'vers') de.value = autre.id; else vers.value = autre.id; }
+        const mt = lireMontant(document.getElementById('vir_mt').value) || 0;
+        const a = compteParId(de.value), b = compteParId(vers.value);
+        document.getElementById('vir_n1').textContent = a.nom; document.getElementById('vir_s1').textContent = fmtCpt(soldeCompte(a) - mt);
+        document.getElementById('vir_n2').textContent = b.nom; document.getElementById('vir_s2').textContent = fmtCpt(soldeCompte(b) + mt);
+    }
+    function inverserVirement() { const de = document.getElementById('vir_de'), vers = document.getElementById('vir_vers'); const t = de.value; de.value = vers.value; vers.value = t; majVirement(); }
+    function validerVirement() {
+        const de = document.getElementById('vir_de').value, vers = document.getElementById('vir_vers').value;
+        const mt = lireMontant(document.getElementById('vir_mt').value);
+        if (!(mt > 0)) { showToast('Indique le montant du virement', 'warning'); return; }
+        if (de === vers) { showToast('Choisis deux comptes différents', 'warning'); return; }
+        mouvements().push({ id: Date.now(), type: 'virement', de, vers, mt, date: new Date().toLocaleDateString('fr-FR') });
+        fermerSheetCpt('sheet-virement'); cptSave();
+        showToast('Virement de ' + fmtCpt(mt) + ' enregistré ⇄', 'success');
+    }
+
+    /* Pointage (rapprochement avec la banque) */
+    let ptCompteId = null;
+    function ouvrirPointage(id) {
+        if (!comptes().length) { ouvrirComptes(); return; }
+        if (!id || !compteParId(id)) id = comptes().slice().sort((a, b) => (a.pointeAt || 0) - (b.pointeAt || 0))[0].id;
+        ptCompteId = id;
+        document.getElementById('pt_banque').value = '';
+        renderPointage();
+        document.getElementById('sheet-pointage').style.display = 'flex';
+    }
+    function renderPointage() {
+        const c = compteParId(ptCompteId); if (!c) return;
+        document.getElementById('pt-titre').textContent = c.nom;
+        const choix = document.getElementById('pt_choix'), choixBox = document.getElementById('pt_choix_box');
+        choixBox.style.display = comptes().length >= 2 ? '' : 'none';
+        choix.innerHTML = comptes().map(x => `<button type="button" class="cpt-opt${x.id === c.id ? ' on' : ''}" style="--c:${x.color};" onclick="ptCompteId='${x.id}';document.getElementById('pt_banque').value='';renderPointage()"><b><i></i>${escH(x.nom)}</b><small>${statutPointage(x).txt}</small></button>`).join('');
+        document.getElementById('pt_calc').textContent = fmtCpt(soldeCompte(c));
+        // Opérations depuis le dernier pointage
+        const depuis = Math.max(c.pointeAt || 0, c.baseAt || 0);
+        document.getElementById('pt_depuis').textContent = depuis ? 'depuis le ' + new Date(depuis).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) : '';
+        const ops = [];
+        db.depenses.forEach(d => { if (compteDe(d) === c.id && !estAVenir(d) && tsEffet(d) > depuis) ops.push({ k: 'd', id: d.id, n: d.desc, s: d.date, m: -d.mt, p: !!d.pointe }); });
+        mouvements().forEach(m => {
+            if (m.id <= depuis) return;
+            let v = 0; if (m.type === 'virement') { if (m.de === c.id) v = -m.mt; else if (m.vers === c.id) v = m.mt; else return; } else if (m.compte === c.id) v = m.mt; else return;
+            ops.push({ k: 'm', id: m.id, n: libelleMouvement(m), s: m.date, m: v, p: !!m.pointe });
+        });
+        ops.sort((a, b) => b.id - a.id);
+        document.getElementById('pt_ops').innerHTML = ops.length ? ops.slice(0, 40).map(o => `<label class="pt-op"><input type="checkbox" ${o.p ? 'checked' : ''} onchange="cocherPointe('${o.k}',${o.id},this.checked)"><span>${escH(o.n)}<small>${escH(o.s)}</small></span><b>${o.m > 0 ? '+' : ''}${fmtCpt(o.m)}</b></label>`).join('')
+            : '<div class="bg-empty" style="padding:10px 0 14px;">Aucune opération depuis le dernier pointage.</div>';
+        majPointage();
+    }
+    function cocherPointe(k, id, v) {
+        const o = k === 'd' ? db.depenses.find(d => d.id === id) : mouvements().find(m => m.id === id);
+        if (o) { o.pointe = v; localStorage.setItem('budget_vGestion', JSON.stringify(db)); }
+    }
+    function majPointage() {
+        const c = compteParId(ptCompteId); if (!c) return;
+        const calc = soldeCompte(c), banque = lireMontant(document.getElementById('pt_banque').value);
+        const box = document.getElementById('pt_ecart'), act = document.getElementById('pt_actions');
+        if (isNaN(banque)) { box.style.display = 'none'; act.innerHTML = ''; return; }
+        const ecart = Math.round((banque - calc) * 100) / 100;
+        box.style.display = '';
+        if (Math.abs(ecart) < 0.005) {
+            box.className = 'pt-ecart ok';
+            document.getElementById('pt_ecart_l').textContent = 'Tout est juste';
+            document.getElementById('pt_ecart_v').textContent = '0,00 €';
+            document.getElementById('pt_ecart_t').textContent = 'Ton compte dans l\'appli correspond exactement à ta banque.';
+            act.innerHTML = '<button class="btn btn-primary" style="height:54px;border-radius:16px;font-weight:800;" onclick="validerPointage()">Valider le pointage</button>';
+            return;
+        }
+        box.className = 'pt-ecart warn';
+        document.getElementById('pt_ecart_l').textContent = 'Écart';
+        document.getElementById('pt_ecart_v').textContent = (ecart > 0 ? '+' : '') + fmtCpt(ecart);
+        document.getElementById('pt_ecart_t').textContent = ecart < 0
+            ? 'Ta banque affiche ' + fmtCpt(-ecart) + ' de moins. Une dépense a peut-être été oubliée.'
+            : 'Ta banque affiche ' + fmtCpt(ecart) + ' de plus. Un remboursement ou une dépense en double, peut-être ?';
+        act.innerHTML = '<span style="font-size:13px;font-weight:700;margin:0 4px;">Que veux-tu faire ?</span>'
+            + (ecart < 0 ? '<button class="btn btn-primary" style="height:54px;border-radius:16px;font-weight:800;" onclick="ajouterDepenseOubliee()">Ajouter la dépense oubliée</button>' : '')
+            + `<button class="btn-2" onclick="ajusterSoldeCompte()">Ajuster le solde à ${fmtCpt(banque)}<small>Crée une ligne « Ajustement », hors budget</small></button>`;
+    }
+    function validerPointage() {
+        const c = compteParId(ptCompteId); if (!c) return;
+        c.pointeAt = Date.now(); fermerSheetCpt('sheet-pointage'); cptSave();
+        showToast(c.nom + ' pointé ✓', 'success');
+    }
+    function ajusterSoldeCompte() {
+        const c = compteParId(ptCompteId); if (!c) return;
+        const banque = lireMontant(document.getElementById('pt_banque').value); if (isNaN(banque)) return;
+        const ecart = Math.round((banque - soldeCompte(c)) * 100) / 100; if (!ecart) return validerPointage();
+        mouvements().push({ id: Date.now(), type: 'ajustement', compte: c.id, mt: ecart, date: new Date().toLocaleDateString('fr-FR') });
+        c.pointeAt = Date.now(); fermerSheetCpt('sheet-pointage'); cptSave();
+        showToast('Solde de ' + c.nom + ' ajusté à ' + fmtCpt(banque), 'success');
+    }
+    function ajouterDepenseOubliee() {
+        const c = compteParId(ptCompteId); if (!c) return;
+        const banque = lireMontant(document.getElementById('pt_banque').value);
+        const ecart = Math.round((soldeCompte(c) - banque) * 100) / 100;
+        fermerSheetCpt('sheet-pointage'); goTo('depenses');
+        const mt = document.getElementById('add_mt'); if (mt && ecart > 0) mt.value = ecart.toFixed(2);
+        choisirComptePaiement(c.id);
+        setTimeout(() => { const ds = document.getElementById('add_desc'); if (ds) ds.focus(); }, 200);
+        showToast('Ajoute la dépense oubliée, puis pointe à nouveau', 'info', 4000);
+    }
+
+    /* Gestion des comptes */
+    let clEditId = null;
+    function ouvrirComptes() {
+        renderListeComptes(); document.getElementById('cl-form').style.display = 'none'; document.getElementById('cl-add').style.display = '';
+        document.getElementById('sheet-comptes').style.display = 'flex';
+    }
+    function renderListeComptes() {
+        const l = comptes();
+        document.getElementById('cl-vide').style.display = l.length ? 'none' : '';
+        document.getElementById('cl-liste-card').style.display = l.length ? '' : 'none';
+        document.getElementById('cl-liste').innerHTML = l.map(c => {
+            const st = statutPointage(c);
+            return `<button class="cl-row" style="--c:${c.color};" onclick="editerCompte('${c.id}')"><span class="cpt-ico">${CPT_SVG}</span>
+                <span class="cl-main"><b>${escH(c.nom)}${c === compteDefaut() ? '<em>Par défaut</em>' : ''}</b><small>${st.txt}</small></span>
+                <span class="cl-solde">${fmtCpt(soldeCompte(c))}</span></button>`;
+        }).join('');
+    }
+    function editerCompte(id) {
+        clEditId = id; const c = id ? compteParId(id) : null;
+        document.getElementById('cl-form-titre').textContent = c ? 'Modifier « ' + c.nom + ' »' : 'Nouveau compte';
+        document.getElementById('cl_nom').value = c ? c.nom : (comptes().length ? '' : 'Compte courant');
+        const pris = comptes().map(x => x.color);
+        const coul = c ? c.color : ((CPT_COULEURS.find(k => !pris.includes(k[0])) || CPT_COULEURS[0])[0]);
+        document.getElementById('cl_couleur').value = coul; renderSwatches();
+        document.getElementById('cl_solde').value = c ? soldeCompte(c).toFixed(2).replace('.', ',') : '';
+        document.getElementById('cl_solde_l').textContent = c ? 'Solde actuel' : 'Solde actuel à ta banque';
+        document.getElementById('cl_solde_h').textContent = c ? 'Modifie-le seulement pour corriger : le compte repartira de ce montant aujourd\'hui.' : 'Le solde affiché par ta banque aujourd\'hui. Les opérations que tu ajoutes ensuite seront déduites de ce compte.';
+        document.getElementById('cl_defaut').checked = c ? c === compteDefaut() : !comptes().length;
+        document.getElementById('cl_del').style.display = c ? '' : 'none';
+        document.getElementById('cl-form').style.display = ''; document.getElementById('cl-add').style.display = 'none';
+        setTimeout(() => document.getElementById('cl-form').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    }
+    function renderSwatches() {
+        const cur = document.getElementById('cl_couleur').value;
+        document.getElementById('cl_sw').innerHTML = CPT_COULEURS.map(k => `<button type="button" aria-label="${k[1]}" class="${k[0] === cur ? 'on' : ''}" style="background:${k[0]};--sw:${k[0]};" onclick="document.getElementById('cl_couleur').value='${k[0]}';renderSwatches()"></button>`).join('');
+    }
+    function enregistrerCompte() {
+        const nom = document.getElementById('cl_nom').value.trim();
+        if (!nom) { showToast('Donne un nom au compte', 'warning'); return; }
+        const vs = document.getElementById('cl_solde').value.trim();
+        const solde = vs === '' ? 0 : lireMontant(vs);
+        if (isNaN(solde)) { showToast('Le solde n\'est pas un nombre valide', 'warning'); return; }
+        const color = document.getElementById('cl_couleur').value || CPT_COULEURS[0][0];
+        const defaut = document.getElementById('cl_defaut').checked;
+        const now = Date.now();
+        let c = clEditId ? compteParId(clEditId) : null;
+        if (!c) {
+            c = { id: 'cpt_' + now, nom, color, base: solde, baseAt: now, pointeAt: now, defaut: false };
+            if (!comptes().length) c.defaut = true;
+            comptes().push(c);
+        } else {
+            c.nom = nom; c.color = color;
+            if (Math.abs(solde - soldeCompte(c)) >= 0.005) { c.base = solde; c.baseAt = now; c.pointeAt = now; }
+        }
+        if (defaut) comptes().forEach(x => { x.defaut = x === c; });
+        else if (c.defaut && comptes().length > 1) { c.defaut = false; comptes().find(x => x !== c).defaut = true; }
+        if (!comptes().some(x => x.defaut)) comptes()[0].defaut = true;
+        cptSave(); renderListeComptes();
+        document.getElementById('cl-form').style.display = 'none'; document.getElementById('cl-add').style.display = '';
+        showToast(clEditId ? 'Compte modifié' : 'Compte « ' + nom + ' » ajouté', 'success');
+        clEditId = null;
+    }
+    function supprimerCompte() {
+        const c = compteParId(clEditId); if (!c) return;
+        if (!confirm('Supprimer « ' + c.nom + ' » ? Ses dépenses restent dans ton budget.')) return;
+        db.depenses.forEach(d => { if (compteDe(d) === c.id) d.compte = '__supprime'; });
+        db.comptes = comptes().filter(x => x !== c);
+        if (db.comptes.length && !db.comptes.some(x => x.defaut)) db.comptes[0].defaut = true;
+        if (!db.comptes.length) { db.mouvements = []; db.depenses.forEach(d => { if (d.compte === '__supprime') delete d.compte; }); }
+        clEditId = null; cptSave(); renderListeComptes();
+        document.getElementById('cl-form').style.display = 'none'; document.getElementById('cl-add').style.display = '';
+        showToast('Compte supprimé', 'warning');
+    }
+
     function renderHistoriqueGroupe(searchTerm, boxId, compteurs) {
         if (boxId === undefined) { boxId = 'dp_history'; compteurs = true; }
         const box = document.getElementById(boxId); if (!box) return;
@@ -3754,12 +4260,13 @@ tfoot td{padding:12px 0 2px;font-weight:800}
         const auj = new Date(); auj.setHours(0, 0, 0, 0);
         const hier = new Date(auj); hier.setDate(hier.getDate() - 1);
         const libelleJour = s => { const d = parse(s); if (!d) return s; if (d.getTime() === auj.getTime()) return "Aujourd'hui"; if (d.getTime() === hier.getTime()) return 'Hier'; const t = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }); return t.charAt(0).toUpperCase() + t.slice(1); };
-        const aVenir = d => estAVenir(d);
+        const aVenir = d => !d._mv && estAVenir(d);
         const filtres = [...db.depenses].reverse().sort((a, b) => aVenir(b) - aVenir(a)).filter(d => {
             if (!searchTerm) return true;
             const cat = db.categories.find(c => c.id === d.ct);
             return d.desc.toLowerCase().includes(searchTerm) || (cat && cat.label.toLowerCase().includes(searchTerm)) || (d.note && d.note.toLowerCase().includes(searchTerm));
         });
+        insererMouvements(filtres, searchTerm, aVenir);
         // compteur
         let totDep = 0;
         depensesEffectives().forEach(d => { const c = db.categories.find(x => x.id === d.ct); if (!(c && c.label.toLowerCase().includes('épargne'))) totDep += d.mt; });
@@ -3773,6 +4280,7 @@ tfoot td{padding:12px 0 2px;font-weight:800}
         box.innerHTML = groupes.map(g => {
             let totJour = 0;
             const lignes = g.ops.map(d => {
+                if (d._mv) return ligneMouvement(d, fmt);
                 const cat = db.categories.find(c => c.id === d.ct);
                 const lbl = cat ? cat.label : 'Sans catégorie';
                 const ep = lbl.toLowerCase().includes('épargne');
@@ -3783,11 +4291,11 @@ tfoot td{padding:12px 0 2px;font-weight:800}
                 const icon = m ? m[1] : (nom.trim().charAt(0) || '?').toUpperCase();
                 return `<div class="dp-op" onclick="ouvrirEditDepense(${d.id})">
                     <span class="dp-ico${m ? ' emoji' : ''}" style="--c:${(cat && cat.color) || '#64748b'};">${icon}</span>
-                    <div class="dp-main"><span class="dp-name">${d.desc}${d.recurring ? ' 🔄' : ''}</span><span class="dp-meta">${infoPrelev(d)}${nom}${d.note ? ' · ' + d.note : ''}</span></div>
+                    <div class="dp-main"><span class="dp-name">${d.desc}${d.recurring ? ' 🔄' : ''}</span><span class="dp-meta">${tagCompte(d)}${infoPrelev(d)}${nom}${d.note ? ' · ' + d.note : ''}</span></div>
                     <span class="dp-amt${ep ? ' pos' : ''}${av ? ' avenir' : ''}">${ep ? '+' : '−'}${fmt(d.mt)}</span>
                 </div>`;
             }).join('');
-            if (g.date === '__avenir') { const t = g.ops.reduce((s, d) => s + d.mt, 0); return `<div class="dp-day avenir"><span>À venir ce mois-ci</span><span>${fmt(t)}</span></div>${lignes}`; }
+            if (g.date === '__avenir') { const t = g.ops.reduce((s, d) => s + (d._mv ? 0 : d.mt), 0); return `<div class="dp-day avenir"><span>À venir ce mois-ci</span><span>${fmt(t)}</span></div>${lignes}`; }
             return `<div class="dp-day"><span>${libelleJour(g.date)}</span><span>${totJour ? '−' + fmt(totJour) : ''}</span></div>${lignes}`;
         }).join('');
     }
