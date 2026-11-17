@@ -443,6 +443,82 @@
         /* Accueil : actions rapides */
         .qa-row { display: flex; gap: 8px; margin-bottom: 18px; }
 
+
+        /* ── Calendrier des prélèvements & objectifs ── */
+        .sp-head { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; }
+        .sp-back { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+        .sp-head small { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+        .sp-head b { display: block; font-size: 18px; font-weight: 800; }
+        .cal-filtres { display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto; scrollbar-width: none; }
+        .cal-chip { height: 38px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--text); font-family: inherit; font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 7px; cursor: pointer; white-space: nowrap; }
+        .cal-chip i { width: 8px; height: 8px; border-radius: 50%; }
+        .cal-chip.on { border: 2px solid var(--main); background: var(--soft); color: var(--soft-text); }
+        .cal-alerte { border-radius: 20px; background: color-mix(in srgb, var(--warning) 13%, var(--card)); padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
+        .cal-alerte-ico { width: 34px; height: 34px; border-radius: 11px; background: var(--warning); color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .cal-alerte strong { display: block; font-size: 14px; font-weight: 800; color: color-mix(in srgb, var(--warning) 70%, #000); }
+        [data-theme="dark"] .cal-alerte strong { color: #fbbf24; }
+        .cal-alerte p { margin: 4px 0 0; font-size: 13px; font-weight: 600; line-height: 1.45; color: var(--text); }
+        .cal-alerte b.neg, .neg { color: var(--danger); }
+        .cal-alerte-btn { margin-top: 8px; height: 38px; padding: 0 14px; border-radius: 12px; border: none; background: var(--card); color: var(--text); font-family: inherit; font-size: 13px; font-weight: 800; cursor: pointer; }
+        .cal-card { padding: 14px 10px 10px !important; }
+        .cal-wd, .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+        .cal-wd { text-align: center; font-size: 11px; font-weight: 700; color: var(--text-muted); padding-bottom: 6px; }
+        .cal-day { position: relative; height: 48px; border-radius: 12px; border: 1px solid transparent; background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 600; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 0; cursor: pointer; }
+        .cal-day b { display: flex; gap: 3px; height: 6px; } .cal-day b i { width: 6px; height: 6px; border-radius: 50%; }
+        .cal-day em { position: absolute; top: 2px; left: 0; right: 0; font-style: normal; font-size: 9px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; line-height: 1; }
+        .cal-day.plein, .cal-day.auj { font-weight: 800; }
+        .cal-day.passe { opacity: .5; }
+        .cal-day.auj { border: 1.5px dashed var(--text-muted); }
+        .cal-day.risque { border: 2px solid var(--warning); background: color-mix(in srgb, var(--warning) 12%, var(--card)); opacity: 1; }
+        .cal-day.sel { border: 2px solid var(--main); background: var(--soft); color: var(--soft-text); opacity: 1; }
+        .dp-amt.neg { color: var(--danger); }
+        .hp-card { padding: 14px 16px !important; }
+        .hp-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer; }
+        .hp-date { width: 42px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; padding: 4px 0; border-radius: 10px; background: color-mix(in srgb, var(--c) 12%, var(--card)); color: var(--c); font-size: 10px; font-weight: 700; }
+        [data-theme="dark"] .hp-date { color: color-mix(in srgb, var(--c) 55%, #fff); }
+        .hp-date b { font-size: 15px; font-weight: 800; line-height: 1.15; }
+        .hp-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+        .hp-main span { font-size: 13px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .hp-main small { font-size: 11px; font-weight: 700; color: var(--text-muted); }
+        .hp-row.risque small, .hp-row.risque .hp-amt { color: var(--danger); }
+        .hp-amt { font-size: 13px; font-weight: 800; white-space: nowrap; }
+        .obj-hbar { height: 8px; border-radius: 999px; background: rgba(255,255,255,.22); overflow: hidden; margin-top: 10px; }
+        .obj-hbar div { height: 100%; border-radius: 999px; background: #fff; }
+        .obj-card { width: 100%; text-align: left; border-radius: 20px; background: var(--card); border: 1px solid var(--line); padding: 14px 16px; display: flex; align-items: center; gap: 14px; font-family: inherit; color: var(--text); cursor: pointer; margin-bottom: 12px; }
+        .obj-ring { position: relative; flex-shrink: 0; display: flex; }
+        .obj-ring > span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+        .obj-ring.sm > span { font-size: 16px; }
+        .obj-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+        .obj-l1 { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+        .obj-l1 b { font-size: 15px; font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .obj-l1 em { font-style: normal; font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+        .obj-l1 em.ok { background: color-mix(in srgb, var(--success) 12%, var(--card)); color: var(--success); }
+        .obj-l1 em.warn { background: color-mix(in srgb, var(--warning) 14%, var(--card)); color: color-mix(in srgb, var(--warning) 70%, #000); }
+        .obj-l1 em.neutre { background: var(--track); color: var(--text-muted); }
+        [data-theme="dark"] .obj-l1 em.warn, [data-theme="dark"] .obj-l3.warn { color: #fbbf24; }
+        .obj-l2 { font-size: 13px; font-weight: 600; color: var(--text-muted); } .obj-l2 strong { color: var(--text); font-weight: 800; }
+        .obj-l3 { font-size: 12px; font-weight: 700; color: var(--text-muted); } .obj-l3.warn { color: color-mix(in srgb, var(--warning) 70%, #000); }
+        .hobj { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); cursor: pointer; }
+        .hobj .obj-main b { font-size: 14px; font-weight: 700; } .hobj .obj-main small { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+        .hobj > strong { font-size: 13px; font-weight: 800; }
+        .obj-opt { width: 100%; display: flex; align-items: center; gap: 10px; min-height: 50px; padding: 6px 12px; border-radius: 14px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font-family: inherit; text-align: left; cursor: pointer; }
+        .obj-opt > span:first-child { font-size: 18px; width: 24px; text-align: center; }
+        .obj-opt > span:last-child { display: flex; flex-direction: column; gap: 1px; } .obj-opt b { font-size: 14px; font-weight: 800; } .obj-opt small { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+        .obj-opt.on { border: 2px solid var(--main); background: var(--soft); padding: 5px 11px; }
+        .obj-pick { display: flex; flex-direction: column; gap: 6px; }
+        .objf-ico { display: flex; gap: 8px; flex-wrap: wrap; }
+        .objf-ico button { width: 44px; height: 44px; border-radius: 14px; border: 1px solid var(--line); background: var(--bg); font-size: 20px; cursor: pointer; padding: 0; }
+        .objf-ico button.on { border: 2px solid var(--main); background: var(--soft); }
+        .objf-ech { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+        .objf-ech button { height: 44px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font-family: inherit; font-size: 12px; font-weight: 800; cursor: pointer; padding: 0; }
+        .objf-ech button.on { border: 2px solid var(--main); background: var(--soft); color: var(--soft-text); }
+        .objf-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+        .objf-calc { border-radius: 18px; background: var(--bg); padding: 14px 16px; display: flex; align-items: center; gap: 14px; }
+        #objf_ring { position: relative; width: 58px; height: 58px; flex-shrink: 0; } #objf_ring span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; }
+        .objf-calc small.l { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); }
+        #objf_mensuel { display: block; font-size: 24px; font-weight: 800; letter-spacing: -0.01em; } #objf_mensuel small { font-size: 14px; color: var(--text-muted); }
+        #objf_duree { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+
         /* ── Comptes bancaires ── */
         .cpt-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
         .cpt-card { text-align: left; border-radius: 18px; background: var(--card); border: 1px solid var(--line); padding: 14px; display: flex; flex-direction: column; gap: 8px; color: var(--text); font-family: inherit; cursor: pointer; min-width: 0; }
@@ -962,7 +1038,8 @@
         <label>Montant (€)</label>
         <input type="number" inputmode="decimal" id="edit-mt" placeholder="0.00">
         <label>Catégorie</label>
-        <select id="edit-cat"></select>
+        <select id="edit-cat" onchange="remplirEditObjectif({ct:this.value, objectif:(document.getElementById('edit-objectif')||{}).value})"></select>
+        <div id="edit-obj-box" style="display:none;"><label>Pour quel objectif ?</label><select id="edit-objectif"></select></div>
         <div id="edit-compte-box" style="display:none;"><label>Payé avec</label><select id="edit-compte"></select></div>
         <label style="margin-top:4px;">Note <span style="font-weight:400;color:var(--text-hint);">(optionnel)</span></label>
         <input type="text" id="edit-note" placeholder="Ex: remboursement prévu...">
@@ -1041,6 +1118,24 @@
             <button class="btn btn-primary" style="height:52px;border-radius:16px;font-weight:800;" onclick="enregistrerCompte()">Enregistrer</button>
             <button class="cl-del" id="cl_del" onclick="supprimerCompte()">Supprimer ce compte</button>
         </div>
+    </div>
+</div>
+
+
+<div id="sheet-objectif" class="sheet-overlay cpt-ov" style="display:none;" onclick="if(event.target===this) fermerSheetCpt('sheet-objectif')">
+    <div class="sheet cpt-sheet" role="dialog" aria-labelledby="objf-titre">
+        <div class="sheet-handle"></div>
+        <div class="cpt-top"><h3 id="objf-titre">Nouvel objectif</h3><button class="cpt-x" aria-label="Fermer" onclick="fermerSheetCpt('sheet-objectif')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+        <div class="objf-ico" id="objf_icones"></div>
+        <label class="dp-field"><span>Nom de l'objectif</span><input type="text" id="objf_nom" placeholder="Ex : Voyage au Japon" maxlength="40"></label>
+        <div class="objf-2">
+            <label class="dp-field"><span>Montant visé</span><span class="pt-input" style="height:50px;"><input type="text" inputmode="decimal" id="objf_cible" placeholder="0" oninput="majFormObjectif()" style="font-size:18px;height:46px;"><b style="font-size:16px;">€</b></span></label>
+            <label class="dp-field"><span id="objf_deja_l">Déjà de côté</span><input type="text" inputmode="decimal" id="objf_deja" placeholder="0 €" oninput="majFormObjectif()"></label>
+        </div>
+        <div class="dp-field"><span>Pour quand ?</span><div class="objf-ech" id="objf_ech"></div></div>
+        <div class="objf-calc"><span id="objf_ring"></span><span><small class="l">Il faut mettre de côté</small><span id="objf_mensuel"></span><span id="objf_duree"></span></span></div>
+        <button class="btn btn-primary" id="objf_ok" style="height:54px;border-radius:16px;font-weight:800;" onclick="enregistrerObjectif()">Créer l'objectif</button>
+        <button class="cl-del" id="objf_del" onclick="supprimerObjectif()">Supprimer cet objectif</button>
     </div>
 </div>
 
@@ -1312,13 +1407,13 @@
                 <span class="qa-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12l3 3 5-6"/></svg></span>
                 <span>Pointer</span>
             </button>
+            <button class="qa" id="qa-calendrier" onclick="goTo('calendrier')">
+                <span class="qa-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg></span>
+                <span>Calendrier</span>
+            </button>
             <button class="qa" onclick="allerPrevisions()">
                 <span class="qa-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>
                 <span>Prévoir</span>
-            </button>
-            <button class="qa" onclick="ouvrirModal()">
-                <span class="qa-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
-                <span>Clôturer</span>
             </button>
             <button class="qa" id="nav-couple" onclick="goTo('couple')" style="display:none;">
                 <span class="qa-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>
@@ -1369,13 +1464,21 @@
             <table id="log_table_tableau" style="display:none;"><tbody></tbody></table>
         </div>
 
+        <!-- ── PROCHAINS PRÉLÈVEMENTS ── -->
+        <div class="card hp-card" id="home-prochains" style="display:none;">
+            <div class="row-between" style="margin-bottom:4px;"><span class="sec-title" style="font-size:14px;">Prochains prélèvements</span><span class="muted-sm" id="hp-nb"></span></div>
+            <div id="hp-list"></div>
+            <button class="link-btn" style="margin-top:4px;" onclick="goTo('calendrier')">Voir le calendrier →</button>
+        </div>
+
         <!-- ── ÉPARGNE ── -->
-        <div class="sec-head"><span class="sec-title">Épargne</span></div>
+        <div class="sec-head"><span class="sec-title">Épargne &amp; objectifs</span><button class="link-btn" onclick="goTo('objectifs')">Voir tout</button></div>
         <div class="card">
             <div class="ep-mini">
                 <div><span class="pl">Ce mois</span><div class="pv" style="color:var(--success);"><span id="m_ep_epargne">0</span> €</div></div>
                 <div><span class="pl">Coffre-fort total</span><div class="pv"><span id="m_coffre_ep">0</span> €</div></div>
             </div>
+            <div id="home-objectifs"></div>
             <div id="ep_list_tableau"></div>
             <table id="epargne_history_table" style="display:none;"><tbody></tbody></table>
             <span id="local_epargne_total" style="display:none;">0</span>
@@ -1477,6 +1580,27 @@
         </div>
     </div>
 
+    <div id="page-calendrier" class="page">
+        <div class="sp-head"><button class="sp-back" aria-label="Retour" onclick="goTo('tableau')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button><div><small>Prélèvements</small><b id="cal-titre">Ce mois-ci</b></div></div>
+        <div class="cal-filtres" id="cal-filtres"></div>
+        <div id="cal-alerte"></div>
+        <div class="card cal-card">
+            <div class="cal-wd"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+            <div class="cal-grid" id="cal-grid"></div>
+        </div>
+        <div class="sec-head"><span class="sec-title" id="cal-sel-titre" style="text-transform:none;"></span><span class="muted-sm" id="cal-sel-total"></span></div>
+        <div class="card" style="padding-top:4px;padding-bottom:4px;"><div id="cal-sel-list"></div></div>
+        <div class="cpt-grid" id="cal-resume"></div>
+    </div>
+
+    <div id="page-objectifs" class="page">
+        <div class="sp-head"><button class="sp-back" aria-label="Retour" onclick="goTo('tableau')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button><div><small>Épargne</small><b>Mes objectifs</b></div></div>
+        <div class="hero" id="obj-hero"></div>
+        <div id="obj-liste"></div>
+        <button class="cl-add" onclick="editerObjectif(null)">+ Nouvel objectif</button>
+        <div class="cpt-info" style="margin-top:14px;background:var(--card);border:1px solid var(--line);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;color:var(--soft-text)"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>Quand tu ajoutes une dépense <strong>Épargne</strong>, l'appli te demande à quel objectif l'attribuer. Les anneaux avancent tout seuls.</span></div>
+    </div>
+
     <div id="page-depenses" class="page">
         <div class="card dp-form">
             <div class="sec-title">Nouvelle dépense</div>
@@ -1491,6 +1615,10 @@
             <div class="dp-field" id="add_compte_box" style="display:none;"><span>Payé avec</span>
                 <div class="cpt-pick" id="add_compte_pick"></div>
                 <input type="hidden" id="add_compte" value="">
+            </div>
+            <div class="dp-field" id="add_obj_box" style="display:none;"><span>Pour quel objectif ?</span>
+                <div class="obj-pick" id="add_obj_pick"></div>
+                <input type="hidden" id="add_objectif" value="">
             </div>
             <label class="dp-field"><span>Note <em>(optionnel)</em></span><input type="text" id="add_note" placeholder="Ex : remboursement prévu"></label>
             <label class="dp-rec" for="add_recurring">
@@ -1866,7 +1994,7 @@
         majAffichage(); afficherEvolution();
     }
 
-    const PAGES = ['tableau','budget','depenses','bilan','couple','archives','partenaire','vacances'];
+    const PAGES = ['tableau','budget','depenses','bilan','couple','archives','partenaire','vacances','calendrier','objectifs'];
     function goTo(name) {
         PAGES.forEach(p => { const el=document.getElementById('page-'+p), btn=document.getElementById('nav-'+p); if(el) el.classList.remove('active'); if(btn) btn.classList.remove('active'); });
         const el=document.getElementById('page-'+name), btn=document.getElementById('nav-'+name);
@@ -1876,6 +2004,8 @@
         if(name==='partenaire') { majAffichagePartenaire(partnerData); chargerBudgetPartenaire(); }
         if(name==='vacances') majAffichageVacances();
         if(name==='bilan') majAffichage();
+        if(name==='calendrier') renderCalendrier();
+        if(name==='objectifs') renderObjectifs();
         if(name==='depenses') setTimeout(()=>{ if(typeof updateScrollBtn==='function') updateScrollBtn(); },60);
     }
 
@@ -1938,6 +2068,7 @@
         let em=0; depensesEffectives().forEach(d=>{ const cat=db.categories.find(c=>c.id===d.ct); if(cat&&cat.label.toLowerCase().includes("épargne")) em+=d.mt; });
         globalSavings+=em; localStorage.setItem('globalSavings',globalSavings);
         const tsFige=figerComptes(); const refNouveau=new Date(); refNouveau.setDate(refNouveau.getDate()+15); db.depenses=db.depenses.filter(d=>d.recurring===true).map(d=>{ const n={...d, pointe:false}; if(tsFige) n.ts=tsFige+1; if(n.jourPrelev) n.date=dateEcheanceTxt(n, refNouveau); return n; });
+        try { ajouterVersementsRecurrents(); } catch (e) {}
         const refCycle=new Date(); refCycle.setDate(refCycle.getDate()+15); marquerCycleOuvert(debutCycle(new Date())>debutCycle(new Date(localStorage.getItem('cycle_ouvert')||0))?new Date():refCycle);
         sauvegarder(); afficherArchives(); afficherEvolution();
         const nbPrev = previsionsMoisProchain.length;
@@ -1969,6 +2100,7 @@
         if(!ctId){ showToast('Sélectionne une catégorie','warning'); return; }
         const jourEl=document.getElementById(recurId==='add_recurring'?'add_jour':'__none'); const jourPrelev=isRec&&jourEl&&jourEl.value?parseInt(jourEl.value):null;
         const expense={id:Date.now(),date:new Date().toLocaleDateString('fr-FR'),desc,mt,ct:ctId,recurring:isRec,note:note||''}; const cptId=compteFormulaire(recurId==='add_recurring'); if(cptId) expense.compte=cptId; if(jourPrelev){ expense.jourPrelev=jourPrelev; expense.date=dateEcheanceTxt(expense); }
+        if(estEpargneCat(ctId)){ const oid=objectifFormulaire(recurId==='add_recurring'); if(oid){ expense.objectif=oid; versementObjectif(oid, expense); } }
         db.depenses.push(expense);
         const catObj=db.categories.find(c=>c.id===ctId);
         if(catObj&&catObj.label.toLowerCase().includes("épargne")) db.historiqueEpargne.push(expense);
@@ -1980,6 +2112,7 @@
     function ajouterDepenseDesktop() { _ajouter('add_desc_d','add_mt_d','add_cat_d','add_recurring_d','add_note_d'); }
 
     function supprimer(id) {
+        try { retirerVersements(id); } catch (e) {}
         const idx=db.historiqueEpargne.findIndex(d=>d.id===id);
         if(idx!==-1){ globalSavings=Math.max(0,globalSavings-db.historiqueEpargne[idx].mt); localStorage.setItem('globalSavings',globalSavings); db.historiqueEpargne.splice(idx,1); }
         db.depenses=db.depenses.filter(d=>d.id!==id);
@@ -2063,6 +2196,7 @@
         if(top3Card&&top3List){ const scored=db.categories.map(cat=>{ const prev=db.previsions[cat.id]||0,reel=totaux[cat.id]||0,pct=prev>0?(reel/prev)*100:(reel>0?999:0); return{label:cat.label,prev,reel,pct}; }).filter(c=>c.reel>0).sort((a,b)=>b.pct-a.pct).slice(0,3); if(scored.length>0){ top3Card.style.display='block'; const rankClass=['r1','r2','r3'],rankEmoji=['','',''],conseils=(c)=>{ if(c.pct>=100) return`Dépassement de ${Math.round(c.reel-c.prev)}€ — à réduire le mois prochain`; if(c.pct>=80) return`${Math.round(c.pct)}% du budget utilisé — attention`; return`${Math.round(c.pct)}% utilisé — surveille cette catégorie`; }; top3List.innerHTML=scored.map((c,i)=>`<div class="top3-item"><div class="top3-rank ${rankClass[i]}">${i+1}</div><div class="top3-info"><div class="top3-name">${rankEmoji[i]} ${c.label}</div><div class="top3-detail">${conseils(c)}</div></div><div class="top3-bar-wrap"><div class="top3-bar-bg"><div class="top3-bar-fill" style="width:${Math.min(c.pct,100)}%;background:${c.pct>=100?'#ef4444':c.pct>=80?'#f59e0b':'#5b5ef4'}"></div></div><div class="top3-pct">${c.prev>0?Math.round(c.pct)+'%':c.reel+'€'}</div></div></div>`).join(''); } else { top3Card.style.display='none'; } }
         majSuggestions(totaux);
         try { majComptes(solde, totalGeneral, budgetBarRef); } catch (e) { console.warn('comptes', e); }
+        try { majCalObj(); } catch (e) { console.warn('calobj', e); }
         if (typeof syncSoloBudget === 'function') { clearTimeout(window._soloSyncTimer); window._soloSyncTimer = setTimeout(syncSoloBudget, 800); }
         majProjection(totaux, totalGeneral);
         if (typeof majPrevisionsCatSelect === 'function') majPrevisionsCatSelect();
@@ -2345,20 +2479,31 @@ tfoot td{padding:12px 0 2px;font-weight:800}
         coupleSession = code;
         localStorage.setItem('couple_session', code);
         input.value = '';
-        await chargerDepensesCouple();
+        await chargerDepensesCouple(true);
         demarrerRealtime();
     }
 
-    async function chargerDepensesCouple() {
+    let coupleErreurs = 0;   // nombre d'échecs de synchro d'affilée (pour ne prévenir qu'une fois)
+    async function chargerDepensesCouple(manuel) {
         if (!coupleSession) return;
+        // Synchro automatique : seulement quand l'appli est à l'écran
+        if (manuel !== true && document.hidden) return;
         try {
             coupleDepenses = await supabaseFetch(`couple_budget?session_id=eq.${encodeURIComponent(coupleSession)}&order=created_at.desc`);
             await chargerArchivesCouple();
             majAffichageCouple();
             majSyncDot(true);
+            if (coupleErreurs > 0 && coupleErreurs >= 2) showToast('Mode Couple : connexion rétablie', 'success');
+            coupleErreurs = 0;
         } catch(e) {
+            coupleErreurs++;
             majSyncDot(false);
-            showToast('Erreur de connexion Supabase', 'danger');
+            console.warn('Synchro Couple échouée :', e);
+            // Un seul message par coupure (au 2e échec d'affilée, pour ignorer un raté ponctuel du réseau),
+            // ou à chaque fois si l'utilisateur a lancé la synchro lui-même
+            const page = document.getElementById('page-couple');
+            if (manuel === true || (coupleErreurs === 2 && page && page.classList.contains('active')))
+                showToast('Mode Couple : impossible de joindre le serveur. Nouvel essai automatique…', 'warning', 4000);
         }
     }
 
@@ -2383,7 +2528,7 @@ tfoot td{padding:12px 0 2px;font-weight:800}
     function demarrerRealtime() {
         if (coupleRealtimeChannel) clearInterval(coupleRealtimeChannel);
         // Polling toutes les 3 secondes (Supabase Realtime via WebSocket nécessite la lib JS)
-        coupleRealtimeChannel = setInterval(chargerDepensesCouple, 3000);
+        coupleRealtimeChannel = setInterval(chargerDepensesCouple, 5000);
         document.getElementById('session-label').textContent = coupleSession;
         majSyncDot(true);
     }
@@ -2948,6 +3093,7 @@ tfoot td{padding:12px 0 2px;font-weight:800}
         db.categories.forEach(c => { sel.innerHTML += `<option value="${c.id}">${c.label}</option>`; });
         sel.value = d.ct;
         remplirEditCompte(d);
+        remplirEditObjectif(d);
         document.getElementById('modal-edit-depense').style.display = 'flex';
         setTimeout(() => document.getElementById('edit-desc').focus(), 100);
     }
@@ -2974,6 +3120,7 @@ tfoot td{padding:12px 0 2px;font-weight:800}
         const jv = document.getElementById('edit-jour').value;
         db.depenses[idx] = { ...db.depenses[idx], desc, mt, ct: cat, note, recurring, jourPrelev: recurring && jv ? parseInt(jv) : null };
         const ecSel = document.getElementById('edit-compte'); if (comptes().length >= 2 && ecSel && ecSel.value) db.depenses[idx].compte = ecSel.value;
+        majVersementEdit(db.depenses[idx]);
         if (db.depenses[idx].jourPrelev) db.depenses[idx].date = dateEcheanceTxt(db.depenses[idx]);
         // Mise à jour historiqueEpargne si besoin
         const epIdx = db.historiqueEpargne.findIndex(d => d.id === id);
@@ -3910,6 +4057,7 @@ tfoot td{padding:12px 0 2px;font-weight:800}
         if (!sel || !dot) return;
         const cat = db.categories.find(c => c.id === sel.value);
         dot.style.background = cat && cat.color ? cat.color : 'var(--text-hint)';
+        try { majChoixObjectif(); } catch (e) {}
     }
     /* Dépense : historique regroupé par jour */
     /* ════════ Comptes bancaires (plusieurs comptes, un seul budget) ════════
@@ -4200,7 +4348,7 @@ tfoot td{padding:12px 0 2px;font-weight:800}
         document.getElementById('cl_nom').value = c ? c.nom : (comptes().length ? '' : 'Compte courant');
         const pris = comptes().map(x => x.color);
         const coul = c ? c.color : ((CPT_COULEURS.find(k => !pris.includes(k[0])) || CPT_COULEURS[0])[0]);
-        document.getElementById('cl_couleur').value = coul; renderSwatches();
+        document.getElementById('cl_couleur').value = coul; renderSwatchesCpt();
         document.getElementById('cl_solde').value = c ? soldeCompte(c).toFixed(2).replace('.', ',') : '';
         document.getElementById('cl_solde_l').textContent = c ? 'Solde actuel' : 'Solde actuel à ta banque';
         document.getElementById('cl_solde_h').textContent = c ? 'Modifie-le seulement pour corriger : le compte repartira de ce montant aujourd\'hui.' : 'Le solde affiché par ta banque aujourd\'hui. Les opérations que tu ajoutes ensuite seront déduites de ce compte.';
@@ -4209,9 +4357,9 @@ tfoot td{padding:12px 0 2px;font-weight:800}
         document.getElementById('cl-form').style.display = ''; document.getElementById('cl-add').style.display = 'none';
         setTimeout(() => document.getElementById('cl-form').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
     }
-    function renderSwatches() {
+    function renderSwatchesCpt() {
         const cur = document.getElementById('cl_couleur').value;
-        document.getElementById('cl_sw').innerHTML = CPT_COULEURS.map(k => `<button type="button" aria-label="${k[1]}" class="${k[0] === cur ? 'on' : ''}" style="background:${k[0]};--sw:${k[0]};" onclick="document.getElementById('cl_couleur').value='${k[0]}';renderSwatches()"></button>`).join('');
+        document.getElementById('cl_sw').innerHTML = CPT_COULEURS.map(k => `<button type="button" aria-label="${k[1]}" class="${k[0] === cur ? 'on' : ''}" style="background:${k[0]};--sw:${k[0]};" onclick="document.getElementById('cl_couleur').value='${k[0]}';renderSwatchesCpt()"></button>`).join('');
     }
     function enregistrerCompte() {
         const nom = document.getElementById('cl_nom').value.trim();
@@ -4251,6 +4399,299 @@ tfoot td{padding:12px 0 2px;font-weight:800}
         showToast('Compte supprimé', 'warning');
     }
 
+    /* ════════ Calendrier des prélèvements ════════ */
+    const RE_EMOJI_CAT = /^(\p{Extended_Pictographic}(?:️|‍\p{Extended_Pictographic})*️?)\s*/u;
+    function iconeCatDep(cat) {
+        const lbl = cat ? cat.label : '?', m = lbl.match(RE_EMOJI_CAT);
+        return { ico: m ? m[1] : (lbl.trim().charAt(0) || '?').toUpperCase(), emoji: !!m, nom: m ? (lbl.slice(m[0].length).trim() || lbl) : lbl, color: (cat && cat.color) || '#64748b' };
+    }
+    function cleJour(dt) { return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate(); }
+    function estEpargneCat(ctId) { const c = db.categories.find(x => x.id === ctId); return !!(c && c.label.toLowerCase().includes('épargne')); }
+    // Prélèvements (dépenses récurrentes) du mois budgétaire en cours, avec leur date et leur compte
+    function prelevementsCycle() {
+        const cyc = getCycle();
+        return db.depenses.filter(d => d.recurring).map(d => {
+            let dt = null;
+            if (d.jourPrelev) { const p = String(d.date || '').split('/'); if (p.length === 3) dt = new Date(+p[2], +p[1] - 1, +p[0]); }
+            if (!dt || dt < cyc.start || dt >= cyc.next) dt = d.jourPrelev ? (echeancePrelev(d) || new Date(cyc.start)) : new Date(cyc.start);
+            return { d, date: dt, avenir: estAVenir(d), cpt: compteDe(d) };
+        }).sort((a, b) => a.date - b.date || a.d.id - b.d.id);
+    }
+    // Simule le solde de chaque compte au fil des prélèvements à venir
+    function simulationComptes(items) {
+        const res = { negatifs: {}, risques: [], fin: {} };
+        comptes().forEach(c => {
+            let s = soldeCompte(c), min = s, premier = null, nb = 0;
+            items.filter(it => it.avenir && it.cpt === c.id).forEach(it => {
+                s -= it.d.mt; nb++;
+                if (s < -0.004) { res.negatifs[it.d.id] = true; if (!premier) premier = it; }
+                if (s < min) min = s;
+            });
+            res.fin[c.id] = { solde: Math.round(s * 100) / 100, nb };
+            if (premier) res.risques.push({ c, it: premier, solde: Math.round(min * 100) / 100, manque: Math.ceil(-min) });
+        });
+        return res;
+    }
+    let calFiltre = 'tous', calSel = null;
+    function renderCalendrier() {
+        const page = document.getElementById('page-calendrier'); if (!page) return;
+        const cyc = getCycle(), items = prelevementsCycle(), sim = simulationComptes(items);
+        const multi = comptes().length >= 2;
+        if (calFiltre !== 'tous' && !compteParId(calFiltre)) calFiltre = 'tous';
+        const vis = items.filter(it => calFiltre === 'tous' || it.cpt === calFiltre);
+        const auj = new Date(); auj.setHours(0, 0, 0, 0);
+        if (!calSel) calSel = cleJour(auj);
+        const fin = new Date(cyc.next); fin.setDate(fin.getDate() - 1);
+        const fmtJ = (dt, opt) => dt.toLocaleDateString('fr-FR', opt || { day: 'numeric', month: 'short' });
+        document.getElementById('cal-titre').textContent = (jourDebutReglage() === 1 ? MOIS_NOMS[cyc.start.getMonth()] + ' ' + cyc.start.getFullYear() : 'Du ' + fmtJ(cyc.start) + ' au ' + fmtJ(fin));
+        // Filtres par compte
+        const fl = document.getElementById('cal-filtres');
+        fl.style.display = multi ? '' : 'none';
+        fl.innerHTML = multi ? [{ id: 'tous', nom: 'Tous', color: null }].concat(comptes()).map(c => `<button class="cal-chip${calFiltre === c.id ? ' on' : ''}" onclick="calFiltre='${c.id}';renderCalendrier()">${c.color ? `<i style="background:${c.color}"></i>` : ''}${escH(c.nom)}</button>`).join('') : '';
+        // Alerte découvert
+        const risques = sim.risques.filter(r => calFiltre === 'tous' || r.c.id === calFiltre);
+        const joursRisque = {}; risques.forEach(r => { joursRisque[cleJour(r.it.date)] = true; });
+        document.getElementById('cal-alerte').innerHTML = risques.map(r => {
+            const autre = comptes().filter(x => x.id !== r.c.id).sort((a, b) => soldeCompte(b) - soldeCompte(a))[0];
+            const btn = autre && soldeCompte(autre) >= r.manque ? `<button class="cal-alerte-btn" onclick="virementPrepare('${autre.id}','${r.c.id}',${r.manque})">⇄ Virer ${r.manque} € depuis ${escH(autre.nom)}</button>` : '';
+            return `<div class="cal-alerte"><span class="cal-alerte-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></span>
+                <div><strong>Risque de découvert le ${fmtJ(r.it.date)}</strong><p>Le compte <b>${escH(r.c.nom)}</b> passera à <b class="neg">${fmtCpt(r.solde)}</b> après « ${escH(r.it.d.desc)} ».</p>${btn}</div></div>`;
+        }).join('');
+        // Grille
+        const parJour = {}; vis.forEach(it => { const k = cleJour(it.date); (parJour[k] = parJour[k] || []).push(it); });
+        let html = '';
+        const decal = (cyc.start.getDay() + 6) % 7; for (let i = 0; i < decal; i++) html += '<span></span>';
+        for (let dt = new Date(cyc.start); dt < cyc.next; dt.setDate(dt.getDate() + 1)) {
+            const k = cleJour(dt), its = parJour[k] || [];
+            const cols = []; its.forEach(it => { const c = multi ? (compteParId(it.cpt) || {}).color : 'var(--main)'; if (c && !cols.includes(c)) cols.push(c); });
+            const cls = ['cal-day', dt < auj ? 'passe' : '', k === cleJour(auj) ? 'auj' : '', k === calSel ? 'sel' : '', joursRisque[k] ? 'risque' : '', its.length ? 'plein' : ''].filter(Boolean).join(' ');
+            const lbl = dt.getDate() === 1 || dt.getTime() === cyc.start.getTime() ? `<em>${fmtJ(dt, { month: 'short' })}</em>` : '';
+            html += `<button class="${cls}" onclick="calSel='${k}';renderCalendrier()" aria-label="${fmtJ(dt, { weekday: 'long', day: 'numeric', month: 'long' })}${its.length ? ', ' + its.length + ' prélèvement' + (its.length > 1 ? 's' : '') : ''}">${lbl}<span>${dt.getDate()}</span><b>${cols.slice(0, 3).map(c => `<i style="background:${c}"></i>`).join('')}</b></button>`;
+        }
+        document.getElementById('cal-grid').innerHTML = html;
+        // Jour sélectionné
+        const [sy, sm, sd] = calSel.split('-').map(Number), selDate = new Date(sy, sm - 1, sd);
+        const sel = parJour[calSel] || [];
+        const tj = fmtJ(selDate, { weekday: 'long', day: 'numeric', month: 'long' }); document.getElementById('cal-sel-titre').textContent = calSel === cleJour(auj) ? "Aujourd'hui · " + tj : tj.charAt(0).toUpperCase() + tj.slice(1);
+        document.getElementById('cal-sel-total').textContent = sel.length ? sel.length + ' prélèvement' + (sel.length > 1 ? 's' : '') + ' · −' + fmtCpt(sel.reduce((s, it) => s + it.d.mt, 0)) : '';
+        document.getElementById('cal-sel-list').innerHTML = sel.length ? sel.map(it => {
+            const cat = iconeCatDep(db.categories.find(c => c.id === it.d.ct)), neg = sim.negatifs[it.d.id];
+            const st = !it.avenir ? (it.d.jourPrelev ? 'Prélevé' : 'Prélevé en début de mois') : (neg ? 'Solde insuffisant' : 'À venir');
+            return `<div class="dp-op" onclick="ouvrirEditDepense(${it.d.id})"><span class="dp-ico${cat.emoji ? ' emoji' : ''}" style="--c:${cat.color};">${cat.ico}</span>
+                <div class="dp-main"><span class="dp-name">${escH(it.d.desc)}</span><span class="dp-meta">${tagCompte(it.d)}<span class="${neg && it.avenir ? 'neg' : ''}">${st}</span></span></div>
+                <span class="dp-amt${neg && it.avenir ? ' neg' : ''}">−${fmtCpt(it.d.mt)}</span></div>`;
+        }).join('') : `<div class="bg-empty" style="padding:14px 0;">${items.length ? 'Aucun prélèvement ce jour-là.' : 'Aucune dépense récurrente pour le moment. Coche « Dépense récurrente » quand tu ajoutes une dépense pour la retrouver ici.'}</div>`;
+        // Résumé par compte
+        const res = document.getElementById('cal-resume');
+        if (comptes().length) {
+            res.innerHTML = comptes().filter(c => calFiltre === 'tous' || c.id === calFiltre).map(c => {
+                const f = sim.fin[c.id];
+                return `<div class="cpt-card" style="--c:${c.color};cursor:default;"><span class="cpt-head"><span class="cpt-ico">${CPT_SVG}</span><span>${escH(c.nom)}</span></span><span class="cpt-solde${f.solde < 0 ? ' neg' : ''}">${fmtCpt(f.solde)}</span><span class="muted-sm">${f.nb ? 'après ' + f.nb + ' prélèvement' + (f.nb > 1 ? 's' : '') + ' à venir' : 'plus rien à prélever ce mois'}</span></div>`;
+            }).join('');
+        } else {
+            const av = items.filter(it => it.avenir);
+            res.innerHTML = `<div class="cpt-card" style="--c:var(--main);cursor:default;grid-column:1/-1;"><span class="cpt-head">Encore à prélever ce mois</span><span class="cpt-solde">${fmtCpt(av.reduce((s, it) => s + it.d.mt, 0))}</span><span class="muted-sm">${av.length} prélèvement${av.length > 1 ? 's' : ''} à venir</span></div>`;
+        }
+    }
+    function virementPrepare(de, vers, mt) {
+        ouvrirVirement();
+        document.getElementById('vir_de').value = de; document.getElementById('vir_vers').value = vers;
+        document.getElementById('vir_mt').value = mt; majVirement();
+    }
+    // Carte « Prochains prélèvements » de l'accueil
+    function renderProchains() {
+        const box = document.getElementById('home-prochains'); if (!box) return;
+        const items = prelevementsCycle();
+        if (!items.length) { box.style.display = 'none'; return; }
+        box.style.display = '';
+        const sim = simulationComptes(items), av = items.filter(it => it.avenir);
+        document.getElementById('hp-nb').innerHTML = av.length ? av.length + ' à venir · <b style="color:var(--text);font-weight:800;">−' + fmtCpt(av.reduce((s, it) => s + it.d.mt, 0)) + '</b>' : '';
+        document.getElementById('hp-list').innerHTML = av.length ? av.slice(0, 3).map(it => {
+            const neg = sim.negatifs[it.d.id], c = compteParId(it.cpt);
+            const sous = (c && comptes().length >= 2 ? escH(c.nom) : iconeCatDep(db.categories.find(x => x.id === it.d.ct)).nom) + (neg ? ' · solde insuffisant' : '');
+            return `<div class="hp-row${neg ? ' risque' : ''}" onclick="calSel='${cleJour(it.date)}';goTo('calendrier')"><span class="hp-date" style="--c:${neg ? 'var(--warning)' : (c && comptes().length >= 2 ? c.color : 'var(--main)')};"><b>${it.date.getDate()}</b>${it.date.toLocaleDateString('fr-FR', { month: 'short' })}</span>
+                <span class="hp-main"><span>${escH(it.d.desc)}</span><small>${sous}</small></span><span class="hp-amt">−${fmtCpt(it.d.mt)}</span></div>`;
+        }).join('') : '<div class="bg-empty" style="padding:6px 0 2px;">Tous les prélèvements du mois sont passés ✓</div>';
+    }
+
+    /* ════════ Objectifs d'épargne ════════
+       db.objectifs : [{ id, nom, icone, cible, deja, echeance: 'AAAA-MM' | null, mensuelInitial, creeLe, versements: [{ id, dep, mt }] }] */
+    const OBJ_ICONES = ['🗾', '✈️', '🚗', '🏠', '💻', '🛟', '🎁', '💍'];
+    const OBJ_COULEURS = ['#be185d', '#d97706', '#0e7490', '#4f46e5', '#047857', '#9333ea'];
+    function objectifs() { if (!Array.isArray(db.objectifs)) db.objectifs = []; return db.objectifs; }
+    function objParId(id) { return objectifs().find(o => o.id === id) || null; }
+    function totalObjectif(o) { return (+o.deja || 0) + (o.versements || []).reduce((s, v) => s + v.mt, 0); }
+    function versementsCycle(o) { const t0 = getCycle().start.getTime(); return (o.versements || []).filter(v => v.id >= t0).reduce((s, v) => s + v.mt, 0); }
+    function moisRestants(ech) {
+        if (!ech) return 0;
+        const [y, m] = ech.split('-').map(Number), now = new Date();
+        return Math.max((y * 12 + m - 1) - (now.getFullYear() * 12 + now.getMonth()), 1);
+    }
+    function mensuelPour(cible, dejaAvant, ech) { if (!ech) return null; return Math.max(0, Math.ceil((cible - dejaAvant) / moisRestants(ech))); }
+    function mensuelObjectif(o) { return mensuelPour(o.cible, totalObjectif(o) - versementsCycle(o), o.echeance); }
+    function statutObjectif(o) {
+        if (totalObjectif(o) >= o.cible - 0.004) return 'fini';
+        if (!o.echeance) return 'libre';
+        const m = mensuelObjectif(o);
+        return o.mensuelInitial && m > o.mensuelInitial * 1.1 + 1 ? 'retard' : 'ok';
+    }
+    function couleurObjectif(o) { const i = objectifs().indexOf(o); return OBJ_COULEURS[(i < 0 ? 0 : i) % OBJ_COULEURS.length]; }
+    function libelleEcheance(ech) { if (!ech) return ''; const [y, m] = ech.split('-').map(Number); return MOIS_NOMS[m - 1].toLowerCase() + ' ' + y; }
+    function ringObj(o, r, w) {
+        const p = Math.min(totalObjectif(o) / (o.cible || 1), 1), C = 2 * Math.PI * r, sz = 2 * r + w + 2, col = statutObjectif(o) === 'fini' ? 'var(--success)' : couleurObjectif(o);
+        return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" aria-hidden="true"><circle cx="${sz / 2}" cy="${sz / 2}" r="${r}" fill="none" stroke="var(--track)" stroke-width="${w}"/><circle cx="${sz / 2}" cy="${sz / 2}" r="${r}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" stroke-dasharray="${(C * p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 ${sz / 2} ${sz / 2})"/></svg>`;
+    }
+    function sousTitreObjectif(o) {
+        const st = statutObjectif(o);
+        if (st === 'fini') return 'Objectif atteint 🎉';
+        if (st === 'libre') return 'Sans échéance · à ton rythme';
+        return 'avant ' + libelleEcheance(o.echeance) + ' · ' + mensuelObjectif(o).toLocaleString('fr-FR') + ' €/mois';
+    }
+    const fmtE0 = v => Math.round(v).toLocaleString('fr-FR') + ' €';
+    function renderObjectifs() {
+        const page = document.getElementById('page-objectifs'); if (!page) return;
+        const l = objectifs(), actifs = l.filter(o => statutObjectif(o) !== 'fini');
+        const aMettre = actifs.reduce((s, o) => s + (mensuelObjectif(o) || 0), 0);
+        const misCe = l.reduce((s, o) => s + versementsCycle(o), 0);
+        const pct = aMettre > 0 ? Math.min(Math.round(misCe / aMettre * 100), 100) : (misCe > 0 ? 100 : 0);
+        const avecEch = actifs.filter(o => o.echeance).length;
+        document.getElementById('obj-hero').innerHTML = l.length ? `<span class="hero-label">À mettre de côté ce mois-ci</span>
+            <div class="hero-amount">${fmtE0(aMettre)}</div><div class="hero-sub">${avecEch ? 'pour tenir ' + (avecEch > 1 ? 'tes ' + avecEch + ' objectifs' : 'ton objectif') + ' avec échéance' : 'aucun objectif avec échéance en cours'}</div>
+            <div class="obj-hbar"><div style="width:${pct}%"></div></div><div class="hero-sub" style="font-weight:700;">${fmtE0(misCe)} déjà mis de côté ce mois${aMettre > 0 ? ' · ' + pct + ' %' : ''}</div>`
+            : `<span class="hero-label">Objectifs d'épargne</span><div class="hero-amount" style="font-size:26px;">Fixe-toi un cap</div><div class="hero-sub">Un voyage, un permis, un fonds de secours… L'appli calcule combien mettre de côté chaque mois.</div>`;
+        document.getElementById('obj-liste').innerHTML = l.slice().sort((a, b) => (statutObjectif(a) === 'fini') - (statutObjectif(b) === 'fini')).map(o => {
+            const st = statutObjectif(o), tot = totalObjectif(o);
+            const pill = { fini: ['Atteint 🎉', 'ok'], retard: ['À accélérer', 'warn'], ok: ['Dans les temps', 'ok'], libre: ['Sans date', 'neutre'] }[st];
+            return `<button class="obj-card" onclick="editerObjectif('${o.id}')"><span class="obj-ring">${ringObj(o, 26, 7)}<span>${o.icone}</span></span>
+                <span class="obj-main"><span class="obj-l1"><b>${escH(o.nom)}</b><em class="${pill[1]}">${pill[0]}</em></span>
+                <span class="obj-l2"><strong>${fmtE0(tot)}</strong> sur ${fmtE0(o.cible)} · ${Math.min(Math.round(tot / o.cible * 100), 100)} %</span>
+                <span class="obj-l3 ${st === 'retard' ? 'warn' : ''}">${sousTitreObjectif(o)}</span></span></button>`;
+        }).join('');
+    }
+    function renderHomeObjectifs() {
+        const box = document.getElementById('home-objectifs'); if (!box) return;
+        const l = objectifs().slice().sort((a, b) => (statutObjectif(a) === 'fini') - (statutObjectif(b) === 'fini')).slice(0, 2);
+        box.innerHTML = l.length ? l.map(o => `<div class="hobj" onclick="goTo('objectifs')"><span class="obj-ring sm">${ringObj(o, 18, 5)}<span>${o.icone}</span></span>
+            <span class="obj-main"><b>${escH(o.nom)}</b><small>${fmtE0(totalObjectif(o))} sur ${fmtE0(o.cible)}${statutObjectif(o) !== 'fini' && o.echeance ? ' · ' + mensuelObjectif(o).toLocaleString('fr-FR') + ' €/mois' : ''}</small></span>
+            <strong>${Math.min(Math.round(totalObjectif(o) / o.cible * 100), 100)} %</strong></div>`).join('')
+            : `<button class="cl-add" style="height:46px;font-size:14px;margin-top:4px;" onclick="goTo('objectifs');setTimeout(()=>editerObjectif(null),80)">+ Crée ton premier objectif d'épargne</button>`;
+    }
+    // Formulaire objectif
+    let objEditId = null, objIcone = OBJ_ICONES[0], objEch = null;
+    function choixEcheances(cur) {
+        const now = new Date(), l = [3, 4, 5, 6, 7, 9, 12, 18].map(n => { const d = new Date(now.getFullYear(), now.getMonth() + n, 1); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); });
+        if (cur && !l.includes(cur)) { l.push(cur); l.sort(); if (l.indexOf(cur) !== l.length - 1) l.splice(l.length - 1, 1); else l.splice(l.length - 2, 1); }
+        return l.concat([null]);
+    }
+    function editerObjectif(id) {
+        objEditId = id; const o = id ? objParId(id) : null;
+        objIcone = o ? o.icone : OBJ_ICONES[objectifs().length % OBJ_ICONES.length];
+        const d6 = new Date(); d6.setMonth(d6.getMonth() + 6, 1);
+        objEch = o ? o.echeance : d6.getFullYear() + '-' + String(d6.getMonth() + 1).padStart(2, '0');
+        document.getElementById('objf-titre').textContent = o ? 'Modifier l\'objectif' : 'Nouvel objectif';
+        document.getElementById('objf_nom').value = o ? o.nom : '';
+        document.getElementById('objf_cible').value = o ? String(o.cible).replace('.', ',') : '';
+        document.getElementById('objf_deja').value = o ? String(o.deja || 0).replace('.', ',') : '';
+        document.getElementById('objf_deja_l').textContent = o ? 'Déjà de côté au départ' : 'Déjà de côté';
+        document.getElementById('objf_ok').textContent = o ? 'Enregistrer' : 'Créer l\'objectif';
+        document.getElementById('objf_del').style.display = o ? '' : 'none';
+        majFormObjectif();
+        document.getElementById('sheet-objectif').style.display = 'flex';
+        if (!o) setTimeout(() => document.getElementById('objf_nom').focus(), 150);
+    }
+    function majFormObjectif() {
+        document.getElementById('objf_icones').innerHTML = OBJ_ICONES.map(e => `<button type="button" class="${e === objIcone ? 'on' : ''}" aria-label="Icône ${e}" onclick="objIcone='${e}';majFormObjectif()">${e}</button>`).join('');
+        document.getElementById('objf_ech').innerHTML = choixEcheances(objEch).map(e => {
+            const lbl = e ? (() => { const [y, m] = e.split('-').map(Number); return ['Janv.','Févr.','Mars','Avr.','Mai','Juin','Juil.','Août','Sept.','Oct.','Nov.','Déc.'][m - 1] + ' ' + y; })() : 'Sans date';
+            return `<button type="button" class="${e === objEch ? 'on' : ''}" onclick="objEch=${e ? `'${e}'` : 'null'};majFormObjectif()">${lbl}</button>`;
+        }).join('');
+        const o = objEditId ? objParId(objEditId) : null;
+        const cible = lireMontant(document.getElementById('objf_cible').value) || 0;
+        const deja = lireMontant(document.getElementById('objf_deja').value) || 0;
+        const tot = deja + (o ? (o.versements || []).reduce((s, v) => s + v.mt, 0) : 0);
+        const avant = tot - (o ? versementsCycle(o) : 0);
+        const m = mensuelPour(cible, avant, objEch), reste = Math.max(cible - tot, 0), p = cible ? Math.min(tot / cible, 1) : 0, C = 2 * Math.PI * 23;
+        document.getElementById('objf_ring').innerHTML = `<svg width="58" height="58" viewBox="0 0 58 58" aria-hidden="true"><circle cx="29" cy="29" r="23" fill="none" stroke="var(--track)" stroke-width="7"/><circle cx="29" cy="29" r="23" fill="none" stroke="#be185d" stroke-width="7" stroke-linecap="round" stroke-dasharray="${(C * p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 29 29)"/></svg><span>${Math.round(p * 100)} %</span>`;
+        document.getElementById('objf_mensuel').innerHTML = objEch ? `${(m || 0).toLocaleString('fr-FR')} € <small>/ mois</small>` : 'À ton rythme';
+        document.getElementById('objf_duree').textContent = !cible ? 'Indique le montant visé' : (reste <= 0 ? 'Objectif déjà atteint 🎉' : (objEch ? 'pendant ' + moisRestants(objEch) + ' mois · reste ' + fmtE0(reste) : 'sans échéance · reste ' + fmtE0(reste)));
+    }
+    function enregistrerObjectif() {
+        const nom = document.getElementById('objf_nom').value.trim();
+        const cible = lireMontant(document.getElementById('objf_cible').value);
+        const deja = lireMontant(document.getElementById('objf_deja').value) || 0;
+        if (!nom) { showToast('Donne un nom à ton objectif', 'warning'); return; }
+        if (!(cible > 0)) { showToast('Indique le montant visé', 'warning'); return; }
+        let o = objEditId ? objParId(objEditId) : null;
+        if (!o) { o = { id: 'obj_' + Date.now(), creeLe: Date.now(), versements: [] }; objectifs().push(o); }
+        Object.assign(o, { nom, icone: objIcone, cible, deja: Math.max(deja, 0), echeance: objEch });
+        o.mensuelInitial = mensuelObjectif(o);
+        fermerSheetCpt('sheet-objectif'); localStorage.setItem('budget_vGestion', JSON.stringify(db));
+        majAffichage(); renderObjectifs();
+        showToast(objEditId ? 'Objectif modifié' : 'Objectif « ' + nom + ' » créé 🎯', 'success');
+        objEditId = null;
+    }
+    function supprimerObjectif() {
+        const o = objParId(objEditId); if (!o) return;
+        if (!confirm('Supprimer l\'objectif « ' + o.nom + ' » ? L\'argent épargné reste dans ton coffre.')) return;
+        db.objectifs = objectifs().filter(x => x !== o);
+        db.depenses.forEach(d => { if (d.objectif === o.id) delete d.objectif; });
+        fermerSheetCpt('sheet-objectif'); objEditId = null;
+        localStorage.setItem('budget_vGestion', JSON.stringify(db)); majAffichage(); renderObjectifs();
+        showToast('Objectif supprimé', 'warning');
+    }
+    // Lien dépense Épargne → objectif
+    function versementObjectif(oid, dep) {
+        const o = objParId(oid); if (!o) return;
+        const avant = statutObjectif(o);
+        (o.versements = o.versements || []).push({ id: Date.now(), dep: dep.id, mt: dep.mt });
+        if (avant !== 'fini' && statutObjectif(o) === 'fini') setTimeout(() => showToast('🎉 Objectif « ' + o.nom + ' » atteint !', 'success', 5000), 400);
+    }
+    function retirerVersements(depId) {
+        const t0 = getCycle().start.getTime();
+        objectifs().forEach(o => { o.versements = (o.versements || []).filter(v => !(v.dep === depId && v.id >= t0)); });
+    }
+    function ajouterVersementsRecurrents() {
+        let k = 1;
+        db.depenses.forEach(d => { if (d.objectif && objParId(d.objectif) && estEpargneCat(d.ct)) { objParId(d.objectif).versements.push({ id: Date.now() + (k++), dep: d.id, mt: d.mt }); } });
+    }
+    function majChoixObjectif() {
+        const box = document.getElementById('add_obj_box'), sel = document.getElementById('add_cat'), inp = document.getElementById('add_objectif');
+        if (!box || !sel || !inp) return;
+        const actifs = objectifs().filter(o => statutObjectif(o) !== 'fini');
+        const show = estEpargneCat(sel.value) && actifs.length > 0;
+        box.style.display = show ? '' : 'none';
+        if (!show) return;
+        if (inp.value && inp.value !== 'aucun' && !objParId(inp.value)) inp.value = '';
+        if (!inp.value) inp.value = actifs[0].id;
+        document.getElementById('add_obj_pick').innerHTML = actifs.map(o => `<button type="button" class="obj-opt${inp.value === o.id ? ' on' : ''}" onclick="document.getElementById('add_objectif').value='${o.id}';majChoixObjectif()"><span>${o.icone}</span><span><b>${escH(o.nom)}</b><small>${fmtE0(totalObjectif(o))} sur ${fmtE0(o.cible)}</small></span></button>`).join('')
+            + `<button type="button" class="obj-opt${inp.value === 'aucun' ? ' on' : ''}" onclick="document.getElementById('add_objectif').value='aucun';majChoixObjectif()"><span>—</span><span><b>Aucun objectif</b><small>Va seulement dans le coffre</small></span></button>`;
+    }
+    function objectifFormulaire(formMobile) {
+        const inp = document.getElementById('add_objectif');
+        const v = formMobile && inp ? inp.value : '';
+        if (inp) inp.value = '';
+        return v && v !== 'aucun' && objParId(v) ? v : null;
+    }
+    function remplirEditObjectif(d) {
+        const box = document.getElementById('edit-obj-box'), sel = document.getElementById('edit-objectif'); if (!box || !sel) return;
+        const l = objectifs();
+        sel.innerHTML = '<option value="">Aucun objectif</option>' + l.map(o => `<option value="${o.id}">${o.icone} ${escH(o.nom)}</option>`).join('');
+        sel.value = d.objectif && objParId(d.objectif) ? d.objectif : '';
+        box.style.display = l.length && estEpargneCat(d.ct) ? '' : 'none';
+    }
+    function majVersementEdit(d) {
+        const sel = document.getElementById('edit-objectif');
+        const oid = estEpargneCat(d.ct) && sel ? sel.value : '';
+        retirerVersements(d.id);
+        if (oid && objParId(oid)) { d.objectif = oid; versementObjectif(oid, d); } else delete d.objectif;
+    }
+
+    function majCalObj() {
+        renderProchains(); renderHomeObjectifs(); majChoixObjectif();
+        const pc = document.getElementById('page-calendrier'); if (pc && pc.classList.contains('active')) renderCalendrier();
+        const po = document.getElementById('page-objectifs'); if (po && po.classList.contains('active')) renderObjectifs();
+    }
+
     function renderHistoriqueGroupe(searchTerm, boxId, compteurs) {
         if (boxId === undefined) { boxId = 'dp_history'; compteurs = true; }
         const box = document.getElementById(boxId); if (!box) return;
@@ -4266,6 +4707,7 @@ tfoot td{padding:12px 0 2px;font-weight:800}
             const cat = db.categories.find(c => c.id === d.ct);
             return d.desc.toLowerCase().includes(searchTerm) || (cat && cat.label.toLowerCase().includes(searchTerm)) || (d.note && d.note.toLowerCase().includes(searchTerm));
         });
+        if (boxId === 'log_list_tableau') { for (let i = filtres.length - 1; i >= 0; i--) if (aVenir(filtres[i])) filtres.splice(i, 1); }  // l'accueil montre les prélèvements à venir dans sa propre carte
         insererMouvements(filtres, searchTerm, aVenir);
         // compteur
         let totDep = 0;
